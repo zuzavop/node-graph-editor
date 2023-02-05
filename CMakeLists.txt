@@ -1,8 +1,16 @@
 cmake_minimum_required(VERSION 3.0)
 project(graphEditor)
 
-# Find the SDL2 library
-find_package(SDL2 REQUIRED)
+# Download and configure Hunter
+include("cmake/HunterGate.cmake")
+HunterGate(
+    URL "https://github.com/cpp-pm/hunter/archive/v0.23.252.tar.gz"
+    SHA1 "a92dabf5a5a8e5c9b67ebb0a7b46d45c8f61e96b"
+)
+
+# Use Hunter to download the SDL2 library
+hunter_add_package(SDL2)
+find_package(SDL2 CONFIG REQUIRED)
 
 # Add the source files
 file(GLOB SOURCES "src/*.cpp")
