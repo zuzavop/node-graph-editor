@@ -1,16 +1,21 @@
 cmake_minimum_required(VERSION 3.0)
-project(graphEditor)
 
 # Download and configure Hunter
-include("cmake/HunterGate.cmake")
-HunterGate(
-    URL "https://github.com/cpp-pm/hunter/archive/v0.23.252.tar.gz"
-    SHA1 "a92dabf5a5a8e5c9b67ebb0a7b46d45c8f61e96b"
-)
+#include("cmake/HunterGate.cmake")
+#HunterGate(
+#    URL "https://github.com/cpp-pm/hunter/archive/v0.23.297.tar.gz"
+#    SHA1 "3319fe6a3b08090df7df98dee75134d68e2ef5a3"
+#)
+
+project(graphEditor VERSION 1.0)
+
+# Enable C++17
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Use Hunter to download the SDL2 library
-hunter_add_package(SDL2)
-find_package(SDL2 CONFIG REQUIRED)
+#hunter_add_package(SDL2)
+#find_package(SDL2 CONFIG REQUIRED)
 
 # Add the source files
 file(GLOB SOURCES "src/*.cpp")
@@ -18,8 +23,14 @@ file(GLOB SOURCES "src/*.cpp")
 # Add the executable
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-# Link the SDL2 library
-target_link_libraries(${PROJECT_NAME} SDL2::SDL2)
+set(SDL2_PATH "D:/path/to/SDL2")
+set(SDL2_INCLUDE_DIR "${SDL2_PATH}/include")
+set(SDL2_LIBRARY "${SDL2_PATH}/lib/x64/SDL2.lib")
 
-# Set the C++ standard to C++17
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
+# Link the SDL2 library
+find_package(SDL2 REQUIRED)
+include_directories(${SDL2_INCLUDE_DIR})
+target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY})
+
+# Set the installation directory
+install(TARGETS ${PROJECT_NAME} DESTINATION bin)
