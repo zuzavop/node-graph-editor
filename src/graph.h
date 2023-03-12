@@ -1,27 +1,40 @@
-
 #ifndef GRAPH_H
 #define GRAPH_H
 
-const int NODE_RADIUS = 20;
-
-// Define a structure for a graph node
-struct Node {
-    int x, y;
-};
-
-// Define a structure for a graph edge
-struct Edge {
-    int start, end;
-};
+#include <vector>
+#include <algorithm>
+#include <iostream>
+#include <memory>
+#include "node.h"
+#include "edge.h"
 
 class Graph {
     public:
         Graph();
-        add_edge(int x, int y);
-        delete_edge();
-        add_node(int x, int y);
-        std::vector<Node> nodes;
-        std::vector<Edge> edges;
-}
+        virtual ~Graph();
+
+        void addNode(int x, int y); // create a node and add it to the graph
+        void addNode(std::shared_ptr<Node> node); // add a node to the graph
+        void removeNode(std::shared_ptr<Node> node); //delete a node from the graph
+        
+        void addEdge(std::shared_ptr<Node> first, std::shared_ptr<Node> second);  // create an edge and add it to graph
+        void addEdge(std::shared_ptr<Edge> edge); // add an edge to the graph
+        void deleteEdge(std::shared_ptr<Edge> edge); // delete an edge from the graph
+
+        void draw(SDL_Renderer* renderer); // draw the entire graph
+        const std::vector<std::shared_ptr<Node>>& getNodes() const {
+            return nodes;
+        }
+
+        const std::vector<std::shared_ptr<Edge>>& getEdges() const {
+            return edges;
+        }
+
+        void saveToFile(const std::string& fileName);
+        void loadFromFile(const std::string& fileName);
+    private:
+        std::vector<std::shared_ptr<Node>> nodes; // list of nodes in the graph
+        std::vector<std::shared_ptr<Edge>> edges; // list of edges in the graph
+};
 
 #endif

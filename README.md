@@ -1,3 +1,17 @@
-# Replace this with your name
+# Graph editor
+Graph editor...
 
-Describe your project(s) here.
+## How to use it
+
+## How to install
+
+### On Windows
+
+### On Linux
+
+## External libraries
+
+* SDL - interface
+
+
+
