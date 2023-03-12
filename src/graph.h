@@ -1,10 +1,20 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
-#include <vector>
 #include <algorithm>
+#include <cmath>
+#include <fstream>
 #include <iostream>
 #include <memory>
+#include <random>
+#include <regex>
+#include <sstream>
+#include <string>
+#include <vector>
+
+#include "SDL2/SDL.h"
+#include "SDL2/SDL_ttf.h"
+
 #include "node.h"
 #include "edge.h"
 
@@ -13,13 +23,14 @@ class Graph {
         Graph();
         virtual ~Graph();
 
-        void addNode(int x, int y); // create a node and add it to the graph
+        void addNode(float x, float y); // create a node and add it to the graph
+        void addNode(const std::string& name, float x, float y);
         void addNode(std::shared_ptr<Node> node); // add a node to the graph
-        void removeNode(std::shared_ptr<Node> node); //delete a node from the graph
+        void removeNode(const std::shared_ptr<Node>& node); //delete a node from the graph
         
-        void addEdge(std::shared_ptr<Node> first, std::shared_ptr<Node> second);  // create an edge and add it to graph
+        void addEdge(const std::shared_ptr<Node>& from, const std::shared_ptr<Node>& to);  // create an edge and add it to graph
         void addEdge(std::shared_ptr<Edge> edge); // add an edge to the graph
-        void deleteEdge(std::shared_ptr<Edge> edge); // delete an edge from the graph
+        void deleteEdge(const std::shared_ptr<Edge>& edge); // delete an edge from the graph
 
         void draw(SDL_Renderer* renderer); // draw the entire graph
         void clearGraph();

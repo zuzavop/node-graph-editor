@@ -1,38 +1,60 @@
 #include "graph.h"
 
 Graph::Graph() {
-    //nodes = {{100, 100}, {200, 200}};
+}
+
+void Graph::addNode(const std::string& name, float x, float y) {
+    nodes.push_back(std::make_shared<Node>(name, x, y));
 }
 
 void Graph::addNode(std::shared_ptr<Node> node) {
-    nodes.emplace_back(node);
+    nodes.push_back(node);
 }
 
-void Graph::add_node(int x, int y) {
-    //nodes.push_back({x, y});
+void Graph::addNode(float x, float y) {
+    nodes.push_back(std::make_shared<Node>("", x, y));
 }
 
-void Graph::add_edge(int x, int y) {
-    for (int i = 0; i < nodes.size(); i++) {
-        int nodeX = nodes[i]->x;
-        int nodeY = nodes[i]->y;
-        int dx = x - nodeX;
-        int dy = y - nodeY;
-        if (dx * dx + dy * dy < NODE_RADIUS * NODE_RADIUS) {
-            if (edges.empty()) {
-                // edges.push_back({i, i});
-            } else {
-                // edges.back().end = i;
-            }
-            break;
+void Graph::removeNode(const std::shared_ptr<Node>& node) {
+    // remove all edges connected to this node
+    for (const auto& edge : node->edges) {
+        auto otherNode = edge->startNode == node ? edge->endNode : edge->startNode;
+        otherNode->removeEdge(edge);
+        edges.erase(std::remove(edges.begin(), edges.end(), edge), edges.end());
+    }
+
+    nodes.erase(std::remove(nodes.begin(), nodes.end(), node), nodes.end());
+}
+
+void Graph::addEdge(const std::shared_ptr<Node>& from, const std::shared_ptr<Node>& to) {
+    // check if the edge already exists
+    for (const auto& edge : edges) {
+        if (*edge == Edge(from, to)) {
+            return;
         }
     }
+
+    auto edge = std::make_shared<Edge>(from, to);
+    from->addEdge(edge);
+    to->addEdge(edge);
+    edges.push_back(edge);
 }
 
-void Graph::delete_edge(std::unique_ptr<Edge> edge) {
-    if (!edges.empty()) {
-        edges.pop_back();
+void Graph::addEdge(std::shared_ptr<Edge> edge) {
+    // check if the edge already exists
+    for (const auto& e : edges) {
+        if (*e == edge) {
+            return;
+        }
     }
+    
+    edges.push_back(edge);
+}
+
+void Graph::removeEdge(const std::shared_ptr<Edge>& edge) {
+    edge->startNode->removeEdge(edge);
+    edge->endNode->removeEdge(edge);
+    edges.erase(std::remove(edges.begin(), edges.end(), edge), edges.end());
 }
 
 void Graph::draw(SDL_Renderer* renderer) {
@@ -50,44 +72,106 @@ void Graph::draw(SDL_Renderer* renderer) {
 
 
 void Graph::saveToFile(const std::string& fileName) {
-    std::ofstream file(fileName);
-    if (file.is_open()) {
-        for (auto node : nodes) {
-            file << "NODE " << node->getID() << " " << node->getX() << " " << node->getY() << "\n";
-            for (auto edge : node->get_edges()) {
-                file << "EDGE " << edge->getStart()->getID() << " " << edge->getEnd()->getID() << " " << edge->getWeight() << "\n";
-            }
-        }
-        file.close();
+    // Open the file for writing
+    std::ofstream file(filename);
+
+    // Write the PostScript header
+    file << "%!PS-Adobe-2.0\n\n";
+
+    // Set up the scaling factors
+    const float xScale = 500.0f;
+    const float yScale = 500.0f;
+
+    // Set the font size
+    const float fontSize = 10.0f;
+
+    // Draw the nodes
+    for (const auto& node : nodes) {
+        // Compute the position of the node
+        const float x = node->getX() * xScale;
+        const float y = node->getY() * yScale;
+
+        // Draw a circle for the node
+        file << x << " " << y << " " << NODE_RADIUS << " 0 360 arc\n"
+             << "closepath\n"
+             << "stroke\n";
+
+        // Draw the label for the node
+        file << "(" << node->getName() << ") "
+             << "dup stringwidth pop 2 div neg " << fontSize / 2.0f << " rmoveto\n"
+             << "show\n";
     }
+
+    // Draw the edges
+    for (const auto& edge : edges) {
+        // Compute the positions of the nodes
+        const float x1 = edge->getSourceNode()->getX() * xScale;
+        const float y1 = edge->getSourceNode()->getY() * yScale;
+        const float x2 = edge->getDestNode()->getX() * xScale;
+        const float y2 = edge->getDestNode()->getY() * yScale;
+
+        // Draw a line for the edge
+        file << x1 << " " << y1 << " moveto\n"
+             << x2 << " " << y2 << " lineto\n"
+             << "stroke\n";
+    }
+
+    // Write the PostScript footer
+    file << "\nshowpage\n";
+
+    // Close the file
+    file.close();
 }
 
 void Graph::loadFromFile(const std::string& fileName) {
-    std::ifstream file(fileName);
-    if (file.is_open()) {
-        clearGraph();
-        std::string line;
-        while (std::getline(file, line)) {
-            std::stringstream ss(line);
-            std::string type;
-            ss >> type;
-            if (type == "NODE") {
-                int id, x, y;
-                ss >> id >> x >> y;
-                addNode(x, y);
-            }
-            else if (type == "EDGE") {
-                int startID, endID, weight;
-                ss >> startID >> endID >> weight;
-                Node* startNode = findNodeByID(startID);
-                Node* endNode = findNodeByID(endID);
-                if (startNode != nullptr && endNode != nullptr) {
-                    addEdge(new Edge(startNode, endNode, weight));
-                }
-            }
+    // Open the file for reading
+    std::ifstream file(filename);
+
+    // Read the PostScript commands
+    std::string line;
+    while (std::getline(file, line)) {
+        // Check if the line is a node command
+        std::smatch match;
+        if (std::regex_match(line, match, std::regex(R"((\S+) (\S+) (\S+) 0 360 arc)"))) {
+            // Extract the node position and size from the command
+            const float x = std::stof(match[1]);
+            const float y = std::stof(match[2]);
+
+            // Create a new node and add it to the graph
+            addNode(std::make_shared<Node>(x, y));
         }
-        file.close();
+
+        // Check if the line is an edge command
+        else if (std::regex_match(line, match, std::regex(R"((\S+) (\S+) moveto (\S+) (\S+) lineto)"))) {
+            // Extract the positions of the source and destination nodes
+            const float x1 = std::stof(match[1]);
+            const float y1 = std::stof(match[2]);
+            const float x2 = std::stof(match[3]);
+            const float y2 = std::stof(match[4]);
+
+            // Find the nodes corresponding to the source and destination positions
+            auto sourceNode = findNodeByPosition(x1, y1);
+            auto destNode = findNodeByPosition(x2, y2);
+
+            // Add a new edge to the graph
+            addEdge(std::make_shared<Edge>("", sourceNode, destNode));
+        }
+
+        // Check if the line is a label command
+        else if (std::regex_match(line, match, std::regex(R"(\((.+)\) \S+ \S+ rmoveto)"))) {
+            // Extract the label text
+            const std::string label = match[1];
+
+            // Find the node corresponding to the label
+            auto node = findNodeByName(label);
+
+            // Set the node's name to the label text
+            node->setName(label);
+        }
     }
+
+    // Close the file
+    file.close();
 }
 
 void Graph::layout(int iterations, float k) {
@@ -180,4 +264,7 @@ void Graph::layoutBruteForce() {
     }
 }
 
-
+void Graph::clearGraph() {
+    nodes.clear();
+    edges.clear();
+}
