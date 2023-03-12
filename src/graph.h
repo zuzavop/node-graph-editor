@@ -22,6 +22,12 @@ class Graph {
         void deleteEdge(std::shared_ptr<Edge> edge); // delete an edge from the graph
 
         void draw(SDL_Renderer* renderer); // draw the entire graph
+        void clearGraph();
+
+        void layout(int iterations, float k);
+        void fruchtermanReingold(int iterations, float k);
+        void layoutBruteForce();
+
         const std::vector<std::shared_ptr<Node>>& getNodes() const {
             return nodes;
         }

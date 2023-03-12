@@ -74,7 +74,7 @@ void Graph::loadFromFile(const std::string& fileName) {
             if (type == "NODE") {
                 int id, x, y;
                 ss >> id >> x >> y;
-                add_node(new Node(id, x, y));
+                addNode(x, y);
             }
             else if (type == "EDGE") {
                 int startID, endID, weight;
@@ -89,3 +89,95 @@ void Graph::loadFromFile(const std::string& fileName) {
         file.close();
     }
 }
+
+void Graph::layout(int iterations, float k) {
+    // use brute force layout for small graphs
+    if (m_nodes.size() < 10) {
+        layoutBruteForce();
+    }
+    // use Fruchterman-Reingold algorithm for large graphs
+    else {
+        fruchtermanReingold(iterations, k);
+    }
+}
+
+void Graph::fruchtermanReingold(int iterations, float k) {
+    std::vector<std::pair<float, float>> pos(nodes.size());
+    // initialize node positions randomly
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<float> dist(0.0f, 1.0f);
+    for (int i = 0; i < nodes.size(); i++) {
+        pos[i].first = dist(gen);
+        pos[i].second = dist(gen);
+    }
+
+    float t = 1.0f;
+    const float deltaT = 1.0f / iterations;
+    const float c = k * std::sqrt(1.0f / nodes.size());
+    for (int iter = 0; iter < iterations; iter++) {
+        // repulsive forces between nodes
+        std::vector<std::pair<float, float>> disp(nodes.size(), {0.0f, 0.0f});
+        for (int i = 0; i < nodes.size(); i++) {
+            for (int j = i + 1; j < nodes.size(); j++) {
+                float dx = pos[i].first - pos[j].first;
+                float dy = pos[i].second - pos[j].second;
+                float distSq = dx * dx + dy * dy;
+                if (distSq > 0.0f) {
+                    float factor = k * k / distSq;
+                    disp[i].first += factor * dx;
+                    disp[i].second += factor * dy;
+                    disp[j].first -= factor * dx;
+                    disp[j].second -= factor * dy;
+                }
+            }
+        }
+        // attractive forces between edges
+        for (const auto& e : edges) {
+            int i = e->getSource()->getIndex();
+            int j = e->getDest()->getIndex();
+            float dx = pos[i].first - pos[j].first;
+            float dy = pos[i].second - pos[j].second;
+            float dist = std::sqrt(dx * dx + dy * dy);
+            float factor = dist * dist / k;
+            disp[i].first -= factor * dx / dist;
+            disp[i].second -= factor * dy / dist;
+            disp[j].first += factor * dx / dist;
+            disp[j].second += factor * dy / dist;
+        }
+        // limit maximum displacement per iteration
+        for (int i = 0; i < nodes.size(); i++) {
+            float dispLen = std::sqrt(disp[i].first * disp[i].first + disp[i].second * disp[i].second);
+            if (dispLen > 0.0f) {
+                float maxDisp = c * t;
+                pos[i].first += disp[i].first / dispLen * std::min(dispLen, maxDisp);
+                pos[i].second += disp[i].second / dispLen * std::min(dispLen, maxDisp);
+            }
+        }
+        t -= deltaT;
+    }
+    // set final node positions
+    for (int i = 0; i < nodes.size(); i++) {
+        nodes[i]->setPosition(pos[i].first, pos[i].second);
+    }
+}
+
+void Graph::layoutBruteForce() {
+    // compute the size of the grid
+    int gridSize = sqrt(nodes.size());
+
+    // compute the node positions in a grid
+    int index = 0;
+    for (int row = 0; row < gridSize; row++) {
+        for (int col = 0; col < gridSize; col++) {
+            if (index < nodes.size()) {
+                float x = static_cast<float>(col) / gridSize;
+                float y = static_cast<float>(row) / gridSize;
+                nodes[index]->setPosition(x, y);
+                index++;
+            }
+        }
+    }
+}
+
+
