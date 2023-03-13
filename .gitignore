@@ -1,4 +1,6 @@
-_3rdParty/
-SDL/
 *.o
 *.bin
+cmake
+include
+lib
+.vscode

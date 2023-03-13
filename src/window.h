@@ -1,7 +1,7 @@
 #ifndef WINDOW_H_
 #define WINDOW_H_
 
-#include <SDL2/SDL.h>
+// #include <SDL.h>
 #include "graph.h"
 
 const int WINDOW_WIDTH = 800;
@@ -10,15 +10,20 @@ const int WINDOW_HEIGHT = 600;
 class MainWindow {
     public:
         MainWindow();
-        void create_window();
-        void main_loop();
-        void close_window();
+        ~MainWindow();
+        void createWindow();
+        void mainLoop();
 
     private:
         SDL_Window* window;
         SDL_Renderer* renderer;
         Graph graph;
-        void render_window();
-}
+        void renderWindow();
+        std::shared_ptr<Node> selectedNode;
+        std::shared_ptr<Edge> selectedEdge;
+        void handleEvents();
+        bool running;
+        bool dragging;
+};
 
 #endif

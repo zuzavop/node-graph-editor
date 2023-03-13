@@ -12,16 +12,14 @@
 #include <string>
 #include <vector>
 
-#include "SDL2/SDL.h"
-#include "SDL2/SDL_ttf.h"
+// #include <SDL.h>
 
 #include "node.h"
 #include "edge.h"
 
 class Graph {
     public:
-        Graph();
-        virtual ~Graph();
+        Graph() {}
 
         void addNode(float x, float y); // create a node and add it to the graph
         void addNode(const std::string& name, float x, float y);
@@ -30,12 +28,12 @@ class Graph {
         
         void addEdge(const std::shared_ptr<Node>& from, const std::shared_ptr<Node>& to);  // create an edge and add it to graph
         void addEdge(std::shared_ptr<Edge> edge); // add an edge to the graph
-        void deleteEdge(const std::shared_ptr<Edge>& edge); // delete an edge from the graph
+        void removeEdge(const std::shared_ptr<Edge>& edge); // delete an edge from the graph
 
         void draw(SDL_Renderer* renderer); // draw the entire graph
         void clearGraph();
 
-        void layout(int iterations, float k);
+        void layout();
         void fruchtermanReingold(int iterations, float k);
         void layoutBruteForce();
 
@@ -49,6 +47,8 @@ class Graph {
 
         void saveToFile(const std::string& fileName);
         void loadFromFile(const std::string& fileName);
+        std::shared_ptr<Node> findNodeByPosition(float x, float y);
+        std::shared_ptr<Node> findNodeByName(const std::string name);
     private:
         std::vector<std::shared_ptr<Node>> nodes; // list of nodes in the graph
         std::vector<std::shared_ptr<Edge>> edges; // list of edges in the graph
