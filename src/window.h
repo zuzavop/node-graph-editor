@@ -1,7 +1,6 @@
 #ifndef WINDOW_H_
 #define WINDOW_H_
 
-// #include <SDL.h>
 #include "graph.h"
 
 const int WINDOW_WIDTH = 800;

@@ -1,19 +1,6 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
-#include <algorithm>
-#include <cmath>
-#include <fstream>
-#include <iostream>
-#include <memory>
-#include <random>
-#include <regex>
-#include <sstream>
-#include <string>
-#include <vector>
-
-// #include <SDL.h>
-
 #include "node.h"
 #include "edge.h"
 
@@ -48,7 +35,7 @@ class Graph {
         void saveToFile(const std::string& fileName);
         void loadFromFile(const std::string& fileName);
         std::shared_ptr<Node> findNodeByPosition(float x, float y);
-        std::shared_ptr<Node> findNodeByName(const std::string name);
+        std::shared_ptr<Node> findNodeByName(const std::string& name);
     private:
         std::vector<std::shared_ptr<Node>> nodes; // list of nodes in the graph
         std::vector<std::shared_ptr<Edge>> edges; // list of edges in the graph

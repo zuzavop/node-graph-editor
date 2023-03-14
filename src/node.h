@@ -8,7 +8,9 @@
 #include <cmath>
 #include <fstream>
 #include <sstream>
-#include <cstring>
+#include <algorithm>
+#include <regex>
+#include <string>
 
 #include <SDL.h>
 
@@ -41,7 +43,7 @@ public:
         y = new_y;
     }
 
-    bool contains(int x, int y, int radius) const {
+    bool contains(float x, float y, int radius) const {
         return std::pow(x - this->x, 2) + std::pow(y - this->y, 2) <= std::pow(radius, 2);
     }
 

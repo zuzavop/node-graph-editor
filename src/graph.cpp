@@ -276,9 +276,20 @@ void Graph::clearGraph() {
 }
 
 std::shared_ptr<Node> Graph::findNodeByPosition(float x, float y) {
+    auto it = std::find_if(nodes.begin(), nodes.end(), [=](const Node& n) {
+        return n.contains(x, y, NODE_RADIUS);
+    });
+
+    auto id = std::distance(nodes.begin(), it);
+
     return nullptr;
 }
         
-std::shared_ptr<Node> Graph::findNodeByName(const std::string name) {
+std::shared_ptr<Node> Graph::findNodeByName(const std::string& name) {
+    auto it = std::find_if(nodes.begin(), nodes.end(), [=](const Node& n) {
+        return n.getName() == name;
+    });
+
+    auto id = std::distance(nodes.begin(), it);
     return nullptr;
 }
