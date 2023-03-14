@@ -1,14 +1,14 @@
 #ifndef EDGE_H
 #define EDGE_H
 
-#include <iostream>
-#include <vector>
-#include <memory>
-#include <random>
 #include <cmath>
 #include <fstream>
+#include <iostream>
+#include <memory>
+#include <random>
+#include <string>
 #include <sstream>
-#include <cstring>
+#include <vector>
 
 #include <SDL.h>
 

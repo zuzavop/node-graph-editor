@@ -1,16 +1,16 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include <iostream>
-#include <vector>
-#include <memory>
-#include <random>
+#include <algorithm>
 #include <cmath>
 #include <fstream>
-#include <sstream>
-#include <algorithm>
+#include <iostream>
+#include <memory>
+#include <random>
 #include <regex>
 #include <string>
+#include <sstream>
+#include <vector>
 
 #include <SDL.h>
 

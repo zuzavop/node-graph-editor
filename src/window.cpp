@@ -1,6 +1,6 @@
 #include "window.h"
 
-MainWindow::MainWindow() {
+MainWindow::MainWindow() : menuBar(renderer) {
     // Initialize SDL
     SDL_Init(SDL_INIT_VIDEO);
     running = true;
@@ -38,6 +38,8 @@ void MainWindow::renderWindow() {
 
     // draw the graph
     graph.draw(renderer);
+
+    menuBar.draw();
 
     // present the renderer
     SDL_RenderPresent(renderer);
@@ -121,5 +123,6 @@ void MainWindow::handleEvents() {
             default:
                 break;
         }
+        menuBar.handleInput(event);
     }
 }
