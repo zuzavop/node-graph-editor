@@ -3,8 +3,11 @@
 int main(int argc, char* argv[]) {
     MainWindow main_window;
 
-    main_window.createWindow();
-    main_window.mainLoop();
+    if (main_window.createWindow()) {
+        main_window.mainLoop();
+    } else {
+        return 1;
+    }
 
     return 0;
 }
