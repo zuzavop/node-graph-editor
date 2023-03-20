@@ -5,6 +5,10 @@ MainWindow::MainWindow() : menuBar(renderer) {
     SDL_Init(SDL_INIT_VIDEO);
     running = true;
     dragging = false;
+
+    graph.addNode(50, 50);
+    graph.addNode(100, 100);
+    graph.addNode(100, 50);
 }
 
 MainWindow::~MainWindow() {
@@ -36,8 +40,8 @@ void MainWindow::mainLoop() {
     while (running) {
         handleEvents();
 
-        renderWindow();
-    }
+	renderWindow();
+   }
 }
 
 void MainWindow::renderWindow() {
@@ -67,7 +71,7 @@ void MainWindow::handleEvents() {
                     if (node->isClicked(event.button.x, event.button.y)) {
                         // handle node click
                         node->setSelected(true);
-                        dragging = true;
+                	dragging = true;
                         // startNode = node;
                         // startX = event.button.x;
                         // startY = event.button.y;
@@ -95,7 +99,8 @@ void MainWindow::handleEvents() {
                 for (auto node : graph.getNodes()) {
                     node->setSelected(false);
                 }
-                if (dragging) {
+                if (dragging) 
+		{
                     // check if the mouse was released on a node
                     bool releasedOnNode = false;
                     for (auto node : graph.getNodes()) {
@@ -121,7 +126,8 @@ void MainWindow::handleEvents() {
                     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
                     // SDL_RenderDrawLine(renderer, startX, startY, event.motion.x, event.motion.y);
                 }
-                else {
+                else 
+		{
                     for (auto node : graph.getNodes()) {
                         if (node->isSelected()) {
                             node->setPosition(event.motion.xrel, event.motion.yrel);

@@ -1,10 +1,8 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include <algorithm>
-#include <cmath>
-#include <fstream>
 #include <iostream>
+#include <fstream>
 #include <memory>
 #include <random>
 #include <regex>
@@ -12,9 +10,9 @@
 #include <sstream>
 #include <vector>
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
-const int NODE_RADIUS = 20;
+const int NODE_RADIUS = 5;
 
 class Edge;
 

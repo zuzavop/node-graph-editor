@@ -1,16 +1,17 @@
 #ifndef EDGE_H
 #define EDGE_H
 
-#include <cmath>
-#include <fstream>
 #include <iostream>
+#include <vector>
 #include <memory>
 #include <random>
+#include <fstream>
 #include <string>
 #include <sstream>
-#include <vector>
+#include <string>
+#include <math.h>
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 class Node;
 
