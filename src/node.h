@@ -5,16 +5,15 @@
 #include <vector>
 #include <memory>
 #include <random>
-#include <cmath>
 #include <fstream>
 #include <sstream>
 #include <algorithm>
 #include <regex>
 #include <string>
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
-const int NODE_RADIUS = 20;
+const int NODE_RADIUS = 5;
 
 class Edge;
 

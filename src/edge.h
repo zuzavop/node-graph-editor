@@ -5,12 +5,12 @@
 #include <vector>
 #include <memory>
 #include <random>
-#include <cmath>
 #include <fstream>
 #include <sstream>
-#include <cstring>
+#include <string>
+#include <math.h>
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 class Node;
 

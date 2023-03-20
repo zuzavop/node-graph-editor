@@ -55,7 +55,8 @@ void Graph::removeEdge(const std::shared_ptr<Edge>& edge) {
 }
 
 void Graph::draw(SDL_Renderer* renderer) {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_SetRenderDrawColor( renderer, 0x00, 0x00, 0xFF, 0xFF );
+    //SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     // draw all edges first
     for (auto edge : edges) {
         edge->draw(renderer);
@@ -276,20 +277,20 @@ void Graph::clearGraph() {
 }
 
 std::shared_ptr<Node> Graph::findNodeByPosition(float x, float y) {
-    auto it = std::find_if(nodes.begin(), nodes.end(), [=](const Node& n) {
-        return n.contains(x, y, NODE_RADIUS);
-    });
+    //auto it = std::find_if(nodes.begin(), nodes.end(), [=](const Node& n) {
+    //    return n.contains(x, y, NODE_RADIUS);
+    //});
 
-    auto id = std::distance(nodes.begin(), it);
+    //auto id = std::distance(nodes.begin(), it);
 
     return nullptr;
 }
         
 std::shared_ptr<Node> Graph::findNodeByName(const std::string& name) {
-    auto it = std::find_if(nodes.begin(), nodes.end(), [=](const Node& n) {
-        return n.getName() == name;
-    });
+    //auto it = std::find_if(nodes.begin(), nodes.end(), [=](const Node& n) {
+    //    return n.getName() == name;
+    //});
 
-    auto id = std::distance(nodes.begin(), it);
+    //auto id = std::distance(nodes.begin(), it);
     return nullptr;
 }
