@@ -1,6 +1,6 @@
 #include "window.h"
 
-MainWindow::MainWindow() {
+MainWindow::MainWindow() : menuBar(renderer) {
     // Initialize SDL
     SDL_Init(SDL_INIT_VIDEO);
     running = true;
@@ -24,12 +24,21 @@ MainWindow::~MainWindow() {
     SDL_Quit();
 }
 
-void MainWindow::createWindow() {
+bool MainWindow::createWindow() {
     // Create a window
     window = SDL_CreateWindow("Graph Editor", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
 
+    if (!window) {
+        return false;
+    }
+
     // Create a renderer
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+
+    if (!renderer) {
+        return false;
+    }
+    return true;
 }
 
 void MainWindow::mainLoop() {
@@ -48,6 +57,8 @@ void MainWindow::renderWindow() {
 
     // draw the graph
     graph.draw(renderer);
+
+    menuBar.draw();
 
     // present the renderer
     SDL_RenderPresent(renderer);
@@ -132,8 +143,19 @@ void MainWindow::handleEvents() {
                     }
                 }
                 break;
+            case SDL_WINDOWEVENT:
+                    switch (event.window.event) {
+                        case SDL_WINDOWEVENT_RESIZED:
+                            // update window dimensions and layout
+                            WINDOW_WIDTH = event.window.data1;
+                            WINDOW_HEIGHT = event.window.data2;
+                            graph.layout();
+                            break;
+                    }
+                    break;
             default:
                 break;
         }
+        menuBar.handleInput(event);
     }
 }

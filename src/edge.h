@@ -6,6 +6,7 @@
 #include <memory>
 #include <random>
 #include <fstream>
+#include <string>
 #include <sstream>
 #include <string>
 #include <math.h>

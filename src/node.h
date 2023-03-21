@@ -2,14 +2,13 @@
 #define NODE_H
 
 #include <iostream>
-#include <vector>
+#include <fstream>
 #include <memory>
 #include <random>
-#include <fstream>
-#include <sstream>
-#include <algorithm>
 #include <regex>
 #include <string>
+#include <sstream>
+#include <vector>
 
 #include <SDL2/SDL.h>
 
