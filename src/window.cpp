@@ -6,9 +6,15 @@ MainWindow::MainWindow() {
     running = true;
     dragging = false;
 
+    std::shared_ptr<Node> a = std::make_shared<Node>(Node(150, 150));
+    std::shared_ptr<Node> b = std::make_shared<Node>(Node(200, 150));
     graph.addNode(50, 50);
     graph.addNode(100, 100);
     graph.addNode(100, 50);
+    graph.addNode(a);
+    graph.addNode(b);
+    graph.addEdge(a, b);
+    graph.layout();
 }
 
 MainWindow::~MainWindow() {
@@ -61,7 +67,7 @@ void MainWindow::handleEvents() {
                         // handle node click
                         node->setSelected(true);
                 	dragging = true;
-                        // startNode = node;
+                        startNode = node;
                         // startX = event.button.x;
                         // startY = event.button.y;
                     }
@@ -73,6 +79,7 @@ void MainWindow::handleEvents() {
                     // delete selected nodes and edges
                     for (auto node : graph.getNodes()) {
                         if (node->isSelected()) {
+			    std::cout << "delete node";
                             graph.removeNode(node);
                         }
                     }
@@ -95,16 +102,17 @@ void MainWindow::handleEvents() {
                     for (auto node : graph.getNodes()) {
                         if (node->isClicked(event.button.x, event.button.y)) {
                             // handle node release
-                            // if (startNode != node) {
-                            //     graph.addEdge(startNode, node);
-                            // }
+                            if (startNode != node) {
+                                 graph.addEdge(startNode, node);
+                            }
                             releasedOnNode = true;
                             break;
                         }
                     }
                     if (!releasedOnNode) {
                         // handle canvas release
-                        graph.addNode(event.button.x, event.button.y);
+                        // graph.addNode(event.button.x, event.button.y);
+			startNode->setPosition(event.button.x, event.button.y);
                     }
                     dragging = false;
                 }

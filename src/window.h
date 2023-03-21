@@ -18,7 +18,7 @@ class MainWindow {
         SDL_Renderer* renderer;
         Graph graph;
         void renderWindow();
-        std::shared_ptr<Node> selectedNode;
+        std::shared_ptr<Node> startNode;
         std::shared_ptr<Edge> selectedEdge;
         void handleEvents();
         bool running;

@@ -183,12 +183,12 @@ void Graph::loadFromFile(const std::string& filename) {
 
 void Graph::layout() {
     // use brute force layout for small graphs
-    if (nodes.size() < 10) {
+    if (nodes.size() < 4) {
         layoutBruteForce();
     }
     // use Fruchterman-Reingold algorithm for large graphs
     else {
-        fruchtermanReingold(10, 1.0);
+        fruchtermanReingold(100, 5);
     }
 }
 

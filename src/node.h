@@ -13,7 +13,7 @@
 
 #include <SDL2/SDL.h>
 
-const int NODE_RADIUS = 5;
+const int NODE_RADIUS = 7;
 
 class Edge;
 
