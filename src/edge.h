@@ -8,8 +8,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
-#include <string>
-#include <math.h>
+#include <cmath>
 
 #include <SDL2/SDL.h>
 

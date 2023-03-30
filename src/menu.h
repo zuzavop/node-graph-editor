@@ -1,5 +1,8 @@
-#include <SDL.h>
-#include <SDL_ttf.h>
+#ifndef MENU_H
+#define MENU_H
+
+#include <SDL2/SDL.h>
+//#include <SDL2/SDL_ttf.h>
 #include <string>
 
 class MenuBar {
@@ -11,8 +14,10 @@ public:
 
 private:
     SDL_Renderer* renderer;
-    TTF_Font* font;
+    //TTF_Font* font;
     SDL_Color textColor;
     SDL_Rect fileButtonRect;
     bool fileButtonSelected;
 };
+
+#endif

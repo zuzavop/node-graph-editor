@@ -1,8 +1,9 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include <iostream>
+#include <algorithm>
 #include <fstream>
+#include <iostream>
 #include <memory>
 #include <random>
 #include <regex>

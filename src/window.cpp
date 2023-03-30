@@ -147,9 +147,9 @@ void MainWindow::handleEvents() {
                     switch (event.window.event) {
                         case SDL_WINDOWEVENT_RESIZED:
                             // update window dimensions and layout
-                            WINDOW_WIDTH = event.window.data1;
-                            WINDOW_HEIGHT = event.window.data2;
-                            graph.layout();
+                            //WINDOW_WIDTH = event.window.data1;
+                            //WINDOW_HEIGHT = event.window.data2;
+                            //graph.layout();
                             break;
                     }
                     break;

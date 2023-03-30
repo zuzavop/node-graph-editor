@@ -4,8 +4,8 @@
 #include "graph.h"
 #include "menu.h"
 
-int WINDOW_WIDTH = 800;
-int WINDOW_HEIGHT = 600;
+const int WINDOW_WIDTH = 800;
+const int WINDOW_HEIGHT = 600;
 
 class MainWindow {
     public:
