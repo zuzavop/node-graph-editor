@@ -5,7 +5,7 @@ Program je napsán v jazyce C++ a využívá knihovnu SDL pro vytváření grafi
 
 ## Requirements
 
-* SDL library
+* SDL knihovna
 
 ## How to install
 Pro spuštění programu Node Graph Editor musíte nejprve nainstalovat knihovnu SDL. Pokud již tuto knihovnu máte nainstalovanou, přeskočte 1. a 2. kroky.
@@ -13,7 +13,7 @@ Pro spuštění programu Node Graph Editor musíte nejprve nainstalovat knihovnu
 1. Otevřete příkazový řádek nebo terminál.
 2. Spusťte příkaz pro instalaci knihovny, který odpovídá vašemu operačnímu systému.
 3. Stáhněte zdrojový kód z repozitáře na GitHubu pomocí příkazu `git clone https://gitlab.mff.cuni.cz/teaching/nprg041/2022-23/repetenti/vopalkoz.git`.
-4. Zkompilujte program za pomoci cmake.
+4. Zkompilujte program za pomoci `cmake .` a `make`.
 5. Po úspěšné kompilaci můžete spustit program pomocí příkazu `./node_graph_editor`.
 
 ### On Windows
@@ -27,13 +27,30 @@ sudo apt install libsdl2-dev
 ```
 
 ## How to use it
-Po spuštění programu se objeví hlavní okno, kde můžete vytvářet a upravovat uzlové grafy. Pro vytvoření nového uzlu klikněte pravým tlačítkem myši do prostoru grafu a vyberte možnost "Nový uzel". Poté se Vám zobrazí dialogové okno, kde můžete zadat název uzlu a jeho parametry.
+Po spuštění programu se objeví hlavní okno, kde můžete interaktivně vytvářet a upravovat uzlové grafy. Uživatel může použít následující ovládací prvky:
 
-Uzly v grafu můžete přesouvat tažením myší. Pro spojení dvou uzlů stačí kliknout na jeden uzel a tažením myší směrem k druhému uzlu ho připojíte k němu.
+## Funkce programu
+### Vytvoření nového grafu
+Po spuštění programu může uživatel vytvořit nový graf pomocí tlačítka "Nový graf".
 
+### Rozložení grafu
 Pro rozmístění uzlů v grafu použijte funkci "Rozložit". Program automaticky rozmístí uzly v grafu pomocí algoritmu Fruchterman-Reingold.
 
+### Přidání uzlů a hran
+Pro vytvoření nového uzlu klikněte pravým tlačítkem myši do prostoru grafu a vyberte možnost "Nový uzel". Poté se Vám zobrazí dialogové okno, kde můžete zadat název uzlu a jeho parametry.
+Uživatel může nové uzly vytvářet kliknutím levého tlačítka myši na prázdné místo v grafu. Nově vytvořený uzel se objeví na pozici kurzoru myši. Uživatel může nově vytvořené uzly spojovat hranami kliknutím na uzel a následným tažením myši k druhému uzlu.
+
+## Mazání uzlů a hran
+Uživatel může mazat uzly a hrany pomocí kliknutí pravým tlačítkem myši na uzel nebo hranu a výběrem možnosti "Delete". Po smazání uzlu se automaticky odstraní všechny hrany, které s ním byly spojeny.
+
+### Úprava pozice uzlů
+Uživatel může upravovat pozici uzlů pomocí tažení myší. Po kliknutí na uzel může uživatel tažením myši přesunout na novou pozici v grafu.
+
+### Export grafu do formátu PostScript
 Pro exportování grafu do formátu PostScript použijte tlačítko "Exportovat" v horní liště. Program Vám umožní vybrat název souboru, do kterého bude graf exportován.
+
+### Uložení a načtení grafu
+Uživatel může uložit aktuální stav grafu do souboru pomocí kliknutí na tlačítko "Save" v menu "File". Po zadání názvu souboru se aktuální stav grafu uloží do zvoleného souboru. Uživatel může také načíst graf ze souboru pomocí kliknutí na tlačítko "Open" v menu "File". Po zadání názvu souboru se načte graf ze zvoleného souboru.
 
 
 
