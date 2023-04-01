@@ -40,7 +40,7 @@ Pro rozmístění uzlů v grafu použijte funkci "Rozložit". Program automatick
 Pro vytvoření nového uzlu klikněte pravým tlačítkem myši do prostoru grafu a vyberte možnost "Nový uzel". Poté se Vám zobrazí dialogové okno, kde můžete zadat název uzlu a jeho parametry.
 Uživatel může nové uzly vytvářet kliknutím levého tlačítka myši na prázdné místo v grafu. Nově vytvořený uzel se objeví na pozici kurzoru myši. Uživatel může nově vytvořené uzly spojovat hranami kliknutím na uzel a následným tažením myši k druhému uzlu.
 
-## Mazání uzlů a hran
+### Mazání uzlů a hran
 Uživatel může mazat uzly a hrany pomocí kliknutí pravým tlačítkem myši na uzel nebo hranu a výběrem možnosti "Delete". Po smazání uzlu se automaticky odstraní všechny hrany, které s ním byly spojeny.
 
 ### Úprava pozice uzlů

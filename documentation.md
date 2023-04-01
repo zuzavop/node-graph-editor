@@ -32,8 +32,8 @@ Tento algoritmus funguje následovně:
 
 
 ## Plány do budoucna
-[ ] Podpora dalších formátů exportu: Kromě formátu PostScript by mohla být implementována podpora pro další formáty, jako je například SVG nebo PNG.
+* [ ] Podpora dalších formátů exportu: Kromě formátu PostScript by mohla být implementována podpora pro další formáty, jako je například SVG nebo PNG.
 
-[ ] Implementace undo/redo: Uživatelé by mohli ocenit možnost vrátit se k předchozímu stavu grafu pomocí undo/redo funkce.
+* [ ] Implementace undo/redo: Uživatelé by mohli ocenit možnost vrátit se k předchozímu stavu grafu pomocí undo/redo funkce.
 
-[ ] Podpora klávesových zkratek: Pro zrychlení práce s programem by mohly být implementovány klávesové zkratky pro nejčastější akce, jako je například vytvoření nového uzlu či hran, smazání uzlu či hran, přesunutí uzlu atd.
+* [ ] Podpora klávesových zkratek: Pro zrychlení práce s programem by mohly být implementovány klávesové zkratky pro nejčastější akce, jako je například vytvoření nového uzlu či hran, smazání uzlu či hran, přesunutí uzlu atd.
