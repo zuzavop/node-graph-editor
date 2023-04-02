@@ -3,9 +3,7 @@
 
 #include "node.h"
 #include "edge.h"
-
-const int WINDOW_WIDTH = 800;
-const int WINDOW_HEIGHT = 600;
+#include "layout.h"
 
 class Graph {
     public:
@@ -24,8 +22,6 @@ class Graph {
         void clearGraph();
 
         void layout();
-        void fruchtermanReingold(int iterations, float k);
-        void layoutBruteForce();
 
         const std::vector<std::shared_ptr<Node>>& getNodes() const {
             return nodes;
@@ -42,6 +38,10 @@ class Graph {
     private:
         std::vector<std::shared_ptr<Node>> nodes; // list of nodes in the graph
         std::vector<std::shared_ptr<Edge>> edges; // list of edges in the graph
+
+	void fruchtermanReingold(int iterations, float k);
+        void layoutBruteForce();
+
 };
 
 #endif

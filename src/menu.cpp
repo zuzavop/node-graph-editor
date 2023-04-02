@@ -22,7 +22,7 @@ MenuBar::~MenuBar() {
 }
 
 
-void MenuBar::handleInput(SDL_Event event) {
+void MenuBar::handleEvent(SDL_Event event) {
     if (event.type == SDL_MOUSEBUTTONDOWN) {
         int x = event.button.x;
         int y = event.button.y;
@@ -35,7 +35,7 @@ void MenuBar::handleInput(SDL_Event event) {
 }
 
 void MenuBar::draw() {
-    int charWidth = fontSurface->w / 26;
+    int charWidth = fontSurface->w / 16;
     int charHeight = fontSurface->h / 16;
     
     // Create the menu items

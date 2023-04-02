@@ -11,7 +11,7 @@ public:
     MenuBar() {};
     ~MenuBar();
     bool init(SDL_Renderer* renderer);
-    void handleInput(SDL_Event event);
+    void handleEvent(SDL_Event event);
     void draw();
 
 private:

@@ -5,7 +5,7 @@ void Node::draw(SDL_Renderer* renderer, int radius) const {
    for (int i = -radius; i <= radius; i++) {
         for (int j = -radius; j <= radius; j++) {
             if (i*i + j*j <= radius*radius) {
-                SDL_RenderDrawPoint(renderer, x + i, y + j);
+                SDL_RenderDrawPoint(renderer, position.x + i, position.y + j);
             }
         }
     }

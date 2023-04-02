@@ -14,7 +14,7 @@ Pro spuštění programu Node Graph Editor musíte nejprve nainstalovat knihovnu
 2. Spusťte příkaz pro instalaci knihovny, který odpovídá vašemu operačnímu systému.
 3. Stáhněte zdrojový kód z repozitáře na GitHubu pomocí příkazu `git clone https://gitlab.mff.cuni.cz/teaching/nprg041/2022-23/repetenti/vopalkoz.git`.
 4. Zkompilujte program za pomoci `cmake .` a `make`.
-5. Po úspěšné kompilaci můžete spustit program pomocí příkazu `./node_graph_editor`.
+5. Po úspěšné kompilaci můžete spustit program pomocí příkazu `./graphEditor`.
 
 ### On Windows
 Pro Windows můžete stáhnout knihovnu SDL ze stránky http://libsdl.org/download-2.0.php. Poté soubory z archivu umístěte do složky s programem.
