@@ -39,10 +39,10 @@ void MenuBar::draw() {
     int charHeight = fontSurface->h / 16;
     
     // Create the menu items
-    std::string menuItems[3] = {"File", "Edit", "Help"};
-    SDL_Rect menuRects[3];
+    std::string menuItems[4] = {"Save", "Load", "Export", "Layout"};
+    SDL_Rect menuRects[4];
     int menuWidth = 0;
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 4; i++) {
         // Create a texture for the menu item
         SDL_Rect charRect = {(i+1)*charWidth, 4*charHeight, charWidth, charHeight};
         SDL_Rect itemRect = {menuWidth, 0, charWidth, charHeight};

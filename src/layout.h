@@ -1,14 +1,20 @@
 #ifndef LAYOUT_H
 #define LAYOUT_H
 
-const int WINDOW_WIDTH = 800;
-const int WINDOW_HEIGHT = 600;
+#include <memory>
+#include <vector>
+
+class Graph;
 
 class Layout {
     public:
 	Layout() {}
 	
-	void layout();
+	void layout(std::shared_ptr<Graph> graph, int width, int height);
+
+    private:
+	void fruchtermanReingold(std::shared_ptr<Graph> graph, int iterations, float k, int width, int height);
+        void layoutBruteForce(std::shared_ptr<Graph> graph);
 };
 
 #endif

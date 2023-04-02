@@ -26,10 +26,10 @@ class Button
         Button(Command& f);
 
         //Sets top left position
-        void setPosition( int x, int y );
+        void setPosition(int x, int y);
 
         //Handles mouse event
-        void handleEvent( SDL_Event* e );
+        void handleEvent(SDL_Event* e);
     
         //Shows button sprite
         void render(SDL_Rect* clip, SDL_Renderer* renderer, SDL_Texture* texture);

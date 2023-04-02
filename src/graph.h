@@ -3,7 +3,6 @@
 
 #include "node.h"
 #include "edge.h"
-#include "layout.h"
 
 class Graph {
     public:
@@ -20,9 +19,7 @@ class Graph {
 
         void draw(SDL_Renderer* renderer); // draw the entire graph
         void clearGraph();
-
-        void layout();
-
+	
         const std::vector<std::shared_ptr<Node>>& getNodes() const {
             return nodes;
         }
@@ -39,10 +36,6 @@ class Graph {
     private:
         std::vector<std::shared_ptr<Node>> nodes; // list of nodes in the graph
         std::vector<std::shared_ptr<Edge>> edges; // list of edges in the graph
-
-	void fruchtermanReingold(int iterations, float k);
-        void layoutBruteForce();
-
 };
 
 #endif
