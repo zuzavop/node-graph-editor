@@ -7,10 +7,10 @@ int main(int argc, char* argv[]) {
 	return 1;
     }
     
-    MainWindow main_window;
+    std::shared_ptr<MainWindow> main_window(new MainWindow);
 
-    if (main_window.createWindow()) {
-        main_window.mainLoop();
+    if (main_window->init()) {
+        main_window->mainLoop();
     } else {
         return 1;
     }

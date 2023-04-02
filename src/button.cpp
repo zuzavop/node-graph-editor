@@ -1,6 +1,6 @@
 #include "button.h"
 
-Button::Button()
+Button::Button(Command& f) : function(f)
 {
     mPosition.x = 0;
     mPosition.y = 0;
@@ -47,6 +47,7 @@ void Button::handleEvent( SDL_Event* e )
                     break;
             
                 case SDL_MOUSEBUTTONDOWN:
+		    function.execute();
                     mCurrentSprite = BUTTON_SPRITE_MOUSE_DOWN;
                     break;
                 

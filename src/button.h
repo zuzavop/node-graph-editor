@@ -3,6 +3,8 @@
 
 #include <SDL2/SDL.h>
 
+#include "command.h"
+
 //Button constants
 const int BUTTON_WIDTH = 300;
 const int BUTTON_HEIGHT = 200;
@@ -21,7 +23,7 @@ class Button
 {
     public:
         //Initializes internal variables
-        Button();
+        Button(Command& f);
 
         //Sets top left position
         void setPosition( int x, int y );
@@ -38,6 +40,8 @@ class Button
 
         //Currently used global sprite
         ButtonSprite mCurrentSprite;
+
+	Command& function;
 };
 
 #endif

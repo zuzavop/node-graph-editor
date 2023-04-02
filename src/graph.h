@@ -33,6 +33,7 @@ class Graph {
 
         void saveToFile(const std::string& fileName);
         void loadFromFile(const std::string& fileName);
+	
         std::shared_ptr<Node> findNodeByPosition(float x, float y);
         std::shared_ptr<Node> findNodeByName(const std::string& name);
     private:

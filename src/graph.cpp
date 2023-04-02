@@ -56,7 +56,6 @@ void Graph::removeEdge(const std::shared_ptr<Edge>& edge) {
 
 void Graph::draw(SDL_Renderer* renderer) {
     SDL_SetRenderDrawColor( renderer, 0x00, 0x00, 0xFF, 0xFF );
-    //SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     // draw all edges first
     for (auto edge : edges) {
         edge->draw(renderer);
@@ -76,40 +75,34 @@ void Graph::saveToFile(const std::string& filename) {
         // Write the PostScript header
         file << "%!PS-Adobe-2.0\n\n";
 
-        // Set up the scaling factors
-        const float xScale = 500.0f;
-        const float yScale = 500.0f;
-
         // Set the font size
         const float fontSize = 10.0f;
 
         // Draw the nodes
         for (const auto& node : nodes) {
             // Compute the position of the node
-            const float x = node->getX() * xScale;
-            const float y = node->getY() * yScale;
+            const float x = node->getX();
+            const float y = node->getY();
 
             // Draw a circle for the node
             file << x << " " << y << " " << NODE_RADIUS << " 0 360 arc\n"
                 << "closepath\n"
                 << "stroke\n";
 
-            // Draw the label for the node
-            file << "(" << node->getName() << ") "
-                << "dup stringwidth pop 2 div neg " << fontSize / 2.0f << " rmoveto\n"
-                << "show\n";
         }
+
+	file << "0.5 setlinewidth\n";
 
         // Draw the edges
         for (const auto& edge : edges) {
             // Compute the positions of the nodes
-            const float x1 = edge->getSource()->getX() * xScale;
-            const float y1 = edge->getSource()->getY() * yScale;
-            const float x2 = edge->getTarget()->getX() * xScale;
-            const float y2 = edge->getTarget()->getY() * yScale;
+            const float x1 = edge->getSource()->getX();
+            const float y1 = edge->getSource()->getY();
+            const float x2 = edge->getTarget()->getX();
+            const float y2 = edge->getTarget()->getY();
 
             // Draw a line for the edge
-            file << x1 << " " << y1 << " moveto\n"
+            file << x1 << " " << y1 << " moveto "
                 << x2 << " " << y2 << " lineto\n"
                 << "stroke\n";
         }
@@ -161,16 +154,16 @@ void Graph::loadFromFile(const std::string& filename) {
             }
 
             // Check if the line is a label command
-            else if (std::regex_match(line, match, std::regex(R"(\((.+)\) \S+ \S+ rmoveto)"))) {
+            //else if (std::regex_match(line, match, std::regex(R"(\((.+)\) \S+ \S+ rmoveto)"))) {
                 // Extract the label text
-                const std::string label = match[1];
+                //const std::string label = match[1];
 
                 // Find the node corresponding to the label
-                auto node = findNodeByName(label);
+                //auto node = findNodeByName(label);
 
                 // Set the node's name to the label text
-                node->setName(label);
-            }
+                //node->setName(label);
+            //}
         }
 
         // Close the file
@@ -277,20 +270,27 @@ void Graph::clearGraph() {
 }
 
 std::shared_ptr<Node> Graph::findNodeByPosition(float x, float y) {
-    //auto it = std::find_if(nodes.begin(), nodes.end(), [=](const Node& n) {
-    //    return n.contains(x, y, NODE_RADIUS);
-    //});
+    auto it = std::find_if(nodes.begin(), nodes.end(), [=](std::shared_ptr<Node>& n) {
+        return n->contains(x, y, NODE_RADIUS);
+    });
 
-    //auto id = std::distance(nodes.begin(), it);
+    if (it != std::end(nodes)) {
+    	auto id = std::distance(nodes.begin(), it);
+	return nodes[id];
+    }
 
     return nullptr;
 }
         
 std::shared_ptr<Node> Graph::findNodeByName(const std::string& name) {
-    //auto it = std::find_if(nodes.begin(), nodes.end(), [=](const Node& n) {
-    //    return n.getName() == name;
-    //});
+    auto it = std::find_if(nodes.begin(), nodes.end(), [=](std::shared_ptr<Node>& n) {
+        return n->getName() == name;
+    });
 
-    //auto id = std::distance(nodes.begin(), it);
+    if (it != std::end(nodes)) {
+	auto id = std::distance(nodes.begin(), it);
+	return nodes[id];
+    }
+    
     return nullptr;
 }
