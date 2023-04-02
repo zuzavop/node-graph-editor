@@ -1,10 +1,16 @@
 #include "window.h"
 
-MainWindow::MainWindow() : menuBar(renderer) {
+MainWindow::MainWindow() {
     // Initialize SDL
     SDL_Init(SDL_INIT_VIDEO);
     running = true;
     dragging = false;
+    mMouseFocus = false;
+    mKeyboardFocus = false;
+    mFullScreen = false;
+    mMinimized = false;
+    mWidth = 0;
+    mHeight = 0;
 
     std::shared_ptr<Node> a = std::make_shared<Node>(Node(150, 150));
     std::shared_ptr<Node> b = std::make_shared<Node>(Node(200, 150));
@@ -40,8 +46,6 @@ MainWindow::MainWindow() : menuBar(renderer) {
 
 MainWindow::~MainWindow() {
     // Clean up and exit
-    SDL_FreeSurface(fontSurface);
-    SDL_DestroyTexture(fontTexture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
@@ -49,11 +53,16 @@ MainWindow::~MainWindow() {
 
 bool MainWindow::createWindow() {
     // Create a window
-    window = SDL_CreateWindow("Graph Editor", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("Graph Editor", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
     if (!window) {
 	std::cout << "Failed to create window: " << SDL_GetError() << std::endl;
         return false;
+    } else {
+	mMouseFocus = true;
+	mKeyboardFocus = true;
+	mWidth = WINDOW_WIDTH;
+	mHeight = WINDOW_HEIGHT;
     }
 
     // Create a renderer
@@ -63,18 +72,8 @@ bool MainWindow::createWindow() {
 	std::cout << "Failed to create renderer: " << SDL_GetError() << std::endl;
         return false;
     }
-    fontSurface = SDL_LoadBMP("menu_font.bmp");
-    if (!fontSurface) {
-	    std::cout << "Failed to get font surface: " << SDL_GetError() << std::endl;
-	    return false;
-    }
-    fontTexture = SDL_CreateTextureFromSurface(renderer, fontSurface);
-    if (!fontTexture) {
-	    std::cout << "Failed to get font texture: " << SDL_GetError() << std::endl;
-	    return false;
-    }
 
-    return true;
+    return menuBar.init(renderer);
 }
 
 void MainWindow::mainLoop() {
@@ -91,35 +90,10 @@ void MainWindow::renderWindow() {
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderClear(renderer);
 
-    int charWidth = fontSurface->w / 26;
-    int charHeight = fontSurface->h / 16;
-    
-    // Create the menu items
-    std::string menuItems[3] = {"File", "Edit", "Help"};
-    SDL_Rect menuRects[3];
-    int menuWidth = 0;
-    for (int i = 0; i < 3; i++) {
-        // Create a texture for the menu item
-        SDL_Rect charRect = {(i+1)*charWidth, 4*charHeight, charWidth, charHeight};
-        SDL_Rect itemRect = {menuWidth, 0, charWidth, charHeight};
-        SDL_RenderCopy(renderer, fontTexture, &charRect, &itemRect);
-
-        // Set the position and dimensions of the menu item
-        int x = menuWidth;
-        int y = 0;
-        int w = charWidth;
-        int h = charHeight;
-        menuRects[i] = {x, y, w, h};
-
-        // Update the menu width
-        menuWidth += charWidth;
-    }
-
-
     // draw the graph
     graph.draw(renderer);
 
-    menuBar.draw();
+    menuBar.draw();    
 
     // present the renderer
     SDL_RenderPresent(renderer);
@@ -160,7 +134,21 @@ void MainWindow::handleEvents() {
                             graph.removeEdge(edge);
                         }
                     }
-                }
+                } 
+		else if (event.key.keysym.sym == SDLK_RETURN )
+    		{
+        	    if( mFullScreen )
+        	    {
+            		SDL_SetWindowFullscreen( window, SDL_FALSE );
+            		mFullScreen = false;
+        	    }
+        	    else
+        	    {
+            		SDL_SetWindowFullscreen( window, SDL_TRUE );
+            		mFullScreen = true;
+            		mMinimized = false;
+        	    }
+    		}
                 break;
             case SDL_MOUSEBUTTONUP:
                 // clear node selection
@@ -206,14 +194,53 @@ void MainWindow::handleEvents() {
                 break;
             case SDL_WINDOWEVENT:
                     switch (event.window.event) {
-                        case SDL_WINDOWEVENT_RESIZED:
-                            // update window dimensions and layout
-                            //WINDOW_WIDTH = event.window.data1;
-                            //WINDOW_HEIGHT = event.window.data2;
-                            graph.layout();
-                            break;
-                    }
-                    break;
+                        case SDL_WINDOWEVENT_SIZE_CHANGED:
+            		    mWidth = event.window.data1;
+            		    mHeight = event.window.data2;
+       			    SDL_RenderPresent(renderer);
+            		    break;
+
+            		//Repaint on exposure
+            		case SDL_WINDOWEVENT_EXPOSED:
+            		    SDL_RenderPresent(renderer);
+            		    break;
+
+	 		//Mouse entered window
+            		case SDL_WINDOWEVENT_ENTER:
+            		    mMouseFocus = true;
+            		    break;
+            
+            		//Mouse left window
+            		case SDL_WINDOWEVENT_LEAVE:
+            		    mMouseFocus = false;
+            		    break;
+
+            		//Window has keyboard focus
+            		case SDL_WINDOWEVENT_FOCUS_GAINED:
+            		    mKeyboardFocus = true;
+            		    break;
+
+            		//Window lost keyboard focus
+            		case SDL_WINDOWEVENT_FOCUS_LOST:
+            		    mKeyboardFocus = false;
+            		    break;
+	    		
+			//Window minimized
+            		case SDL_WINDOWEVENT_MINIMIZED:
+            		    mMinimized = true;
+		            break;
+
+            		//Window maximized
+            		case SDL_WINDOWEVENT_MAXIMIZED:
+            		    mMinimized = false;
+            		    break;
+            
+            		//Window restored
+            		case SDL_WINDOWEVENT_RESTORED:
+            		    mMinimized = false;
+            		    break;		
+		    }
+		    break;
             default:
                 break;
         }

@@ -1,18 +1,24 @@
 #include "menu.h"
 
-MenuBar::MenuBar(SDL_Renderer* r) {
+bool MenuBar::init(SDL_Renderer* r) {
     renderer = r;
-    //TTF_Init();
-    //font = TTF_OpenFont("arial.ttf", 20);
-    textColor = {0, 0, 0, 255};
-    fileButtonRect = {10, 10, 80, 30};
-    fileButtonSelected = false;
+    fontSurface = SDL_LoadBMP("../menu_font.bmp");
+    if (!fontSurface) {
+	    std::cout << "Failed to get font surface: " << SDL_GetError() << std::endl;
+	    return false;
+    }
+    fontTexture = SDL_CreateTextureFromSurface(renderer, fontSurface);
+    if (!fontTexture) {
+	    std::cout << "Failed to get font texture: " << SDL_GetError() << std::endl;
+	    return false;
+    }
+    return true;
 }
 
 
 MenuBar::~MenuBar() {
-    //TTF_CloseFont(font);
-    //TTF_Quit();
+    SDL_FreeSurface(fontSurface);
+    SDL_DestroyTexture(fontTexture);
 }
 
 
@@ -20,28 +26,36 @@ void MenuBar::handleInput(SDL_Event event) {
     if (event.type == SDL_MOUSEBUTTONDOWN) {
         int x = event.button.x;
         int y = event.button.y;
-        if (x >= fileButtonRect.x && x <= fileButtonRect.x + fileButtonRect.w && y >= fileButtonRect.y && y <= fileButtonRect.y + fileButtonRect.h) {
-            fileButtonSelected = true;
-        } else {
-            fileButtonSelected = false;
-        }
+        //if (x >= fileButtonRect.x && x <= fileButtonRect.x + fileButtonRect.w && y >= fileButtonRect.y && y <= fileButtonRect.y + fileButtonRect.h) {
+            //fileButtonSelected = true;
+        //} else {
+            //fileButtonSelected = false;
+        //}
     }
 }
 
 void MenuBar::draw() {
-    //SDL_Surface* textSurface = TTF_RenderText_Solid(font, "File", textColor);
-    //SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-    //SDL_Rect textRect = {fileButtonRect.x + 10, fileButtonRect.y + 5, textSurface->w, textSurface->h};
-    //SDL_Rect buttonRect = {fileButtonRect.x, fileButtonRect.y, textSurface->w + 20, textSurface->h + 10};
-    SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
-    //SDL_RenderFillRect(renderer, &buttonRect);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    //SDL_RenderDrawRect(renderer, &buttonRect);
-    if (fileButtonSelected) {
-        SDL_SetRenderDrawColor(renderer, 150, 150, 150, 255);
-        //SDL_RenderFillRect(renderer, &buttonRect);
+    int charWidth = fontSurface->w / 26;
+    int charHeight = fontSurface->h / 16;
+    
+    // Create the menu items
+    std::string menuItems[3] = {"File", "Edit", "Help"};
+    SDL_Rect menuRects[3];
+    int menuWidth = 0;
+    for (int i = 0; i < 3; i++) {
+        // Create a texture for the menu item
+        SDL_Rect charRect = {(i+1)*charWidth, 4*charHeight, charWidth, charHeight};
+        SDL_Rect itemRect = {menuWidth, 0, charWidth, charHeight};
+        SDL_RenderCopy(renderer, fontTexture, &charRect, &itemRect);
+
+        // Set the position and dimensions of the menu item
+        int x = menuWidth;
+        int y = 0;
+        int w = charWidth;
+        int h = charHeight;
+        menuRects[i] = {x, y, w, h};
+
+        // Update the menu width
+        menuWidth += charWidth;
     }
-    //SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
-    //SDL_FreeSurface(textSurface);
-    //SDL_DestroyTexture(textTexture);
 }

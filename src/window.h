@@ -12,19 +12,40 @@ class MainWindow {
         bool createWindow();
         void mainLoop();
 
+	//Window dimensions
+        int getWidth() { return mWidth; }
+        int getHeight() { return mHeight; }
+
+        //Window focii
+        bool hasMouseFocus() { return mMouseFocus; }
+        bool hasKeyboardFocus() { return mKeyboardFocus; }
+        bool isMinimized() { return mMinimized; }
+
     private:
+	// window data
         SDL_Window* window;
+
+	// window dimensions
+	int mWidth;
+	int mHeight;
+
         SDL_Renderer* renderer;
-	SDL_Surface* fontSurface;
-    	SDL_Texture* fontTexture;
         Graph graph;
         MenuBar menuBar;
-        void renderWindow();
         std::shared_ptr<Node> startNode;
         std::shared_ptr<Edge> selectedEdge;
-        void handleEvents();
-        bool running;
+
+	bool running;
         bool dragging;
+
+	//Window focus
+        bool mMouseFocus;
+        bool mKeyboardFocus;
+        bool mFullScreen;
+        bool mMinimized;
+	
+	void renderWindow();
+        void handleEvents();
 };
 
 #endif
