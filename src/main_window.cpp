@@ -2,44 +2,42 @@
 #include "events.h"
 
 MainWindow::MainWindow() : Window() {
+    graph = std::make_shared<Graph>();
+    
     std::shared_ptr<Node> a = std::make_shared<Node>(Node(150, 150));
     std::shared_ptr<Node> b = std::make_shared<Node>(Node(200, 150));
     std::shared_ptr<Node> c = std::make_shared<Node>(Node(50, 50));
     std::shared_ptr<Node> d = std::make_shared<Node>(Node(100, 100));
     std::shared_ptr<Node> e = std::make_shared<Node>(Node(100, 50));
-    graph.addNode(c);
-    graph.addNode(d);
-    graph.addNode(e);
-    graph.addNode(a);
-    graph.addNode(b);
-    graph.addNode(100, 100);
-    graph.addNode(100, 100);
-    graph.addNode(100, 100);
-    graph.addNode(100, 100);
-    graph.addNode(100, 100);
-    graph.addNode(100, 100);
-    graph.addNode(100, 100);
-    graph.addNode(100, 100);
-    graph.addNode(100, 100);
-    graph.addEdge(a, b);
-    graph.addEdge(a, c);
-    graph.addEdge(b, c);
-    graph.addEdge(a, d);
-    graph.addEdge(a, e);
-    graph.addEdge(b, d);
-    graph.addEdge(b, e);
-    graph.addEdge(c, d);
-    graph.addEdge(c, e);
-    graph.addEdge(d, e);
-    graph.layout();
+    graph->addNode(c);
+    graph->addNode(d);
+    graph->addNode(e);
+    graph->addNode(a);
+    graph->addNode(b);
+    graph->addNode(100, 100);
+    graph->addNode(100, 100);
+    graph->addNode(100, 100);
+    graph->addNode(100, 100);
+    graph->addNode(100, 100);
+    graph->addNode(100, 100);
+    graph->addNode(100, 100);
+    graph->addNode(100, 100);
+    graph->addNode(100, 100);
+    graph->addEdge(a, b);
+    graph->addEdge(a, c);
+    graph->addEdge(b, c);
+    graph->addEdge(a, d);
+    graph->addEdge(a, e);
+    graph->addEdge(b, d);
+    graph->addEdge(b, e);
+    graph->addEdge(c, d);
+    graph->addEdge(c, e);
+    graph->addEdge(d, e);
+    graph->layout();
 }
 
 MainWindow::~MainWindow() {
     // Clean up and exit
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    window = NULL;
-    renderer = NULL;
     SDL_Quit();
 }
 
@@ -60,6 +58,7 @@ void MainWindow::mainLoop() {
     events.attach(&mouseObserver);
     events.attach(&keyboardObserver);
     events.attach(&windowObserver);
+
     // Loop to handle events
     while (running) {
         SDL_Event event;
@@ -81,7 +80,7 @@ void MainWindow::renderWindow() {
     SDL_RenderClear(renderer);
 
     // draw the graph
-    graph.draw(renderer);
+    graph->draw(renderer);
 
     // draw the menu
     menuBar.draw();    

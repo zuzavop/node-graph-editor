@@ -14,7 +14,8 @@ class Window {
 	// window dimensions
         int getWidth() { return mWidth; }
         int getHeight() { return mHeight; }
-	// std::shared_ptr<SDL_Renderer> getRenderer() { return std::make_shared<SDL_Renderer>(renderer); }
+	SDL_Renderer* getRenderer() { return renderer; }
+	SDL_Window* getWindow() { return window; }
 
 	void setDimension(int w, int h) {
 		mWidth = w;
@@ -27,16 +28,15 @@ class Window {
 	bool isFullScreen() { return mFullScreen; }
         bool isMinimized() { return mMinimized; }
 
-	void setMouseFocus(bool m) { mMouseFocus = m; }
-        void setKeyboardFocus(bool k) { mKeyboardFocus = k; }
-	void setFullScreen(bool f) { mFullScreen = f; }
-        void setMinimized(bool m) { mMinimized = m; }
+	void setMouseFocus(bool mouseFocus) { mMouseFocus = mouseFocus; }
+        void setKeyboardFocus(bool keyboardFocus) { mKeyboardFocus = keyboardFocus; }
+	void setFullScreen(bool fullScreen) { mFullScreen = fullScreen; }
+        void setMinimized(bool minimized) { mMinimized = minimized; }
 
     protected:
-	Window(int w = 0, int h = 0) : window(NULL), renderer(NULL), mWidth(w), mHeight(h), running(true), mMouseFocus(false), mKeyboardFocus(false), mFullScreen(false), mMinimized(false) {}
-	
+	Window(int w = 0, int h = 0);	
 	// window data
-        SDL_Window* window;
+	SDL_Window* window;
 	SDL_Renderer* renderer;
 
 	// window dimensions

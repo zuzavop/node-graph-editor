@@ -14,10 +14,10 @@ class MainWindow : public Window, public std::enable_shared_from_this<MainWindow
         void mainLoop() override;
 
 	std::shared_ptr<MainWindow> getptr() { return shared_from_this(); }
-	std::shared_ptr<Graph> getGraph() { return std::make_shared<Graph>(graph); }	
+	std::shared_ptr<Graph> getGraph() { return graph; }	
     private:
-        Graph graph;
-        MenuBar menuBar;
+	std::shared_ptr<Graph> graph;
+	MenuBar menuBar;
 
         std::shared_ptr<Edge> selectedEdge;
 	

@@ -1,5 +1,8 @@
 #include "window.h"
 
+Window::Window(int w, int h) : window(NULL), renderer(nullptr), mWidth(w), mHeight(h), running(true), mMouseFocus(false), mKeyboardFocus(false), mFullScreen(false), mMinimized(false) { }
+
+
 bool Window::init() {
     // set texture filtering to linear
     if( !SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1" ) )
@@ -9,6 +12,7 @@ bool Window::init() {
 
     // create a window
     window = SDL_CreateWindow("Graph Editor", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+
 
     if (!window) {
 	std::cout << "Failed to create window: " << SDL_GetError() << std::endl;

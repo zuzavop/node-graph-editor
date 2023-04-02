@@ -31,21 +31,6 @@ void MouseObserver::update(SDL_Event* event) {
                         startNode = node;
 		    }
                 }
-        } else if (event->type == SDL_MOUSEMOTION) {
-            // move selected nodes or handle drag
-                if (dragging) {
-                    //SDL_SetRenderDrawColor(*window->getRenderer, 0, 0, 0, 255);
-                    // SDL_RenderDrawLine(renderer, startX, startY, event.motion.x, event.motion.y);
-		    int i = 0;
-                }
-                else 
-		{
-                    for (auto node : window->getGraph()->getNodes()) {
-                        if (node->isSelected()) {
-                            node->setPosition(event->motion.xrel, event->motion.yrel);
-                        }
-                    }
-                }
         } else if (event->type == SDL_MOUSEBUTTONUP) {
 		// clear node selection
                 for (auto node : window->getGraph()->getNodes()) {
@@ -55,9 +40,9 @@ void MouseObserver::update(SDL_Event* event) {
 		{
                     // check if the mouse was released on a node
                     bool releasedOnNode = false;
-                    for (auto node : window->getGraph()->getNodes()) {
+		    for (auto node : window->getGraph()->getNodes()) {
                         if (node->isClicked(event->button.x, event->button.y)) {
-                            // handle node release
+			    // handle node release
                             if (startNode != node) {
                                  window->getGraph()->addEdge(startNode, node);
                             }
@@ -97,13 +82,12 @@ void KeyboardObserver::update(SDL_Event* event) {
     		{
         	    if(window->isFullScreen())
         	    {
-            		//SDL_SetWindowFullscreen(*window, SDL_FALSE );
-
+            		SDL_SetWindowFullscreen(window->getWindow(), SDL_FALSE );
             		window->setFullScreen(false);
         	    }
         	    else
         	    {
-            		//SDL_SetWindowFullscreen(*window, SDL_TRUE );
+            		SDL_SetWindowFullscreen(window->getWindow(), SDL_TRUE );
             		window->setFullScreen(true);
 			window->setMinimized(false);
 		    }
@@ -116,12 +100,12 @@ void WindowObserver::update(SDL_Event* event) {
 		switch (event->window.event) {
                         case SDL_WINDOWEVENT_SIZE_CHANGED:
 			    window->setDimension(event->window.data1,event->window.data2);
-       			    //SDL_RenderPresent(*window->getRenderer());
+       			    SDL_RenderPresent(window->getRenderer());
             		    break;
 
             		//Repaint on exposure
             		case SDL_WINDOWEVENT_EXPOSED:
-            		    //SDL_RenderPresent(*window->getRenderer());
+            		    SDL_RenderPresent(window->getRenderer());
             		    break;
 
 	 		//Mouse entered window
