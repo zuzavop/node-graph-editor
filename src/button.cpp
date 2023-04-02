@@ -72,8 +72,18 @@ void Button::handleEvent( SDL_Event* e )
     }
 }
 
-void Button::render()
+void Button::render(SDL_Rect* clip, SDL_Renderer* renderer, SDL_Texture* texture)
 {
-    //Show current button sprite
-    //gButtonSpriteSheetTexture.render( mPosition.x, mPosition.y, &gSpriteClips[ mCurrentSprite ] );
+    //Set rendering space and render to screen
+    SDL_Rect renderQuad = { mPosition.x, mPosition.y, 0, 0 };
+
+	//Set clip rendering dimensions
+	if( clip != NULL )
+	{
+		renderQuad.w = clip->w;
+		renderQuad.h = clip->h;
+	}
+
+	//Render to screen
+	SDL_RenderCopyEx(renderer, texture, clip, &renderQuad, 0.0, NULL, SDL_FLIP_NONE);
 }

@@ -31,7 +31,7 @@ class Button
         void handleEvent( SDL_Event* e );
     
         //Shows button sprite
-        void render();
+        void render(SDL_Rect* clip, SDL_Renderer* renderer, SDL_Texture* texture);
 
     private:
         //Top left position
