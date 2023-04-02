@@ -188,7 +188,7 @@ void Graph::layout() {
     }
     // use Fruchterman-Reingold algorithm for large graphs
     else {
-        fruchtermanReingold(100, 5);
+        fruchtermanReingold(100, 10);
     }
 }
 
@@ -249,7 +249,7 @@ void Graph::fruchtermanReingold(int iterations, float k) {
     }
     // set final node positions
     for (int i = 0; i < nodes.size(); i++) {
-        nodes[i]->setPosition(pos[i].first, pos[i].second);
+        nodes[i]->setPosition(pos[i].first + (WINDOW_WIDTH / 2), pos[i].second + (WINDOW_HEIGHT / 2));
     }
 }
 

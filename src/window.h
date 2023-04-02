@@ -4,8 +4,6 @@
 #include "graph.h"
 #include "menu.h"
 
-const int WINDOW_WIDTH = 800;
-const int WINDOW_HEIGHT = 600;
 
 class MainWindow {
     public:
@@ -17,6 +15,8 @@ class MainWindow {
     private:
         SDL_Window* window;
         SDL_Renderer* renderer;
+	SDL_Surface* fontSurface;
+    	SDL_Texture* fontTexture;
         Graph graph;
         MenuBar menuBar;
         void renderWindow();

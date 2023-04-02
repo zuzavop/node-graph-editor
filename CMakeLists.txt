@@ -23,14 +23,14 @@ file(GLOB SOURCES "src/*.cpp")
 # Add the executable
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-set(SDL2_PATH "D:\Downloads\SDL2-devel-2.26.4-VC")
-set(SDL2_INCLUDE_DIR "${SDL2_PATH}/include")
-set(SDL2_LIBRARY "${SDL2_PATH}/lib/x64/SDL2.lib")
+#set(SDL2_PATH "D:\Downloads\SDL2-devel-2.26.4-VC")
+#set(SDL2_INCLUDE_DIR "${SDL2_PATH}/include")
+#set(SDL2_LIBRARY "${SDL2_PATH}/lib/x64/SDL2.lib")
 
 # Link the SDL2 library
 find_package(SDL2 REQUIRED)
-include_directories(${SDL2_INCLUDE_DIR})
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY})
+#include_directories(${SDL2_INCLUDE_DIR})
+#target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY})
 
 # Set the installation directory
 # install(TARGETS ${PROJECT_NAME} DESTINATION bin)

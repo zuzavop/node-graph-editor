@@ -4,6 +4,9 @@
 #include "node.h"
 #include "edge.h"
 
+const int WINDOW_WIDTH = 800;
+const int WINDOW_HEIGHT = 600;
+
 class Graph {
     public:
         Graph() {}
