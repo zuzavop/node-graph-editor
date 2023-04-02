@@ -1,6 +1,8 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
+#include "main_window.h"
+
 class Command {
     public:
 	virtual void execute() = 0;
@@ -8,56 +10,53 @@ class Command {
 
 class QuitCommand : public Command {
 public:
-    QuitCommand(bool& running) : running_(running) {}
+    QuitCommand(bool& running) : _running(running) {}
     void execute() override {
-        running_ = false;
+        _running = false;
     }
 private:
-    bool& running_;
+    bool& _running;
 };
 
 class SaveCommand : public Command {
 public:
-    SaveCommand(bool& running) : running_(running) {}
+    SaveCommand(std::shared_ptr<MainWindow> window) : _window(window) {}
     void execute() override {
-        running_ = false;
+        _window->saveToFile("");
     }
 private:
-    bool& running_;
-
+    std::shared_ptr<MainWindow> _window;
 };
 
 class LoadCommand : public Command {
 public:
-    LoadCommand(bool& running) : running_(running) {}
+    LoadCommand(std::shared_ptr<MainWindow> window) : _window(window) {}
     void execute() override {
-        running_ = false;
+        _window->loadFromFile("");
     }
 private:
-    bool& running_;
+    std::shared_ptr<MainWindow> _window;
 
 };
 
 class LayoutCommand : public Command {
 public:
-    LayoutCommand(bool& running) : running_(running) {}
+    LayoutCommand(std::shared_ptr<MainWindow> window) : _window(window) {}
     void execute() override {
-        running_ = false;
+        _window->layoutGraph();
     }
 private:
-    bool& running_;
-
+    std::shared_ptr<MainWindow> _window;
 };
 
 class ExportCommand : public Command {
 public:
-    ExportCommand(bool& running) : running_(running) {}
+    ExportCommand(std::shared_ptr<MainWindow> window) : _window(window) {}
     void execute() override {
-        running_ = false;
+        _window->saveToFile("");
     }
 private:
-    bool& running_;
-
+    std::shared_ptr<MainWindow> _window;
 };
 
 #endif

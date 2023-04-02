@@ -45,8 +45,8 @@ bool MainWindow::init() {
 	return false;
     }
 
-    _layout.layout(_graph, _width, _height);
-    
+    layoutGraph();
+        
     return _menuBar.init(_renderer);
 }
 
@@ -89,3 +89,16 @@ void MainWindow::renderWindow() {
     // present the renderer
     SDL_RenderPresent(_renderer);
 }
+
+void MainWindow::layoutGraph() {
+    _layout.layout(_graph, _width, _height);
+}
+
+void MainWindow::saveToFile(const std::string& fileName) {
+    _graph->saveToFile(fileName);
+}
+	
+void MainWindow::loadFromFile(const std::string& fileName) {
+    _graph->loadFromFile(fileName);
+}
+

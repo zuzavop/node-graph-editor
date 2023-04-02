@@ -16,6 +16,10 @@ class MainWindow : public Window, public std::enable_shared_from_this<MainWindow
 
 	std::shared_ptr<MainWindow> getptr() { return shared_from_this(); }
 	std::shared_ptr<Graph> getGraph() { return _graph; }	
+
+	void layoutGraph();
+	void saveToFile(const std::string& fileName);
+	void loadFromFile(const std::string& fileName);
     private:
 	std::shared_ptr<Graph> _graph;
 	Layout _layout;
