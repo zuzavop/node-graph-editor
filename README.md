@@ -6,6 +6,7 @@ Program je napsán v jazyce C++ a využívá knihovnu SDL pro vytváření grafi
 ## Requirements
 
 * SDL knihovna
+* c++ (min verze 17)
 
 ## How to install
 Pro spuštění programu Node Graph Editor musíte nejprve nainstalovat knihovnu SDL. Pokud již tuto knihovnu máte nainstalovanou, přeskočte 1. a 2. kroky.

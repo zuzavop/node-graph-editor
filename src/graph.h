@@ -11,8 +11,7 @@ public:
   void addNode(float x, float y); // create a node and add it to the graph
   void addNode(const std::string &name, float x, float y);
   void addNode(std::shared_ptr<Node> node); // add a node to the graph
-  void
-  removeNode(const std::shared_ptr<Node> &node); // delete a node from the graph
+  void removeNode(const std::shared_ptr<Node> &node); // delete a node from the graph
 
   void addEdge(
       const std::shared_ptr<Node> &from,
@@ -30,6 +29,8 @@ public:
 
   void saveToFile(const std::string &fileName);
   void loadFromFile(const std::string &fileName);
+  void loadFromPSFile(const std::string &fileName);
+  void exportToPSFile(const std::string &fileName);
 
   std::shared_ptr<Node> findNodeByPosition(float x, float y);
   std::shared_ptr<Node> findNodeByName(const std::string &name);
