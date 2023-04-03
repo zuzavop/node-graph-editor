@@ -29,6 +29,9 @@ void MouseObserver::update(SDL_Event *event) {
         startNode = node;
       }
     }
+    if (!dragging) {
+      window->getGraph()->addNode(event->button.x, event->button.y);
+    }
   } else if (event->type == SDL_MOUSEBUTTONUP) {
     // clear node selection
     for (auto node : window->getGraph()->getNodes()) {
@@ -39,7 +42,6 @@ void MouseObserver::update(SDL_Event *event) {
       bool releasedOnNode = false;
       for (auto node : window->getGraph()->getNodes()) {
         if (node->isClicked(event->button.x, event->button.y)) {
-          // handle node release
           if (startNode != node) {
             window->getGraph()->addEdge(startNode, node);
           }
@@ -48,8 +50,6 @@ void MouseObserver::update(SDL_Event *event) {
         }
       }
       if (!releasedOnNode) {
-        // handle canvas release
-        // graph.addNode(event.button.x, event.button.y);
         startNode->setPosition(event->button.x, event->button.y);
       }
       dragging = false;
@@ -59,7 +59,7 @@ void MouseObserver::update(SDL_Event *event) {
 
 void KeyboardObserver::update(SDL_Event *event) {
   if (event->type == SDL_KEYDOWN) {
-    // Handle edge deletion
+    // handle edge deletion
     if (event->key.keysym.sym == SDLK_DELETE) {
       std::cout << "delete" << std::endl;
       // delete selected nodes and edges
@@ -95,42 +95,34 @@ void WindowObserver::update(SDL_Event *event) {
       SDL_RenderPresent(window->getRenderer());
       break;
 
-    // Repaint on exposure
     case SDL_WINDOWEVENT_EXPOSED:
       SDL_RenderPresent(window->getRenderer());
       break;
 
-    // Mouse entered window
     case SDL_WINDOWEVENT_ENTER:
       window->setMouseFocus(true);
       break;
 
-    // Mouse left window
     case SDL_WINDOWEVENT_LEAVE:
       window->setMouseFocus(false);
       break;
 
-    // Window has keyboard focus
     case SDL_WINDOWEVENT_FOCUS_GAINED:
       window->setKeyboardFocus(true);
       break;
 
-    // Window lost keyboard focus
     case SDL_WINDOWEVENT_FOCUS_LOST:
       window->setKeyboardFocus(false);
       break;
 
-    // Window minimized
     case SDL_WINDOWEVENT_MINIMIZED:
       window->setMinimized(true);
       break;
 
-    // Window maximized
     case SDL_WINDOWEVENT_MAXIMIZED:
       window->setMinimized(false);
       break;
 
-    // Window restored
     case SDL_WINDOWEVENT_RESTORED:
       window->setMinimized(false);
       break;

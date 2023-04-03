@@ -20,6 +20,8 @@ public:
   void layoutGraph();
   void saveToFile(const std::string &fileName);
   void loadFromFile(const std::string &fileName);
+  void exportToPSFile(const std::string &fileName);
+  void loadFromPSFile(const std::string &fileName);
 
 private:
   std::shared_ptr<Graph> _graph;

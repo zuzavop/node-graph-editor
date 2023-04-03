@@ -36,7 +36,6 @@ MainWindow::MainWindow() : Window() {
 }
 
 MainWindow::~MainWindow() {
-  // Clean up and exit
   SDL_DestroyWindow(_window);
   SDL_DestroyRenderer(_renderer);
   SDL_Quit();
@@ -46,9 +45,6 @@ bool MainWindow::init(const char* name) {
   if (!Window::init(name)) {
     return false;
   }
-
-  //_graph->saveToFile("file.txt");
-  _graph->loadFromFile("../data/input.txt");
 
   layoutGraph();
 
@@ -65,7 +61,6 @@ void MainWindow::mainLoop() {
   events.attach(&keyboardObserver);
   events.attach(&windowObserver);
 
-  // Loop to handle events
   while (_running) {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -85,13 +80,9 @@ void MainWindow::renderWindow() {
   SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
   SDL_RenderClear(_renderer);
 
-  // draw the _graph
   _graph->draw(_renderer);
-
-  // draw the menu
   _menuBar.draw();
 
-  // present the renderer
   SDL_RenderPresent(_renderer);
 }
 
@@ -103,4 +94,12 @@ void MainWindow::saveToFile(const std::string &fileName) {
 
 void MainWindow::loadFromFile(const std::string &fileName) {
   _graph->loadFromFile(fileName);
+}
+
+void MainWindow::exportToPSFile(const std::string &fileName) {
+  _graph->exportToPSFile(fileName);
+}
+
+void MainWindow::loadFromPSFile(const std::string &fileName) {
+  _graph->loadFromPSFile(fileName);
 }

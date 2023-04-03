@@ -35,6 +35,15 @@ private:
   std::shared_ptr<MainWindow> _window;
 };
 
+class LoadFromPSCommand : public Command {
+public:
+  LoadFromPSCommand(std::shared_ptr<MainWindow> window) : _window(window) {}
+  void execute() override { _window->loadFromPSFile(""); }
+
+private:
+  std::shared_ptr<MainWindow> _window;
+};
+
 class LayoutCommand : public Command {
 public:
   LayoutCommand(std::shared_ptr<MainWindow> window) : _window(window) {}
@@ -47,7 +56,7 @@ private:
 class ExportCommand : public Command {
 public:
   ExportCommand(std::shared_ptr<MainWindow> window) : _window(window) {}
-  void execute() override { _window->saveToFile(""); }
+  void execute() override { _window->exportToPSFile(""); }
 
 private:
   std::shared_ptr<MainWindow> _window;

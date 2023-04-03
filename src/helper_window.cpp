@@ -26,6 +26,5 @@ void HelperWindow::renderWindow() {
   SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
   SDL_RenderClear(_renderer);
 
-  // present the renderer
   SDL_RenderPresent(_renderer);
 }

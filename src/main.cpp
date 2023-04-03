@@ -1,7 +1,6 @@
 #include "main_window.h"
 
 int main(int argc, char *argv[]) {
-  // Initialize SDL
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     std::cerr << "SDL could not initialize! SDL Error:" << SDL_GetError()
               << std::endl;

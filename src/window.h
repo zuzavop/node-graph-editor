@@ -14,7 +14,6 @@ public:
   virtual bool init(const char* name);
   virtual void mainLoop() = 0;
 
-  // window dimensions
   int getWidth() { return _width; }
   int getHeight() { return _height; }
   SDL_Renderer *getRenderer() { return _renderer; }
@@ -25,7 +24,6 @@ public:
     _height = height;
   }
 
-  // window focii
   bool hasMouseFocus() { return _mouseFocus; }
   bool hasKeyboardFocus() { return _keyboardFocus; }
   bool isFullScreen() { return _fullScreen; }
@@ -42,7 +40,6 @@ protected:
   SDL_Window *_window;
   SDL_Renderer *_renderer;
 
-  // window dimensions
   int _width;
   int _height;
 

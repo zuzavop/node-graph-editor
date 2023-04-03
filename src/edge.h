@@ -16,7 +16,6 @@ class Node;
 
 enum Oriented { NOT = 0, FROM_SOURCE = 1, TO_SOURCE = 2 };
 
-// Define a structure for a graph edge
 class Edge {
 public:
   Edge(std::shared_ptr<Node> start, std::shared_ptr<Node> end)
@@ -34,7 +33,7 @@ public:
            (startNode == other.endNode && endNode == other.startNode);
   }
 
-  void draw(SDL_Renderer *renderer) const; // draw the edge
+  void draw(SDL_Renderer *renderer) const;
 private:
   std::shared_ptr<Node> startNode; // starting node of the edge
   std::shared_ptr<Node> endNode;   // ending node of the edge

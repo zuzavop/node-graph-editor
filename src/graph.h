@@ -8,20 +8,19 @@ class Graph {
 public:
   Graph() {}
 
-  void addNode(float x, float y); // create a node and add it to the graph
+  void addNode(float x, float y);
   void addNode(const std::string &name, float x, float y);
-  void addNode(std::shared_ptr<Node> node); // add a node to the graph
-  void
-  removeNode(const std::shared_ptr<Node> &node); // delete a node from the graph
+  void addNode(std::shared_ptr<Node> node);
+  void removeNode(const std::shared_ptr<Node> &node); 
 
   void addEdge(
       const std::shared_ptr<Node> &from,
-      const std::shared_ptr<Node> &to); // create an edge and add it to graph
-  void addEdge(std::shared_ptr<Edge> edge); // add an edge to the graph
+      const std::shared_ptr<Node> &to); 
+  void addEdge(std::shared_ptr<Edge> edge);
   void removeEdge(
-      const std::shared_ptr<Edge> &edge); // delete an edge from the graph
+      const std::shared_ptr<Edge> &edge);
 
-  void draw(SDL_Renderer *renderer); // draw the entire graph
+  void draw(SDL_Renderer *renderer);
   void clearGraph();
 
   const std::vector<std::shared_ptr<Node>> &getNodes() const { return nodes; }

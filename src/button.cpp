@@ -13,12 +13,10 @@ void Button::setPosition(int x, int y) {
 }
 
 void Button::handleEvent(SDL_Event *e) {
-  // any mouse event happened
   if (e->type == SDL_MOUSEMOTION || e->type == SDL_MOUSEBUTTONDOWN ||
       e->type == SDL_MOUSEBUTTONUP) {
-    // mouse position
     int x, y;
-    SDL_GetMouseState(&x, &y);
+    SDL_GetMouseState(&x, &y); // mouse position
 
     // check if mouse is in button
     bool inside = true;
@@ -27,13 +25,9 @@ void Button::handleEvent(SDL_Event *e) {
       inside = false;
     }
 
-    // mouse is outside button
     if (!inside) {
       mCurrentSprite = BUTTON_SPRITE_MOUSE_OUT;
-    }
-
-    // mouse is inside button
-    else {
+    } else {
       // set mouse over sprite
       switch (e->type) {
       case SDL_MOUSEMOTION:
@@ -55,16 +49,15 @@ void Button::handleEvent(SDL_Event *e) {
 
 void Button::render(SDL_Rect *clip, SDL_Renderer *renderer,
                     SDL_Texture *texture) {
-  // set rendering space and render to screen
+  // set rendering space
   SDL_Rect renderQuad = {mPosition.x, mPosition.y, 0, 0};
 
-  // set clip rendering dimensions
   if (clip != NULL) {
     renderQuad.w = clip->w;
     renderQuad.h = clip->h;
   }
 
-  // Render to screen
+  // render to screen
   SDL_RenderCopyEx(renderer, texture, clip, &renderQuad, 0.0, NULL,
                    SDL_FLIP_NONE);
 }
