@@ -4,59 +4,53 @@
 #include "main_window.h"
 
 class Command {
-    public:
-	virtual void execute() = 0;
+public:
+  virtual void execute() = 0;
 };
 
 class QuitCommand : public Command {
 public:
-    QuitCommand(bool& running) : _running(running) {}
-    void execute() override {
-        _running = false;
-    }
+  QuitCommand(bool &running) : _running(running) {}
+  void execute() override { _running = false; }
+
 private:
-    bool& _running;
+  bool &_running;
 };
 
 class SaveCommand : public Command {
 public:
-    SaveCommand(std::shared_ptr<MainWindow> window) : _window(window) {}
-    void execute() override {
-        _window->saveToFile("");
-    }
+  SaveCommand(std::shared_ptr<MainWindow> window) : _window(window) {}
+  void execute() override { _window->saveToFile(""); }
+
 private:
-    std::shared_ptr<MainWindow> _window;
+  std::shared_ptr<MainWindow> _window;
 };
 
 class LoadCommand : public Command {
 public:
-    LoadCommand(std::shared_ptr<MainWindow> window) : _window(window) {}
-    void execute() override {
-        _window->loadFromFile("");
-    }
-private:
-    std::shared_ptr<MainWindow> _window;
+  LoadCommand(std::shared_ptr<MainWindow> window) : _window(window) {}
+  void execute() override { _window->loadFromFile(""); }
 
+private:
+  std::shared_ptr<MainWindow> _window;
 };
 
 class LayoutCommand : public Command {
 public:
-    LayoutCommand(std::shared_ptr<MainWindow> window) : _window(window) {}
-    void execute() override {
-        _window->layoutGraph();
-    }
+  LayoutCommand(std::shared_ptr<MainWindow> window) : _window(window) {}
+  void execute() override { _window->layoutGraph(); }
+
 private:
-    std::shared_ptr<MainWindow> _window;
+  std::shared_ptr<MainWindow> _window;
 };
 
 class ExportCommand : public Command {
 public:
-    ExportCommand(std::shared_ptr<MainWindow> window) : _window(window) {}
-    void execute() override {
-        _window->saveToFile("");
-    }
+  ExportCommand(std::shared_ptr<MainWindow> window) : _window(window) {}
+  void execute() override { _window->saveToFile(""); }
+
 private:
-    std::shared_ptr<MainWindow> _window;
+  std::shared_ptr<MainWindow> _window;
 };
 
 #endif

@@ -5,43 +5,41 @@
 
 #include "command.h"
 
-//Button constants
+// Button constants
 const int BUTTON_WIDTH = 300;
 const int BUTTON_HEIGHT = 200;
 
-enum ButtonSprite
-{
-    BUTTON_SPRITE_MOUSE_OUT = 0,
-    BUTTON_SPRITE_MOUSE_OVER_MOTION = 1,
-    BUTTON_SPRITE_MOUSE_DOWN = 2,
-    BUTTON_SPRITE_MOUSE_UP = 3,
-    BUTTON_SPRITE_TOTAL = 4
+enum ButtonSprite {
+  BUTTON_SPRITE_MOUSE_OUT = 0,
+  BUTTON_SPRITE_MOUSE_OVER_MOTION = 1,
+  BUTTON_SPRITE_MOUSE_DOWN = 2,
+  BUTTON_SPRITE_MOUSE_UP = 3,
+  BUTTON_SPRITE_TOTAL = 4
 };
 
-//The mouse button
-class Button
-{
-    public:
-        //Initializes internal variables
-        Button(Command& f);
+// The mouse button
+class Button {
+public:
+  // Initializes internal variables
+  Button(Command &f);
 
-        //Sets top left position
-        void setPosition(int x, int y);
+  // Sets top left position
+  void setPosition(int x, int y);
 
-        //Handles mouse event
-        void handleEvent(SDL_Event* e);
-    
-        //Shows button sprite
-        void render(SDL_Rect* clip, SDL_Renderer* renderer, SDL_Texture* texture);
+  // Handles mouse event
+  void handleEvent(SDL_Event *e);
 
-    private:
-        //Top left position
-        SDL_Point mPosition;
+  // Shows button sprite
+  void render(SDL_Rect *clip, SDL_Renderer *renderer, SDL_Texture *texture);
 
-        //Currently used global sprite
-        ButtonSprite mCurrentSprite;
+private:
+  // Top left position
+  SDL_Point mPosition;
 
-	Command& function;
+  // Currently used global sprite
+  ButtonSprite mCurrentSprite;
+
+  Command &function;
 };
 
 #endif
