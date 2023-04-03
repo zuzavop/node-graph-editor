@@ -78,8 +78,8 @@ void Graph::saveToFile(const std::string &filename) {
       const float y = node->getY();
 
       // Draw a circle for the node
-      file << "\\node (" << node->getId() << ") {" << node->getName()
-                             << "} " << x << " " << y << "\n";
+      file << "\\node (" << node->getId() << ") {" << node->getName() << "} "
+           << x << " " << y << "\n";
     }
 
     // Draw the edges
@@ -117,7 +117,7 @@ void Graph::loadFromFile(const std::string &filename) {
         size_t id_start = line.find('(') + 1;
         size_t id_end = line.find(')', id_start);
         std::string id = line.substr(id_start, id_end - id_start);
-        //addNode(label, x, y);
+        // addNode(label, x, y);
       } else {
 
         // Parse the edge definitions
@@ -130,156 +130,155 @@ void Graph::loadFromFile(const std::string &filename) {
         }
         std::string source_id = line.substr(0, arrow_pos - 1);
         std::string target_id = line.substr(arrow_pos + 3);
-        //Node *source_node = nodes[source_id];
-        //Node *target_node = nodes[target_id];
-        //addEdge(source_node, target_node);
+        // Node *source_node = nodes[source_id];
+        // Node *target_node = nodes[target_id];
+        // addEdge(source_node, target_node);
       }
       // Close the file
       file.close();
     }
+  } else {
+    std::cerr << "Failed to open file: " << filename << std::endl;
   }
-    else {
-      std::cerr << "Failed to open file: " << filename << std::endl;
+}
+
+void Graph::exportToPSFile(const std::string &filename) {
+  // Open the file for writing
+  std::ofstream file(filename);
+  if (file.is_open()) {
+    // Write the PostScript header
+    file << "%!PS-Adobe-2.0\n\n";
+
+    // Set the font size
+    const float fontSize = 10.0f;
+
+    // Draw the nodes
+    for (const auto &node : nodes) {
+      // Compute the position of the node
+      const float x = node->getX();
+      const float y = node->getY();
+
+      // Draw a circle for the node
+      file << x << " " << y << " " << NODE_RADIUS << " 0 360 arc\n"
+           << "closepath\n"
+           << "stroke\n";
     }
- }
 
-  void Graph::exportToPSFile(const std::string &filename) {
-    // Open the file for writing
-    std::ofstream file(filename);
-    if (file.is_open()) {
-      // Write the PostScript header
-      file << "%!PS-Adobe-2.0\n\n";
+    file << "0.5 setlinewidth\n";
 
-      // Set the font size
-      const float fontSize = 10.0f;
+    // Draw the edges
+    for (const auto &edge : edges) {
+      // Compute the positions of the nodes
+      const float x1 = edge->getSource()->getX();
+      const float y1 = edge->getSource()->getY();
+      const float x2 = edge->getTarget()->getX();
+      const float y2 = edge->getTarget()->getY();
 
-      // Draw the nodes
-      for (const auto &node : nodes) {
-        // Compute the position of the node
-        const float x = node->getX();
-        const float y = node->getY();
+      // Draw a line for the edge
+      file << x1 << " " << y1 << " moveto " << x2 << " " << y2 << " lineto\n"
+           << "stroke\n";
+    }
 
-        // Draw a circle for the node
-        file << x << " " << y << " " << NODE_RADIUS << " 0 360 arc\n"
-             << "closepath\n"
-             << "stroke\n";
+    // Write the PostScript footer
+    file << "\nshowpage\n";
+
+    // Close the file
+    file.close();
+  } else {
+    std::cerr << "Failed to open file: " << filename << std::endl;
+  }
+}
+
+void Graph::loadFromPSFile(const std::string &filename) {
+  // Open the file for reading
+  std::ifstream file(filename);
+  if (file.is_open()) {
+    clearGraph();
+
+    // Read the PostScript commands
+    std::string line;
+    while (std::getline(file, line)) {
+      // Check if the line is a node command
+      std::smatch match;
+      if (std::regex_match(line, match,
+                           std::regex(R"((\S+) (\S+) (\S+) 0 360 arc)"))) {
+        // Extract the node position and size from the command
+        const float x = std::stof(match[1]);
+        const float y = std::stof(match[2]);
+
+        // Create a new node and add it to the graph
+        addNode(std::make_shared<Node>(x, y));
       }
 
-      file << "0.5 setlinewidth\n";
+      // Check if the line is an edge command
+      else if (std::regex_match(
+                   line, match,
+                   std::regex(R"((\S+) (\S+) moveto (\S+) (\S+) lineto)"))) {
+        // Extract the positions of the source and destination nodes
+        const float x1 = std::stof(match[1]);
+        const float y1 = std::stof(match[2]);
+        const float x2 = std::stof(match[3]);
+        const float y2 = std::stof(match[4]);
 
-      // Draw the edges
-      for (const auto &edge : edges) {
-        // Compute the positions of the nodes
-        const float x1 = edge->getSource()->getX();
-        const float y1 = edge->getSource()->getY();
-        const float x2 = edge->getTarget()->getX();
-        const float y2 = edge->getTarget()->getY();
+        // Find the nodes corresponding to the source and destination
+        // positions
+        auto sourceNode = findNodeByPosition(x1, y1);
+        auto destNode = findNodeByPosition(x2, y2);
 
-        // Draw a line for the edge
-        file << x1 << " " << y1 << " moveto " << x2 << " " << y2 << " lineto\n"
-             << "stroke\n";
+        // Add a new edge to the graph
+        addEdge(std::make_shared<Edge>(sourceNode, destNode));
       }
 
-      // Write the PostScript footer
-      file << "\nshowpage\n";
+      // Check if the line is a label command
+      // else if (std::regex_match(line, match, std::regex(R"(\((.+)\) \S+ \S+
+      // rmoveto)"))) {
+      // Extract the label text
+      // const std::string label = match[1];
 
-      // Close the file
-      file.close();
-    } else {
-      std::cerr << "Failed to open file: " << filename << std::endl;
-    }
-  }
+      // Find the node corresponding to the label
+      // auto node = findNodeByName(label);
 
-  void Graph::loadFromPSFile(const std::string &filename) {
-    // Open the file for reading
-    std::ifstream file(filename);
-    if (file.is_open()) {
-      clearGraph();
-
-      // Read the PostScript commands
-      std::string line;
-      while (std::getline(file, line)) {
-        // Check if the line is a node command
-        std::smatch match;
-        if (std::regex_match(line, match,
-                             std::regex(R"((\S+) (\S+) (\S+) 0 360 arc)"))) {
-          // Extract the node position and size from the command
-          const float x = std::stof(match[1]);
-          const float y = std::stof(match[2]);
-
-          // Create a new node and add it to the graph
-          addNode(std::make_shared<Node>(x, y));
-        }
-
-        // Check if the line is an edge command
-        else if (std::regex_match(
-                     line, match,
-                     std::regex(R"((\S+) (\S+) moveto (\S+) (\S+) lineto)"))) {
-          // Extract the positions of the source and destination nodes
-          const float x1 = std::stof(match[1]);
-          const float y1 = std::stof(match[2]);
-          const float x2 = std::stof(match[3]);
-          const float y2 = std::stof(match[4]);
-
-          // Find the nodes corresponding to the source and destination
-          // positions
-          auto sourceNode = findNodeByPosition(x1, y1);
-          auto destNode = findNodeByPosition(x2, y2);
-
-          // Add a new edge to the graph
-          addEdge(std::make_shared<Edge>(sourceNode, destNode));
-        }
-
-        // Check if the line is a label command
-        // else if (std::regex_match(line, match, std::regex(R"(\((.+)\) \S+ \S+
-        // rmoveto)"))) {
-        // Extract the label text
-        // const std::string label = match[1];
-
-        // Find the node corresponding to the label
-        // auto node = findNodeByName(label);
-
-        // Set the node's name to the label text
-        // node->setName(label);
-        //}
-      }
-
-      // Close the file
-      file.close();
-    } else {
-      std::cerr << "Failed to open file: " << filename << std::endl;
-    }
-  }
-
-  void Graph::clearGraph() {
-    nodes.clear();
-    edges.clear();
-  }
-
-  std::shared_ptr<Node> Graph::findNodeByPosition(float x, float y) {
-    auto it =
-        std::find_if(nodes.begin(), nodes.end(), [=](std::shared_ptr<Node> &n) {
-          return n->contains(x, y, NODE_RADIUS);
-        });
-
-    if (it != std::end(nodes)) {
-      auto id = std::distance(nodes.begin(), it);
-      return nodes[id];
+      // Set the node's name to the label text
+      // node->setName(label);
+      //}
     }
 
-    return nullptr;
+    // Close the file
+    file.close();
+  } else {
+    std::cerr << "Failed to open file: " << filename << std::endl;
+  }
+}
+
+void Graph::clearGraph() {
+  nodes.clear();
+  edges.clear();
+}
+
+std::shared_ptr<Node> Graph::findNodeByPosition(float x, float y) {
+  auto it =
+      std::find_if(nodes.begin(), nodes.end(), [=](std::shared_ptr<Node> &n) {
+        return n->contains(x, y, NODE_RADIUS);
+      });
+
+  if (it != std::end(nodes)) {
+    auto id = std::distance(nodes.begin(), it);
+    return nodes[id];
   }
 
-  std::shared_ptr<Node> Graph::findNodeByName(const std::string &name) {
-    auto it =
-        std::find_if(nodes.begin(), nodes.end(), [=](std::shared_ptr<Node> &n) {
-          return n->getName() == name;
-        });
+  return nullptr;
+}
 
-    if (it != std::end(nodes)) {
-      auto id = std::distance(nodes.begin(), it);
-      return nodes[id];
-    }
+std::shared_ptr<Node> Graph::findNodeByName(const std::string &name) {
+  auto it =
+      std::find_if(nodes.begin(), nodes.end(), [=](std::shared_ptr<Node> &n) {
+        return n->getName() == name;
+      });
 
-    return nullptr;
+  if (it != std::end(nodes)) {
+    auto id = std::distance(nodes.begin(), it);
+    return nodes[id];
   }
+
+  return nullptr;
+}

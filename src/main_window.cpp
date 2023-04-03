@@ -37,6 +37,8 @@ MainWindow::MainWindow() : Window() {
 
 MainWindow::~MainWindow() {
   // Clean up and exit
+  SDL_DestroyWindow(_window);
+  SDL_DestroyRenderer(_renderer);
   SDL_Quit();
 }
 

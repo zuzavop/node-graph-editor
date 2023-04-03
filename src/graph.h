@@ -11,7 +11,8 @@ public:
   void addNode(float x, float y); // create a node and add it to the graph
   void addNode(const std::string &name, float x, float y);
   void addNode(std::shared_ptr<Node> node); // add a node to the graph
-  void removeNode(const std::shared_ptr<Node> &node); // delete a node from the graph
+  void
+  removeNode(const std::shared_ptr<Node> &node); // delete a node from the graph
 
   void addEdge(
       const std::shared_ptr<Node> &from,

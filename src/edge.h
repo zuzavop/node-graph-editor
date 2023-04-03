@@ -14,11 +14,7 @@
 
 class Node;
 
-enum Oriented {
-  NOT = 0,
-  FROM_SOURCE = 1,
-  TO_SOURCE = 2
-};
+enum Oriented { NOT = 0, FROM_SOURCE = 1, TO_SOURCE = 2 };
 
 // Define a structure for a graph edge
 class Edge {
