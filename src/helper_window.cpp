@@ -7,7 +7,7 @@ HelperWindow::~HelperWindow() {
   SDL_DestroyRenderer(_renderer);
 }
 
-bool HelperWindow::init() { return Window::init(); }
+bool HelperWindow::init(const char* name) { return Window::init(name); }
 
 void HelperWindow::mainLoop() {
   while (_running) {

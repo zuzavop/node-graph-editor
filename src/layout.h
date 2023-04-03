@@ -15,7 +15,7 @@ public:
 private:
   void fruchtermanReingold(std::shared_ptr<Graph> graph, int iterations,
                            float k, int width, int height);
-  void layoutBruteForce(std::shared_ptr<Graph> graph);
+  void layoutBruteForce(std::shared_ptr<Graph> graph, int width, int height);
 };
 
 #endif

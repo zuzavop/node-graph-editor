@@ -11,7 +11,7 @@ const int WINDOW_HEIGHT = 600;
 class Window {
 public:
   virtual ~Window(){};
-  virtual bool init();
+  virtual bool init(const char* name);
   virtual void mainLoop() = 0;
 
   // window dimensions

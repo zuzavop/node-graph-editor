@@ -3,12 +3,12 @@
 
 void Layout::layout(std::shared_ptr<Graph> graph, int width, int height) {
   // use brute force layout for small graphs
-  if (graph->getNodes().size() < 5) {
-    layoutBruteForce(graph);
+  if (graph->getNodes().size() < 7) {
+    layoutBruteForce(graph, width, height);
   }
   // use Fruchterman-Reingold algorithm for large graphs
   else {
-    fruchtermanReingold(graph, 100, 10, width, height);
+    fruchtermanReingold(graph, 200, 10, width, height);
   }
 }
 
@@ -77,7 +77,7 @@ void Layout::fruchtermanReingold(std::shared_ptr<Graph> graph, int iterations,
   }
 }
 
-void Layout::layoutBruteForce(std::shared_ptr<Graph> graph) {
+void Layout::layoutBruteForce(std::shared_ptr<Graph> graph, int width, int height) {
   // compute the size of the grid
   int gridSize = sqrt(graph->getNodes().size());
 
@@ -88,6 +88,7 @@ void Layout::layoutBruteForce(std::shared_ptr<Graph> graph) {
         float x = static_cast<float>(col) / gridSize;
         float y = static_cast<float>(row) / gridSize;
         n->setPosition(x, y);
+	std::cout << x << " " << y << std::endl;
       }
     }
   }

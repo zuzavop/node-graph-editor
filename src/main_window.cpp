@@ -42,10 +42,13 @@ MainWindow::~MainWindow() {
   SDL_Quit();
 }
 
-bool MainWindow::init() {
-  if (!Window::init()) {
+bool MainWindow::init(const char* name) {
+  if (!Window::init(name)) {
     return false;
   }
+
+  //_graph->saveToFile("file.txt");
+  _graph->loadFromFile("../data/input.txt");
 
   layoutGraph();
 

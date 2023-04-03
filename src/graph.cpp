@@ -73,13 +73,9 @@ void Graph::saveToFile(const std::string &filename) {
   if (file.is_open()) {
     // write the nodes
     for (const auto &node : nodes) {
-      // Compute the position of the node
-      const float x = node->getX();
-      const float y = node->getY();
-
       // Draw a circle for the node
       file << "\\node (" << node->getId() << ") {" << node->getName() << "} "
-           << x << " " << y << "\n";
+           << node->getX() << " " << node->getY() << "\n";
     }
 
     // Draw the edges
@@ -109,34 +105,79 @@ void Graph::loadFromFile(const std::string &filename) {
 
     // Parse the node definitions
     std::string line;
+    int num_line = 1;
     while (std::getline(file, line)) {
-      if (line.front() == '\\') {
-        size_t label_start = line.find('{') + 1;
-        size_t label_end = line.find('}', label_start);
-        std::string label = line.substr(label_start, label_end - label_start);
-        size_t id_start = line.find('(') + 1;
-        size_t id_end = line.find(')', id_start);
-        std::string id = line.substr(id_start, id_end - id_start);
-        // addNode(label, x, y);
-      } else {
-
-        // Parse the edge definitions
-        size_t arrow_pos = line.find("-->");
-        if (arrow_pos == std::string::npos) {
-          arrow_pos = line.find("--");
-        }
-        if (arrow_pos == std::string::npos) {
-          continue;
-        }
-        std::string source_id = line.substr(0, arrow_pos - 1);
-        std::string target_id = line.substr(arrow_pos + 3);
-        // Node *source_node = nodes[source_id];
-        // Node *target_node = nodes[target_id];
-        // addEdge(source_node, target_node);
+      std::smatch match;
+      if (std::regex_match(line, match,
+                           std::regex(R"(\\node \((\d+)\) \{(\w*)\} (\d+) (\d+))"))) {
+        // Extract the node position and size from the command
+	const int id = std::stoi(match[1]);
+	std::string name;
+	try {
+		name = match[2];
+	} catch (std::invalid_argument const& ex) {
+		name = "";
+	}
+	const float x = std::stof(match[3]);
+	const float y = std::stof(match[4]);
+	
+        // Create a new node and add it to the graph
+        addNode(std::make_shared<Node>(name, x, y, id));
       }
-      // Close the file
-      file.close();
+      else if (std::regex_match(line, match,
+                           std::regex(R"(\\node \((\d+)\) \{(\w*)\})"))) {
+        // Extract the node position and size from the command
+	const int id = std::stoi(match[1]);
+	std::string name;
+	try {
+		name = match[2];
+	} catch (std::invalid_argument const& ex) {
+		name = "";
+	}
+
+        // Create a new node and add it to the graph
+        addNode(std::make_shared<Node>(name, 0, 0, id));
+      }
+
+      // Check if the line is an edge command
+      else if (std::regex_match(
+                   line, match,
+                   std::regex(R"(\((\d+)\) -- \((\d+)\))"))) {
+        // Extract the positions of the source and destination nodes
+        const int id1 = std::stoi(match[1]);
+        const int id2 = std::stoi(match[2]);
+	
+        // Find the nodes corresponding to the source and destination
+        // positions
+        auto sourceNode = findNodeById(id1);
+        auto destNode = findNodeById(id2);
+
+        // Add a new edge to the graph
+        addEdge(std::make_shared<Edge>(sourceNode, destNode));
+      } else if (std::regex_match(
+                   line, match,
+                   std::regex(R"((\d+) (\d+) -- (\d+) (\d+))"))) {
+        // Extract the positions of the source and destination nodes
+        const float x1 = std::stof(match[1]);
+        const float y1 = std::stof(match[2]);
+        const float x2 = std::stof(match[3]);
+        const float y2 = std::stof(match[4]);
+	
+        // Find the nodes corresponding to the source and destination
+        // positions
+        auto sourceNode = findNodeByPosition(x1, y1);
+        auto destNode = findNodeByPosition(x2, y2);
+
+        // Add a new edge to the graph
+        addEdge(std::make_shared<Edge>(sourceNode, destNode));
+      } else {
+	std::cerr << "Invalid line " << num_line << std::endl;
+	break;
+      }
+      ++num_line;
     }
+    // Close the file
+      file.close();
   } else {
     std::cerr << "Failed to open file: " << filename << std::endl;
   }
@@ -273,6 +314,20 @@ std::shared_ptr<Node> Graph::findNodeByName(const std::string &name) {
   auto it =
       std::find_if(nodes.begin(), nodes.end(), [=](std::shared_ptr<Node> &n) {
         return n->getName() == name;
+      });
+
+  if (it != std::end(nodes)) {
+    auto id = std::distance(nodes.begin(), it);
+    return nodes[id];
+  }
+
+  return nullptr;
+}
+
+std::shared_ptr<Node> Graph::findNodeById(int id) {
+  auto it =
+      std::find_if(nodes.begin(), nodes.end(), [=](std::shared_ptr<Node> &n) {
+        return n->getId() == id;
       });
 
   if (it != std::end(nodes)) {

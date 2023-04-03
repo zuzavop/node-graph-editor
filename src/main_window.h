@@ -11,7 +11,7 @@ class MainWindow : public Window,
 public:
   MainWindow();
   ~MainWindow();
-  bool init() override;
+  bool init(const char* name) override;
   void mainLoop() override;
 
   std::shared_ptr<MainWindow> getptr() { return shared_from_this(); }

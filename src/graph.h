@@ -35,6 +35,7 @@ public:
 
   std::shared_ptr<Node> findNodeByPosition(float x, float y);
   std::shared_ptr<Node> findNodeByName(const std::string &name);
+  std::shared_ptr<Node> findNodeById(int id);
 
 private:
   std::vector<std::shared_ptr<Node>> nodes; // list of nodes in the graph

@@ -5,7 +5,7 @@ Window::Window(int width, int height)
       _running(true), _mouseFocus(false), _keyboardFocus(false),
       _fullScreen(false), _minimized(false) {}
 
-bool Window::init() {
+bool Window::init(const char* name) {
   // set texture filtering to linear
   if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1")) {
     std::cerr << "Warning: Linear texture filtering not enabled!" << std::endl;
@@ -13,8 +13,8 @@ bool Window::init() {
 
   // create a window
   _window = SDL_CreateWindow(
-      "Graph Editor", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-      WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+      name, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH,
+      WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
   if (!_window) {
     std::cout << "Failed to create window: " << SDL_GetError() << std::endl;

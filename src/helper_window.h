@@ -7,11 +7,11 @@ class HelperWindow : public Window {
 public:
   HelperWindow();
   ~HelperWindow();
-  bool init() override;
+  bool init(const char* name) override;
   void mainLoop() override;
 
 private:
   void renderWindow() override;
-}
+};
 
 #endif

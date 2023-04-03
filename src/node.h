@@ -25,10 +25,18 @@ public:
     position.x = n_x;
     position.y = n_y;
   }
+
   Node(float n_x, float n_y) : id(0), name(""), selected(false) {
     position.x = n_x;
     position.y = n_y;
   }
+
+  Node(const std::string &n_name, float n_x, float n_y, int n_id)
+      : id(n_id), name(n_name), selected(false) {
+    position.x = n_x;
+    position.y = n_y;
+  }
+
 
   float getX() const { return position.x; }
   float getY() const { return position.y; }
