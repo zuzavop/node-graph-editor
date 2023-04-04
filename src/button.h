@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 
 #include "command.h"
+#include "text.h"
 
 // button constants
 const int BUTTON_WIDTH = 300;
@@ -19,16 +20,20 @@ enum ButtonSprite {
 
 class Button {
 public:
-  Button(Command &f);
+  Button(Command &c, std::shared_ptr<BitmapFont> f);
   
   void setPosition(int x, int y); // sets top left position
+  void setSize(int w, int h);
   void handleEvent(SDL_Event *e);
   void render(SDL_Rect *clip, SDL_Renderer *renderer, SDL_Texture *texture);
 
 private:
-  SDL_Point mPosition;
-  ButtonSprite mCurrentSprite;
-  Command &function;
+  SDL_Point _position;
+  int _width, _height;
+  
+  ButtonSprite _sprite;
+  Command &_function;
+  std::shared_ptr<BitmapFont> _font;
 };
 
 #endif

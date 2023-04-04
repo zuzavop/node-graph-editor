@@ -1,15 +1,23 @@
 #include "button.h"
 
-Button::Button(Command &f) : function(f) {
-  mPosition.x = 0;
-  mPosition.y = 0;
+Button::Button(Command &c, std::shared_ptr<BitmapFont> f) : _function(c), _font(f) {
+  _position.x = 0;
+  _position.y = 0;
 
-  mCurrentSprite = BUTTON_SPRITE_MOUSE_OUT;
+  _width = BUTTON_WIDTH;
+  _height = BUTTON_HEIGHT;
+
+  _sprite = BUTTON_SPRITE_MOUSE_OUT;
 }
 
 void Button::setPosition(int x, int y) {
-  mPosition.x = x;
-  mPosition.y = y;
+  _position.x = x;
+  _position.y = y;
+}
+
+void Button::setSize(int w, int h) {
+  _width = w;
+  _height = h;
 }
 
 void Button::handleEvent(SDL_Event *e) {
@@ -20,27 +28,27 @@ void Button::handleEvent(SDL_Event *e) {
 
     // check if mouse is in button
     bool inside = true;
-    if (x < mPosition.x || x > mPosition.x + BUTTON_WIDTH || y < mPosition.y ||
-        y > mPosition.y + BUTTON_HEIGHT) {
+    if (x < _position.x || x > _position.x + BUTTON_WIDTH || y < _position.y ||
+        y > _position.y + BUTTON_HEIGHT) {
       inside = false;
     }
 
     if (!inside) {
-      mCurrentSprite = BUTTON_SPRITE_MOUSE_OUT;
+      _sprite = BUTTON_SPRITE_MOUSE_OUT;
     } else {
       // set mouse over sprite
       switch (e->type) {
       case SDL_MOUSEMOTION:
-        mCurrentSprite = BUTTON_SPRITE_MOUSE_OVER_MOTION;
+        _sprite = BUTTON_SPRITE_MOUSE_OVER_MOTION;
         break;
 
       case SDL_MOUSEBUTTONDOWN:
-        function.execute();
-        mCurrentSprite = BUTTON_SPRITE_MOUSE_DOWN;
+        _function.execute();
+        _sprite = BUTTON_SPRITE_MOUSE_DOWN;
         break;
 
       case SDL_MOUSEBUTTONUP:
-        mCurrentSprite = BUTTON_SPRITE_MOUSE_UP;
+        _sprite = BUTTON_SPRITE_MOUSE_UP;
         break;
       }
     }
@@ -50,7 +58,7 @@ void Button::handleEvent(SDL_Event *e) {
 void Button::render(SDL_Rect *clip, SDL_Renderer *renderer,
                     SDL_Texture *texture) {
   // set rendering space
-  SDL_Rect renderQuad = {mPosition.x, mPosition.y, 0, 0};
+  SDL_Rect renderQuad = {_position.x, _position.y, 0, 0};
 
   if (clip != NULL) {
     renderQuad.w = clip->w;

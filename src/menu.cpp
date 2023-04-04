@@ -1,23 +1,7 @@
 #include "menu.h"
 
-bool MenuBar::init(SDL_Renderer *r) {
-  renderer = r;
-  fontSurface = SDL_LoadBMP("../menu_font.bmp");
-  if (!fontSurface) {
-    std::cout << "Failed to get font surface: " << SDL_GetError() << std::endl;
-    return false;
-  }
-  fontTexture = SDL_CreateTextureFromSurface(renderer, fontSurface);
-  if (!fontTexture) {
-    std::cout << "Failed to get font texture: " << SDL_GetError() << std::endl;
-    return false;
-  }
-  return true;
-}
+void MenuBar::init() {
 
-MenuBar::~MenuBar() {
-  SDL_FreeSurface(fontSurface);
-  SDL_DestroyTexture(fontTexture);
 }
 
 void MenuBar::handleEvent(SDL_Event event) {
@@ -33,27 +17,22 @@ void MenuBar::handleEvent(SDL_Event event) {
   }
 }
 
-void MenuBar::draw() {
-  int charWidth = fontSurface->w / 16;
-  int charHeight = fontSurface->h / 16;
-
+void MenuBar::draw(SDL_Renderer *renderer) {
   // create the menu items
   std::string menuItems[4] = {"Save", "Load", "Export", "Layout"};
   SDL_Rect menuRects[4];
   int menuWidth = 0;
   for (int i = 0; i < 4; i++) {
     // create a texture for the menu item
-    SDL_Rect charRect = {(i + 1) * charWidth, 4 * charHeight, charWidth,
-                         charHeight};
-    SDL_Rect itemRect = {menuWidth, 0, charWidth, charHeight};
-    SDL_RenderCopy(renderer, fontTexture, &charRect, &itemRect);
-
+    int wordHeight = 10;
+    int wordWidth = 10;
+    
     int x = menuWidth;
     int y = 0;
-    int w = charWidth;
-    int h = charHeight;
+    int w = wordWidth;
+    int h = wordHeight;
     menuRects[i] = {x, y, w, h};
 
-    menuWidth += charWidth;
+    menuWidth += wordWidth;
   }
 }

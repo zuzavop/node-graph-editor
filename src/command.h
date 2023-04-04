@@ -1,7 +1,9 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
-#include "main_window.h"
+#include <memory>
+
+class MainWindow;
 
 class Command {
 public:
@@ -20,7 +22,7 @@ private:
 class SaveCommand : public Command {
 public:
   SaveCommand(std::shared_ptr<MainWindow> window) : _window(window) {}
-  void execute() override { _window->saveToFile(""); }
+  void execute() override;
 
 private:
   std::shared_ptr<MainWindow> _window;
@@ -29,7 +31,7 @@ private:
 class LoadCommand : public Command {
 public:
   LoadCommand(std::shared_ptr<MainWindow> window) : _window(window) {}
-  void execute() override { _window->loadFromFile(""); }
+  void execute() override;
 
 private:
   std::shared_ptr<MainWindow> _window;
@@ -38,7 +40,7 @@ private:
 class LoadFromPSCommand : public Command {
 public:
   LoadFromPSCommand(std::shared_ptr<MainWindow> window) : _window(window) {}
-  void execute() override { _window->loadFromPSFile(""); }
+  void execute() override;
 
 private:
   std::shared_ptr<MainWindow> _window;
@@ -47,7 +49,7 @@ private:
 class LayoutCommand : public Command {
 public:
   LayoutCommand(std::shared_ptr<MainWindow> window) : _window(window) {}
-  void execute() override { _window->layoutGraph(); }
+  void execute() override;
 
 private:
   std::shared_ptr<MainWindow> _window;
@@ -56,7 +58,7 @@ private:
 class ExportCommand : public Command {
 public:
   ExportCommand(std::shared_ptr<MainWindow> window) : _window(window) {}
-  void execute() override { _window->exportToPSFile(""); }
+  void execute() override;
 
 private:
   std::shared_ptr<MainWindow> _window;

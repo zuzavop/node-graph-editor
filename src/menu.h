@@ -4,20 +4,24 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 #include <string>
+#include <memory>
+#include <vector>
+
+#include "text.h"
+#include "button.h"
 
 class MenuBar {
 public:
-  MenuBar(){};
-  ~MenuBar();
-  bool init(SDL_Renderer *renderer);
+  MenuBar(std::shared_ptr<BitmapFont> f) : font(f) {};
+  ~MenuBar() {};
+
+  void init();
   void handleEvent(SDL_Event event);
-  void draw();
+  void draw(SDL_Renderer *r);
 
 private:
-  SDL_Renderer *renderer;
+  std::shared_ptr<BitmapFont> font;
   bool fileButtonSelected;
-  SDL_Surface *fontSurface;
-  SDL_Texture *fontTexture;
 };
 
 #endif

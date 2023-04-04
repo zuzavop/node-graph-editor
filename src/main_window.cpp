@@ -3,6 +3,8 @@
 
 MainWindow::MainWindow() : Window() {
   _graph = std::make_shared<Graph>();
+  _font = std::make_shared<BitmapFont>();
+  _menuBar = std::make_unique<MenuBar>(_font);
 
   std::shared_ptr<Node> a = std::make_shared<Node>(Node(150, 150));
   std::shared_ptr<Node> b = std::make_shared<Node>(Node(200, 150));
@@ -46,9 +48,14 @@ bool MainWindow::init(const char* name) {
     return false;
   }
 
+  if(!_font->buildFont("../menu_font.bmp", _window, _renderer))
+	{
+		return false;
+	}
+
   layoutGraph();
 
-  return _menuBar.init(_renderer);
+  return true;
 }
 
 void MainWindow::mainLoop() {
@@ -68,7 +75,7 @@ void MainWindow::mainLoop() {
         _running = false;
       }
       events.notify(&event);
-      _menuBar.handleEvent(event);
+      _menuBar->handleEvent(event);
     }
 
     renderWindow();
@@ -81,7 +88,7 @@ void MainWindow::renderWindow() {
   SDL_RenderClear(_renderer);
 
   _graph->draw(_renderer);
-  _menuBar.draw();
+  _menuBar->draw(_renderer);
 
   SDL_RenderPresent(_renderer);
 }

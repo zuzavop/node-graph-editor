@@ -5,6 +5,7 @@
 #include "layout.h"
 #include "menu.h"
 #include "window.h"
+#include "text.h"
 
 class MainWindow : public Window,
                    public std::enable_shared_from_this<MainWindow> {
@@ -26,7 +27,8 @@ public:
 private:
   std::shared_ptr<Graph> _graph;
   Layout _layout;
-  MenuBar _menuBar;
+  std::unique_ptr<MenuBar> _menuBar;
+  std::shared_ptr<BitmapFont> _font;
 
   void renderWindow() override;
 };
