@@ -1,38 +1,40 @@
 #include "menu.h"
+#include "command.h"
+#include "main_window.h"
 
-void MenuBar::init() {
+void MenuBar::init(std::shared_ptr<MainWindow> window) {
+  _buttons.push_back(std::make_unique<Button>(
+      std::make_unique<SaveCommand>(window), _font, "Save"));
+  _buttons.push_back(std::make_unique<Button>(
+      std::make_unique<LoadCommand>(window), _font, "Load"));
+  _buttons.push_back(std::make_unique<Button>(
+      std::make_unique<ExportCommand>(window), _font, "Export"));
+  _buttons.push_back(std::make_unique<Button>(
+      std::make_unique<LayoutCommand>(window), _font, "Layout"));
 
+  int startX = 0;
+  for (std::size_t i = 0; i < _buttons.size(); ++i) {
+    _buttons[i]->setPosition(startX, 0);
+    startX += _buttons[i]->getWidth() + 10;
+  }
+  _height = _buttons[0]->getHeight();
 }
 
-void MenuBar::handleEvent(SDL_Event event) {
-  if (event.type == SDL_MOUSEBUTTONDOWN) {
-    int x = event.button.x;
-    int y = event.button.y;
-    // if (x >= fileButtonRect.x && x <= fileButtonRect.x + fileButtonRect.w &&
-    // y >= fileButtonRect.y && y <= fileButtonRect.y + fileButtonRect.h) {
-    // fileButtonSelected = true;
-    //} else {
-    // fileButtonSelected = false;
-    //}
+void MenuBar::handleEvent(SDL_Event *event) {
+  for (std::size_t i = 0; i < _buttons.size(); ++i) {
+    _buttons[i]->handleEvent(event);
   }
 }
 
 void MenuBar::draw(SDL_Renderer *renderer) {
-  // create the menu items
-  std::string menuItems[4] = {"Save", "Load", "Export", "Layout"};
-  SDL_Rect menuRects[4];
-  int menuWidth = 0;
-  for (int i = 0; i < 4; i++) {
-    // create a texture for the menu item
-    int wordHeight = 10;
-    int wordWidth = 10;
-    
-    int x = menuWidth;
-    int y = 0;
-    int w = wordWidth;
-    int h = wordHeight;
-    menuRects[i] = {x, y, w, h};
-
-    menuWidth += wordWidth;
+  for (std::size_t i = 0; i < _buttons.size(); ++i) {
+    _buttons[i]->render(renderer);
   }
+}
+
+bool MenuBar::clickedInMenu(int x, int y) {
+	if (y < _height) {
+		return true;
+	}
+	return false;
 }

@@ -20,6 +20,7 @@ void Subject::notify(SDL_Event *event) {
 
 void MouseObserver::update(SDL_Event *event) {
   if (event->type == SDL_MOUSEBUTTONDOWN) {
+	  if (!window->getMenu()->clickedInMenu(event->button.x, event->button.y)) {
     // check if the mouse was clicked on a node
     for (auto node : window->getGraph()->getNodes()) {
       if (node->isClicked(event->button.x, event->button.y)) {
@@ -32,7 +33,9 @@ void MouseObserver::update(SDL_Event *event) {
     if (!dragging) {
       window->getGraph()->addNode(event->button.x, event->button.y);
     }
+	  }
   } else if (event->type == SDL_MOUSEBUTTONUP) {
+	  if (!window->getMenu()->clickedInMenu(event->button.x, event->button.y)) {
     // clear node selection
     for (auto node : window->getGraph()->getNodes()) {
       node->setSelected(false);
@@ -54,6 +57,7 @@ void MouseObserver::update(SDL_Event *event) {
       }
       dragging = false;
     }
+  }
   }
 }
 

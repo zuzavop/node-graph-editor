@@ -10,15 +10,6 @@ public:
   virtual void execute() = 0;
 };
 
-class QuitCommand : public Command {
-public:
-  QuitCommand(bool &running) : _running(running) {}
-  void execute() override { _running = false; }
-
-private:
-  bool &_running;
-};
-
 class SaveCommand : public Command {
 public:
   SaveCommand(std::shared_ptr<MainWindow> window) : _window(window) {}

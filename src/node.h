@@ -13,7 +13,7 @@
 
 #include <SDL2/SDL.h>
 
-const int NODE_RADIUS = 7;
+const int NODE_RADIUS = 10;
 
 class Edge;
 
@@ -36,7 +36,6 @@ public:
     position.y = n_y;
   }
 
-
   float getX() const { return position.x; }
   float getY() const { return position.y; }
   int getId() const { return id; }
@@ -46,6 +45,7 @@ public:
 
   void setX(float new_x) { position.x = new_x; }
   void setY(float new_y) { position.y = new_y; }
+  void setId(int _id) { id = _id; }
   void setName(std::string new_name) { name = new_name; }
   void setSelected(bool is_selected) { selected = is_selected; }
 

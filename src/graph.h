@@ -11,14 +11,12 @@ public:
   void addNode(float x, float y);
   void addNode(const std::string &name, float x, float y);
   void addNode(std::shared_ptr<Node> node);
-  void removeNode(const std::shared_ptr<Node> &node); 
+  void removeNode(const std::shared_ptr<Node> &node);
 
-  void addEdge(
-      const std::shared_ptr<Node> &from,
-      const std::shared_ptr<Node> &to); 
+  void addEdge(const std::shared_ptr<Node> &from,
+               const std::shared_ptr<Node> &to);
   void addEdge(std::shared_ptr<Edge> edge);
-  void removeEdge(
-      const std::shared_ptr<Edge> &edge);
+  void removeEdge(const std::shared_ptr<Edge> &edge);
 
   void draw(SDL_Renderer *renderer);
   void clearGraph();
@@ -36,9 +34,14 @@ public:
   std::shared_ptr<Node> findNodeByName(const std::string &name);
   std::shared_ptr<Node> findNodeById(int id);
 
+  bool needLayout() { return _needLayout; }
+  void wasLayout() { _needLayout = false; }
+
 private:
   std::vector<std::shared_ptr<Node>> nodes; // list of nodes in the graph
   std::vector<std::shared_ptr<Edge>> edges; // list of edges in the graph
+
+  bool _needLayout;
 };
 
 #endif

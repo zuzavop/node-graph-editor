@@ -127,9 +127,7 @@ void Texture::setBlendMode(SDL_BlendMode blending) {
   SDL_SetTextureBlendMode(mTexture, blending);
 }
 
-void Texture::setAlpha(Uint8 alpha) {
-  SDL_SetTextureAlphaMod(mTexture, alpha);
-}
+void Texture::setAlpha(Uint8 alpha) { SDL_SetTextureAlphaMod(mTexture, alpha); }
 
 void Texture::render(int x, int y, SDL_Renderer *renderer, SDL_Rect *clip,
                      double angle, SDL_Point *center, SDL_RendererFlip flip) {

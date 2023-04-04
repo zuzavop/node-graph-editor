@@ -104,36 +104,37 @@ void Graph::loadFromFile(const std::string &filename) {
     while (std::getline(file, line)) {
       std::smatch match;
       // parse the node definitions
-      if (std::regex_match(line, match,
-                           std::regex(R"(\\node \((\d+)\) \{(\w*)\} (\d+) (\d+))"))) {
+      if (std::regex_match(
+              line, match,
+              std::regex(R"(\\node \((\d+)\) \{(\w*)\} (\d+) (\d+))"))) {
         const int id = std::stoi(match[1]);
         std::string name;
         try {
           name = match[2];
-        } catch (std::invalid_argument const& ex) {
+        } catch (std::invalid_argument const &ex) {
           name = "";
         }
         const float x = std::stof(match[3]);
         const float y = std::stof(match[4]);
 
         addNode(std::make_shared<Node>(name, x, y, id));
-      }
-      else if (std::regex_match(line, match,
-                           std::regex(R"(\\node \((\d+)\) \{(\w*)\})"))) {
+      } else if (std::regex_match(
+                     line, match,
+                     std::regex(R"(\\node \((\d+)\) \{(\w*)\})"))) {
         const int id = std::stoi(match[1]);
         std::string name;
         try {
           name = match[2];
-        } catch (std::invalid_argument const& ex) {
+        } catch (std::invalid_argument const &ex) {
           name = "";
         }
 
         addNode(std::make_shared<Node>(name, 0, 0, id));
+	_needLayout = true;
       }
       // parse the edge definitions
-      else if (std::regex_match(
-                   line, match,
-                   std::regex(R"(\((\d+)\) -- \((\d+)\))"))) {
+      else if (std::regex_match(line, match,
+                                std::regex(R"(\((\d+)\) -- \((\d+)\))"))) {
         const int id1 = std::stoi(match[1]);
         const int id2 = std::stoi(match[2]);
 
@@ -142,20 +143,20 @@ void Graph::loadFromFile(const std::string &filename) {
 
         addEdge(std::make_shared<Edge>(sourceNode, destNode));
       } else if (std::regex_match(
-                   line, match,
-                   std::regex(R"((\d+) (\d+) -- (\d+) (\d+))"))) {
+                     line, match,
+                     std::regex(R"((\d+) (\d+) -- (\d+) (\d+))"))) {
         const float x1 = std::stof(match[1]);
         const float y1 = std::stof(match[2]);
         const float x2 = std::stof(match[3]);
         const float y2 = std::stof(match[4]);
-	
+
         auto sourceNode = findNodeByPosition(x1, y1);
         auto destNode = findNodeByPosition(x2, y2);
 
         addEdge(std::make_shared<Edge>(sourceNode, destNode));
       } else {
-	std::cerr << "Invalid line " << num_line << std::endl;
-	break;
+        std::cerr << "Invalid line " << num_line << std::endl;
+        break;
       }
       ++num_line;
     }
@@ -281,9 +282,8 @@ std::shared_ptr<Node> Graph::findNodeByName(const std::string &name) {
 
 std::shared_ptr<Node> Graph::findNodeById(int id) {
   auto it =
-      std::find_if(nodes.begin(), nodes.end(), [=](std::shared_ptr<Node> &n) {
-        return n->getId() == id;
-      });
+      std::find_if(nodes.begin(), nodes.end(),
+                   [=](std::shared_ptr<Node> &n) { return n->getId() == id; });
 
   if (it != std::end(nodes)) {
     auto id = std::distance(nodes.begin(), it);

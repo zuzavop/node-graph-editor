@@ -1,22 +1,22 @@
 #include "text.h"
 
 BitmapFont::BitmapFont() {
-  mNewLine = 0;
-  mSpace = 0;
+  _newLine = 0;
+  _space = 0;
 }
 
 bool BitmapFont::buildFont(std::string path, SDL_Window *window,
                            SDL_Renderer *renderer) {
   // load bitmap image
   bool success = true;
-  if (!mFontTexture.loadPixelsFromFile(path, window)) {
+  if (!_fontTexture.loadPixelsFromFile(path, window)) {
     printf("Unable to load bitmap font surface!\n");
     success = false;
   } else {
-    Uint32 bgColor = mFontTexture.getPixel32(0, 0);
+    Uint32 bgColor = _fontTexture.getPixel32(0, 0);
 
-    int cellW = mFontTexture.getWidth() / 16;
-    int cellH = mFontTexture.getHeight() / 16;
+    int cellW = _fontTexture.getWidth() / 16;
+    int cellH = _fontTexture.getHeight() / 16;
 
     int top = cellH;
     int baseA = cellH;
@@ -25,11 +25,11 @@ bool BitmapFont::buildFont(std::string path, SDL_Window *window,
 
     for (int rows = 0; rows < 16; ++rows) {
       for (int cols = 0; cols < 16; ++cols) {
-        mChars[currentChar].x = cellW * cols;
-        mChars[currentChar].y = cellH * rows;
+        _chars[currentChar].x = cellW * cols;
+        _chars[currentChar].y = cellH * rows;
 
-        mChars[currentChar].w = cellW;
-        mChars[currentChar].h = cellH;
+        _chars[currentChar].w = cellW;
+        _chars[currentChar].h = cellH;
 
         // find left side
         for (int pCol = 0; pCol < cellW; ++pCol) {
@@ -38,8 +38,8 @@ bool BitmapFont::buildFont(std::string path, SDL_Window *window,
             int pY = (cellH * rows) + pRow;
 
             // if a non colorkey pixel is found
-            if (mFontTexture.getPixel32(pX, pY) != bgColor) {
-              mChars[currentChar].x = pX;
+            if (_fontTexture.getPixel32(pX, pY) != bgColor) {
+              _chars[currentChar].x = pX;
 
               pCol = cellW;
               pRow = cellH;
@@ -54,8 +54,8 @@ bool BitmapFont::buildFont(std::string path, SDL_Window *window,
             int pY = (cellH * rows) + pRowW;
 
             // if a non colorkey pixel is found
-            if (mFontTexture.getPixel32(pX, pY) != bgColor) {
-              mChars[currentChar].w = (pX - mChars[currentChar].x) + 1;
+            if (_fontTexture.getPixel32(pX, pY) != bgColor) {
+              _chars[currentChar].w = (pX - _chars[currentChar].x) + 1;
 
               pColW = -1;
               pRowW = cellH;
@@ -70,7 +70,7 @@ bool BitmapFont::buildFont(std::string path, SDL_Window *window,
             int pY = (cellH * rows) + pRow;
 
             // if a non colorkey pixel is found
-            if (mFontTexture.getPixel32(pX, pY) != bgColor) {
+            if (_fontTexture.getPixel32(pX, pY) != bgColor) {
               if (pRow < top) {
                 top = pRow;
               }
@@ -88,7 +88,7 @@ bool BitmapFont::buildFont(std::string path, SDL_Window *window,
             int pY = (cellH * rows) + pRow;
 
             // if a non colorkey pixel is found
-            if (mFontTexture.getPixel32(pX, pY) != bgColor) {
+            if (_fontTexture.getPixel32(pX, pY) != bgColor) {
               baseA = pRow;
 
               pCol = cellW;
@@ -101,16 +101,16 @@ bool BitmapFont::buildFont(std::string path, SDL_Window *window,
       }
     }
 
-    mSpace = cellW / 2;
+    _space = cellW / 2;
 
-    mNewLine = baseA - top;
+    _newLine = baseA - top;
 
     for (int i = 0; i < 256; ++i) {
-      mChars[i].y += top;
-      mChars[i].h -= top;
+      _chars[i].y += top;
+      _chars[i].h -= top;
     }
 
-    if (!mFontTexture.loadFromPixels(renderer)) {
+    if (!_fontTexture.loadFromPixels(renderer)) {
       printf("Unable to create font texture!\n");
       success = false;
     }
@@ -122,24 +122,55 @@ bool BitmapFont::buildFont(std::string path, SDL_Window *window,
 void BitmapFont::renderText(int x, int y, std::string text,
                             SDL_Renderer *renderer) {
   // if the font has been built
-  if (mFontTexture.getWidth() > 0) {
+  if (_fontTexture.getWidth() > 0) {
     int curX = x, curY = y;
     for (int i = 0; i < text.length(); ++i) {
       if (text[i] == ' ') {
-        curX += mSpace;
-      }
-      else if (text[i] == '\n') {
-        curY += mNewLine;
+        curX += _space;
+      } else if (text[i] == '\n') {
+        curY += _newLine;
 
         curX = x;
       } else {
         // get the ASCII value of the character
         int ascii = (unsigned char)text[i];
 
-        mFontTexture.render(curX, curY, renderer, &mChars[ascii]);
+        _fontTexture.render(curX, curY, renderer, &_chars[ascii]);
 
-        curX += mChars[ascii].w + 1;
+        curX += _chars[ascii].w + 1;
       }
     }
   }
+}
+
+int BitmapFont::getWordWidth(const std::string &word) {
+  int width = 0;
+  // if the font has been built
+  if (_fontTexture.getWidth() > 0) {
+    for (int i = 0; i < word.length(); ++i) {
+      if (word[i] == ' ') {
+        width += _space;
+      } else {
+	int ascii = (unsigned char)word[i];
+        width += _chars[ascii].w + 1;
+      }
+    }
+  }
+  return width;
+}
+
+int BitmapFont::getWordHeight(const std::string& word) {
+  int height = 0;
+  // if the font has been built
+  if (_fontTexture.getWidth() > 0) {
+    height = _newLine;
+    for (int i = 0; i < word.length(); ++i) {
+      if (word[i] == '\n') {
+        height += _newLine;
+
+      }
+    }
+  }
+  return height;
+
 }

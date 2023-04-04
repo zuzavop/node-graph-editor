@@ -34,6 +34,7 @@ public:
   }
 
   void draw(SDL_Renderer *renderer) const;
+
 private:
   std::shared_ptr<Node> startNode; // starting node of the edge
   std::shared_ptr<Node> endNode;   // ending node of the edge

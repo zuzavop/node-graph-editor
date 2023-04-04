@@ -4,37 +4,7 @@
 MainWindow::MainWindow() : Window() {
   _graph = std::make_shared<Graph>();
   _font = std::make_shared<BitmapFont>();
-  _menuBar = std::make_unique<MenuBar>(_font);
-
-  std::shared_ptr<Node> a = std::make_shared<Node>(Node(150, 150));
-  std::shared_ptr<Node> b = std::make_shared<Node>(Node(200, 150));
-  std::shared_ptr<Node> c = std::make_shared<Node>(Node(50, 50));
-  std::shared_ptr<Node> d = std::make_shared<Node>(Node(100, 100));
-  std::shared_ptr<Node> e = std::make_shared<Node>(Node(100, 50));
-  _graph->addNode(c);
-  _graph->addNode(d);
-  _graph->addNode(e);
-  _graph->addNode(a);
-  _graph->addNode(b);
-  _graph->addNode(100, 100);
-  _graph->addNode(100, 100);
-  _graph->addNode(100, 100);
-  _graph->addNode(100, 100);
-  _graph->addNode(100, 100);
-  _graph->addNode(100, 100);
-  _graph->addNode(100, 100);
-  _graph->addNode(100, 100);
-  _graph->addNode(100, 100);
-  _graph->addEdge(a, b);
-  _graph->addEdge(a, c);
-  _graph->addEdge(b, c);
-  _graph->addEdge(a, d);
-  _graph->addEdge(a, e);
-  _graph->addEdge(b, d);
-  _graph->addEdge(b, e);
-  _graph->addEdge(c, d);
-  _graph->addEdge(c, e);
-  _graph->addEdge(d, e);
+  _menuBar = std::make_shared<MenuBar>(_font);
 }
 
 MainWindow::~MainWindow() {
@@ -43,18 +13,17 @@ MainWindow::~MainWindow() {
   SDL_Quit();
 }
 
-bool MainWindow::init(const char* name) {
+bool MainWindow::init(const char *name) {
   if (!Window::init(name)) {
     return false;
   }
 
-  if(!_font->buildFont("../menu_font.bmp", _window, _renderer))
-	{
-		return false;
-	}
+  if (!_font->buildFont("../data/menu_font.bmp", _window, _renderer)) {
+    return false;
+  }
 
-  layoutGraph();
-
+  _menuBar->init(getptr());
+  
   return true;
 }
 
@@ -75,7 +44,7 @@ void MainWindow::mainLoop() {
         _running = false;
       }
       events.notify(&event);
-      _menuBar->handleEvent(event);
+      _menuBar->handleEvent(&event);
     }
 
     renderWindow();
@@ -93,7 +62,10 @@ void MainWindow::renderWindow() {
   SDL_RenderPresent(_renderer);
 }
 
-void MainWindow::layoutGraph() { _layout.layout(_graph, _width, _height); }
+void MainWindow::layoutGraph() { 
+	int startY = _menuBar->getHeight() + NODE_RADIUS * 2;
+	int startX = NODE_RADIUS*2;
+	_layout.layout(_graph, _width - 2 * startX, _height - startY - startX, startX , startY); }
 
 void MainWindow::saveToFile(const std::string &fileName) {
   _graph->saveToFile(fileName);
