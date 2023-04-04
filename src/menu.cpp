@@ -33,8 +33,8 @@ void MenuBar::draw(SDL_Renderer *renderer) {
 }
 
 bool MenuBar::clickedInMenu(int x, int y) {
-	if (y < _height) {
-		return true;
-	}
-	return false;
+  if (y < _height) {
+    return true;
+  }
+  return false;
 }

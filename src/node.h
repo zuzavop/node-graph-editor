@@ -65,7 +65,7 @@ public:
   void draw(SDL_Renderer *renderer, int radius) const;
   bool isClicked(float mouseX, float mouseY);
 
-  bool operator==(const Node &other) const { return id == other.id; }
+  bool operator==(const std::shared_ptr<Node> &other) const { return id == other->getId() && position.x == other->getX() && position.y == other->getY(); }
 
 private:
   int id;

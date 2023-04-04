@@ -21,7 +21,7 @@ public:
   void handleEvent(SDL_Event *event);
   void draw(SDL_Renderer *r);
   bool clickedInMenu(int x, int y);
-  int getHeight() {return _height; }
+  int getHeight() { return _height; }
 
 private:
   std::shared_ptr<BitmapFont> _font;

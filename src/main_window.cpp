@@ -18,12 +18,12 @@ bool MainWindow::init(const char *name) {
     return false;
   }
 
-  if (!_font->buildFont("../data/menu_font.bmp", _window, _renderer)) {
+  if (!_font->buildFont("../data/font.bmp", _window, _renderer)) {
     return false;
   }
 
   _menuBar->init(getptr());
-  
+
   return true;
 }
 
@@ -62,10 +62,19 @@ void MainWindow::renderWindow() {
   SDL_RenderPresent(_renderer);
 }
 
-void MainWindow::layoutGraph() { 
-	int startY = _menuBar->getHeight() + NODE_RADIUS * 2;
-	int startX = NODE_RADIUS*2;
-	_layout.layout(_graph, _width - 2 * startX, _height - startY - startX, startX , startY); }
+void MainWindow::layoutGraph() {
+  int startY = _menuBar->getHeight() + NODE_RADIUS * 2;
+  int startX = NODE_RADIUS * 2;
+  _layout.layout(_graph, _width - 2 * startX, _height - startY - startX, startX,
+                 startY);
+}
+
+void MainWindow::layoutFix() {
+  int startY = _menuBar->getHeight() + NODE_RADIUS * 2;
+  int startX = NODE_RADIUS * 2;
+  _layout.layoutFix(_graph, _width - 2 * startX, _height - startY - startX, startX,
+                 startY);
+}
 
 void MainWindow::saveToFile(const std::string &fileName) {
   _graph->saveToFile(fileName);

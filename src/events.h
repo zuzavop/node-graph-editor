@@ -24,7 +24,7 @@ private:
 
 class MouseObserver : public Observer {
 public:
-  MouseObserver(std::shared_ptr<MainWindow> w) : window(w) {}
+  MouseObserver(std::shared_ptr<MainWindow> w) : window(w), dragging(false) {}
   void update(SDL_Event *event) override;
 
 private:

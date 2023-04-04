@@ -20,6 +20,7 @@ public:
   std::shared_ptr<MenuBar> getMenu() { return _menuBar; }
 
   void layoutGraph();
+  void layoutFix();
   void saveToFile(const std::string &fileName);
   void loadFromFile(const std::string &fileName);
   void exportToPSFile(const std::string &fileName);

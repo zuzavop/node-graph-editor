@@ -24,14 +24,14 @@ void Graph::removeNode(const std::shared_ptr<Node> &node) {
 
 void Graph::addEdge(const std::shared_ptr<Node> &from,
                     const std::shared_ptr<Node> &to) {
+  auto edge = std::make_shared<Edge>(from, to);
   // check if the edge already exists
-  for (const auto &edge : edges) {
-    if (*edge == Edge(from, to)) {
+  for (const auto &e : edges) {
+    if (e == edge) {
       return;
     }
   }
 
-  auto edge = std::make_shared<Edge>(from, to);
   from->addEdge(edge);
   to->addEdge(edge);
   edges.push_back(edge);
@@ -79,12 +79,16 @@ void Graph::saveToFile(const std::string &filename) {
 
     // write the edges
     for (const auto &edge : edges) {
+      if (edge->getSource()->getId() > 0 && edge->getTarget()->getId() > 0) {
+        file << "(" << edge->getSource()->getId() << ") -- (" << edge->getTarget()->getId() << ")\n";
+      } else {
       const float x1 = edge->getSource()->getX();
       const float y1 = edge->getSource()->getY();
       const float x2 = edge->getTarget()->getX();
       const float y2 = edge->getTarget()->getY();
 
       file << x1 << " " << y1 << " -- " << x2 << " " << y2 << "\n";
+      }
     }
 
     file.close();
@@ -130,7 +134,7 @@ void Graph::loadFromFile(const std::string &filename) {
         }
 
         addNode(std::make_shared<Node>(name, 0, 0, id));
-	_needLayout = true;
+        _needLayout = true;
       }
       // parse the edge definitions
       else if (std::regex_match(line, match,

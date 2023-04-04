@@ -151,7 +151,7 @@ int BitmapFont::getWordWidth(const std::string &word) {
       if (word[i] == ' ') {
         width += _space;
       } else {
-	int ascii = (unsigned char)word[i];
+        int ascii = (unsigned char)word[i];
         width += _chars[ascii].w + 1;
       }
     }
@@ -159,7 +159,7 @@ int BitmapFont::getWordWidth(const std::string &word) {
   return width;
 }
 
-int BitmapFont::getWordHeight(const std::string& word) {
+int BitmapFont::getWordHeight(const std::string &word) {
   int height = 0;
   // if the font has been built
   if (_fontTexture.getWidth() > 0) {
@@ -167,10 +167,8 @@ int BitmapFont::getWordHeight(const std::string& word) {
     for (int i = 0; i < word.length(); ++i) {
       if (word[i] == '\n') {
         height += _newLine;
-
       }
     }
   }
   return height;
-
 }

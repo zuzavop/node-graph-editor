@@ -12,7 +12,7 @@ Button::Button(std::unique_ptr<Command> c, std::shared_ptr<BitmapFont> f,
   }
   _height = _font->getWordHeight(name);
   if (_height == 0) {
-	  _height = BUTTON_HEIGHT;
+    _height = BUTTON_HEIGHT;
   }
 }
 
