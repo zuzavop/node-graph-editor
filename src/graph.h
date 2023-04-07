@@ -21,7 +21,7 @@ public:
   void addEdge(std::shared_ptr<Edge> edge);
   void removeEdge(const std::shared_ptr<Edge> &edge);
 
-  void draw(SDL_Renderer *renderer);
+  void draw(SDL_Renderer *renderer, std::shared_ptr<BitmapFont> _font);
   void clearGraph();
 
   const std::vector<std::shared_ptr<Node>> &getNodes() const { return nodes; }

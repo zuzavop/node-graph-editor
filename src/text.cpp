@@ -16,14 +16,14 @@ bool BitmapFont::buildFont(std::string path, SDL_Window *window,
     Uint32 bgColor = _fontTexture.getPixel32(0, 0);
 
     int cellW = _fontTexture.getWidth() / 16;
-    int cellH = _fontTexture.getHeight() / 16;
+    int cellH = _fontTexture.getHeight() / 8;
 
     int top = cellH;
     int baseA = cellH;
 
     int currentChar = 0;
 
-    for (int rows = 0; rows < 16; ++rows) {
+    for (int rows = 0; rows < 8; ++rows) {
       for (int cols = 0; cols < 16; ++cols) {
         _chars[currentChar].x = cellW * cols;
         _chars[currentChar].y = cellH * rows;
@@ -39,8 +39,6 @@ bool BitmapFont::buildFont(std::string path, SDL_Window *window,
 
             // if a non colorkey pixel is found
             if (_fontTexture.getPixel32(pX, pY) != bgColor) {
-              _chars[currentChar].x = pX;
-
               pCol = cellW;
               pRow = cellH;
             }
@@ -120,10 +118,20 @@ bool BitmapFont::buildFont(std::string path, SDL_Window *window,
 }
 
 void BitmapFont::renderText(int x, int y, std::string text,
-                            SDL_Renderer *renderer) {
+                            SDL_Renderer *renderer, float scale_factor,
+                            int width, int height) {
+  x = x * (1 / scale_factor);
+  y = y * (1 / scale_factor);
+  // Set the scaling factor
+  SDL_RenderSetScale(renderer, scale_factor, scale_factor);
+  const SDL_Rect buttonSpace = {
+      x, y, (width == 0 ? getWordWidth(text) : width) + 2,
+      (height == 0 ? getWordHeight(text) : height) + 2};
+  SDL_RenderFillRect(renderer, &buttonSpace);
+
   // if the font has been built
   if (_fontTexture.getWidth() > 0) {
-    int curX = x, curY = y;
+    int curX = x + 1, curY = y + 1;
     for (int i = 0; i < text.length(); ++i) {
       if (text[i] == ' ') {
         curX += _space;
@@ -141,6 +149,7 @@ void BitmapFont::renderText(int x, int y, std::string text,
       }
     }
   }
+  SDL_RenderSetScale(renderer, SCALE_FACTOR, SCALE_FACTOR);
 }
 
 int BitmapFont::getWordWidth(const std::string &word) {
@@ -163,7 +172,9 @@ int BitmapFont::getWordHeight(const std::string &word) {
   int height = 0;
   // if the font has been built
   if (_fontTexture.getWidth() > 0) {
-    height = _newLine;
+    // get the ASCII value of the character
+    int ascii = (unsigned char)word[0];
+    height = _chars[ascii].h;
     for (int i = 0; i < word.length(); ++i) {
       if (word[i] == '\n') {
         height += _newLine;

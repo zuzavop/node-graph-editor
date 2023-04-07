@@ -1,10 +1,11 @@
 #include "button.h"
 
 Button::Button(std::unique_ptr<Command> c, std::shared_ptr<BitmapFont> f,
-               const std::string &name)
+               const std::string &name, float scale)
     : _function(std::move(c)), _font(f), _title(name) {
   _position.x = 0;
   _position.y = 0;
+  _scale = scale;
 
   _width = _font->getWordWidth(name);
   if (_width == 0) {
@@ -49,8 +50,6 @@ void Button::handleEvent(SDL_Event *e) {
 }
 
 void Button::render(SDL_Renderer *renderer) {
-  const SDL_Rect buttonSpace = {_position.x, _position.y, _width, _height};
-  SDL_RenderFillRect(renderer, &buttonSpace);
-
-  _font->renderText(_position.x, _position.y, _title, renderer);
+  _font->renderText(_position.x, _position.y, _title, renderer, _scale, _width,
+                    _height);
 }

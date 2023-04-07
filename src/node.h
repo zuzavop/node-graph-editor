@@ -13,6 +13,8 @@
 
 #include <SDL2/SDL.h>
 
+#include "text.h"
+
 const int NODE_RADIUS = 10;
 
 class Edge;
@@ -62,7 +64,8 @@ public:
   void addEdge(std::shared_ptr<Edge> edge);
   void removeEdge(const std::shared_ptr<Edge> &edge);
 
-  void draw(SDL_Renderer *renderer, int radius) const;
+  void draw(SDL_Renderer *renderer, int radius,
+            std::shared_ptr<BitmapFont> _font) const;
   bool isClicked(float mouseX, float mouseY);
 
   bool operator==(const Node &other) const {

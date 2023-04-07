@@ -28,6 +28,8 @@ public:
   void update(SDL_Event *event) override;
 
 private:
+  void processButtonDown(SDL_Event *event);
+  void processButtonUp(SDL_Event *event);
   std::shared_ptr<MainWindow> window;
   bool dragging;
   std::shared_ptr<Node> startNode;

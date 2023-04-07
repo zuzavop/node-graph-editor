@@ -13,7 +13,7 @@ const int BUTTON_HEIGHT = 200;
 class Button {
 public:
   Button(std::unique_ptr<Command> c, std::shared_ptr<BitmapFont> f,
-         const std::string &name);
+         const std::string &name, float scale = 0.6);
 
   void setPosition(int x, int y); // sets top left position
   void setSize(int w, int h);
@@ -32,6 +32,7 @@ private:
 
   std::unique_ptr<Command> _function;
   std::shared_ptr<BitmapFont> _font;
+  float _scale;
 };
 
 #endif

@@ -3,21 +3,26 @@
 #include "main_window.h"
 
 void MenuBar::init(std::shared_ptr<MainWindow> window) {
+  float scale = 0.7;
   _buttons.push_back(std::make_unique<Button>(
-      std::make_unique<SaveCommand>(window), _font, "Save"));
+      std::make_unique<NewCommand>(window), _font, "New", scale));
   _buttons.push_back(std::make_unique<Button>(
-      std::make_unique<LoadCommand>(window), _font, "Load"));
+      std::make_unique<SaveCommand>(window), _font, "Save", scale));
   _buttons.push_back(std::make_unique<Button>(
-      std::make_unique<ExportCommand>(window), _font, "Export"));
+      std::make_unique<LoadCommand>(window), _font, "Open", scale));
   _buttons.push_back(std::make_unique<Button>(
-      std::make_unique<LayoutCommand>(window), _font, "Layout"));
+      std::make_unique<ExportCommand>(window), _font, "Export", scale));
+  _buttons.push_back(std::make_unique<Button>(
+      std::make_unique<LayoutCommand>(window), _font, "Layout", scale));
 
   int startX = 0;
   for (std::size_t i = 0; i < _buttons.size(); ++i) {
     _buttons[i]->setPosition(startX, 0);
-    startX += _buttons[i]->getWidth() + 10;
+    startX += _buttons[i]->getWidth() * scale + 10;
+    _height = _buttons[i]->getHeight() * scale > _height
+                  ? _buttons[i]->getHeight() * scale
+                  : _height;
   }
-  _height = _buttons[0]->getHeight();
 }
 
 void MenuBar::handleEvent(SDL_Event *event) {

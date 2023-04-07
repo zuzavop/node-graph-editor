@@ -56,7 +56,7 @@ void MainWindow::renderWindow() {
   SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
   SDL_RenderClear(_renderer);
 
-  _graph->draw(_renderer);
+  _graph->draw(_renderer, _font);
   _menuBar->draw(_renderer);
 
   SDL_RenderPresent(_renderer);

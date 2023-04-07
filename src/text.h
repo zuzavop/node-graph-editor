@@ -7,13 +7,17 @@
 
 #include "texture.h"
 
+const float SCALE_FACTOR = 1;
+
 class BitmapFont {
 public:
   BitmapFont();
   ~BitmapFont(){};
 
   bool buildFont(std::string path, SDL_Window *window, SDL_Renderer *renderer);
-  void renderText(int x, int y, std::string text, SDL_Renderer *renderer);
+  void renderText(int x, int y, std::string text, SDL_Renderer *renderer,
+                  float scale_factor = SCALE_FACTOR, int width = 0,
+                  int height = 0);
   int getWordWidth(const std::string &word);
   int getWordHeight(const std::string &word);
 

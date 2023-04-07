@@ -47,4 +47,13 @@ private:
   std::shared_ptr<MainWindow> _window;
 };
 
+class NewCommand : public Command {
+public:
+  NewCommand(std::shared_ptr<MainWindow> window) : _window(window) {}
+  void execute() override;
+
+private:
+  std::shared_ptr<MainWindow> _window;
+};
+
 #endif
