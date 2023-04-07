@@ -25,9 +25,21 @@ void Graph::removeNode(const std::shared_ptr<Node> &node) {
 void Graph::addEdge(const std::shared_ptr<Node> &from,
                     const std::shared_ptr<Node> &to) {
   auto edge = std::make_shared<Edge>(from, to);
+  auto invertedEdge = std::make_shared<Edge>(to, from);
   // check if the edge already exists
   for (const auto &e : edges) {
-    if (e == edge) {
+    if (*e == *edge) {
+      if (!e->isOriented()) {
+        e->setOrientation(true);
+      }
+      return;
+    }
+    if (*e == *invertedEdge) {
+      if (e->isOriented()) {
+        e->setOrientation(false);
+      } else {
+        e->switchNodes();
+      }
       return;
     }
   }
@@ -70,6 +82,7 @@ void Graph::draw(SDL_Renderer *renderer) {
 void Graph::saveToFile(const std::string &filename) {
   // open the file for writing
   std::ofstream file(filename);
+
   if (file.is_open()) {
     // write the nodes
     for (const auto &node : nodes) {
@@ -79,15 +92,19 @@ void Graph::saveToFile(const std::string &filename) {
 
     // write the edges
     for (const auto &edge : edges) {
-      if (edge->getSource()->getId() > 0 && edge->getTarget()->getId() > 0) {
-        file << "(" << edge->getSource()->getId() << ") -- (" << edge->getTarget()->getId() << ")\n";
-      } else {
-      const float x1 = edge->getSource()->getX();
-      const float y1 = edge->getSource()->getY();
-      const float x2 = edge->getTarget()->getX();
-      const float y2 = edge->getTarget()->getY();
 
-      file << x1 << " " << y1 << " -- " << x2 << " " << y2 << "\n";
+      if (edge->getSource()->getId() > 0 && edge->getTarget()->getId() > 0) {
+        file << "(" << edge->getSource()->getId()
+             << (edge->isOriented() ? ") --> (" : ") -- (")
+             << edge->getTarget()->getId() << ")\n";
+      } else {
+        const float x1 = edge->getSource()->getX();
+        const float y1 = edge->getSource()->getY();
+        const float x2 = edge->getTarget()->getX();
+        const float y2 = edge->getTarget()->getY();
+
+        file << x1 << " " << y1 << (edge->isOriented() ? " --> " : " -- ") << x2
+             << " " << y2 << "\n";
       }
     }
 
@@ -105,60 +122,57 @@ void Graph::loadFromFile(const std::string &filename) {
 
     std::string line;
     int num_line = 1;
+
+    // Define regex constants for node and edge parsing
+    const std::regex node_regex(R"(\\node \((\d+)\) \{(\w*)\}( (\d+) (\d+))?)");
+    const std::regex edge_regex(R"(\((\d+)\) (--|<--|-->) \((\d+)\))");
+    const std::regex pos_edge_regex(R"((\d+) (\d+) (--|<--|-->) (\d+) (\d+))");
+
     while (std::getline(file, line)) {
       std::smatch match;
       // parse the node definitions
-      if (std::regex_match(
-              line, match,
-              std::regex(R"(\\node \((\d+)\) \{(\w*)\} (\d+) (\d+))"))) {
+      if (std::regex_match(line, match, node_regex)) {
         const int id = std::stoi(match[1]);
-        std::string name;
-        try {
-          name = match[2];
-        } catch (std::invalid_argument const &ex) {
-          name = "";
+        std::string name = match[2].matched ? match.str(2) : "";
+        const float x = match[4].matched ? std::stof(match[4]) : 0;
+        const float y = match[5].matched ? std::stof(match[5]) : 0;
+        if (!match[4].matched || !match[5].matched) {
+          _needLayout = true;
         }
-        const float x = std::stof(match[3]);
-        const float y = std::stof(match[4]);
 
         addNode(std::make_shared<Node>(name, x, y, id));
-      } else if (std::regex_match(
-                     line, match,
-                     std::regex(R"(\\node \((\d+)\) \{(\w*)\})"))) {
-        const int id = std::stoi(match[1]);
-        std::string name;
-        try {
-          name = match[2];
-        } catch (std::invalid_argument const &ex) {
-          name = "";
-        }
+      } else if (std::regex_match(line, match, edge_regex)) {
+        int id1 = std::stoi(match[1]);
+        int id2 = std::stoi(match[3]);
 
-        addNode(std::make_shared<Node>(name, 0, 0, id));
-        _needLayout = true;
-      }
-      // parse the edge definitions
-      else if (std::regex_match(line, match,
-                                std::regex(R"(\((\d+)\) -- \((\d+)\))"))) {
-        const int id1 = std::stoi(match[1]);
-        const int id2 = std::stoi(match[2]);
+        const std::string type = match[2];
+        const bool directed = type == "-->" || type == "<--";
+        if (type == "<--") {
+          std::swap(id1, id2);
+        }
 
         auto sourceNode = findNodeById(id1);
         auto destNode = findNodeById(id2);
 
-        addEdge(std::make_shared<Edge>(sourceNode, destNode));
-      } else if (std::regex_match(
-                     line, match,
-                     std::regex(R"((\d+) (\d+) -- (\d+) (\d+))"))) {
-        const float x1 = std::stof(match[1]);
-        const float y1 = std::stof(match[2]);
-        const float x2 = std::stof(match[3]);
-        const float y2 = std::stof(match[4]);
+        addEdge(std::make_shared<Edge>(sourceNode, destNode, directed));
+      } else if (std::regex_match(line, match, pos_edge_regex)) {
+        float x1 = std::stof(match[1]);
+        float y1 = std::stof(match[2]);
+        float x2 = std::stof(match[4]);
+        float y2 = std::stof(match[5]);
+
+        const std::string type = match[3];
+        const bool directed = type == "-->" || type == "<--";
+        if (type == "<--") {
+          std::swap(x1, x2);
+          std::swap(y1, y2);
+        }
 
         auto sourceNode = findNodeByPosition(x1, y1);
         auto destNode = findNodeByPosition(x2, y2);
 
-        addEdge(std::make_shared<Edge>(sourceNode, destNode));
-      } else {
+        addEdge(std::make_shared<Edge>(sourceNode, destNode, directed));
+      } else if (line.size() > 0) {
         std::cerr << "Invalid line " << num_line << std::endl;
         break;
       }
@@ -174,31 +188,51 @@ void Graph::exportToPSFile(const std::string &filename) {
   // open the file for writing
   std::ofstream file(filename);
   if (file.is_open()) {
-    // write the PostScript header
-    file << "%!PS-Adobe-2.0\n\n";
 
-    const float fontSize = 10.0f;
-
-    // draw the nodes
+    // Calculate the scaling factor to fit the graph on a page
+    const float padding = NODE_RADIUS * 2;
+    float min_x = std::numeric_limits<float>::max();
+    float max_x = std::numeric_limits<float>::min();
+    float min_y = std::numeric_limits<float>::max();
+    float max_y = std::numeric_limits<float>::min();
     for (const auto &node : nodes) {
-      const float x = node->getX();
-      const float y = node->getY();
-
-      file << x << " " << y << " " << NODE_RADIUS << " 0 360 arc\n"
-           << "closepath\n"
-           << "stroke\n";
+      min_x = std::min(min_x, node->getX());
+      max_x = std::max(max_x, node->getX());
+      min_y = std::min(min_y, node->getY());
+      max_y = std::max(max_y, node->getY());
     }
 
-    // draw the edges
-    file << "0.5 setlinewidth\n";
-    for (const auto &edge : edges) {
-      const float x1 = edge->getSource()->getX();
-      const float y1 = edge->getSource()->getY();
-      const float x2 = edge->getTarget()->getX();
-      const float y2 = edge->getTarget()->getY();
+    const float width = max_x - min_x;
+    const float height = max_y - min_y;
+    const float scale_x = (A4_HEIGHT - (2 * padding)) / width;
+    const float padding_x = padding - min_x;
+    const float scale_y = (A4_WIDTH - (2 * padding)) / height;
+    const float padding_y = padding - min_y;
 
-      file << x1 << " " << y1 << " moveto " << x2 << " " << y2 << " lineto\n"
-           << "stroke\n";
+    // Write the PostScript header
+    file << "%!PS-Adobe-3.0" << std::endl
+         << "%%BoundingBox: 0 0 " << A4_WIDTH << " " << A4_HEIGHT << std::endl
+         << "%%EndComments\n\n";
+    file << "/radius " << NODE_RADIUS << " def" << std::endl;
+
+    // Write the edges to the file
+    for (auto &edge : edges) {
+      const auto fromX = (edge->getSource()->getX() + padding_x) * scale_x;
+      const auto fromY = (edge->getSource()->getY() + padding_y) * scale_y;
+      const auto toX = (edge->getTarget()->getX() + padding_x) * scale_x;
+      const auto toY = (edge->getTarget()->getY() + padding_y) * scale_y;
+      file << fromY << " " << fromX << " moveto" << std::endl
+           << toY << " " << toX << " lineto" << std::endl
+           << "stroke\n"
+           << std::endl;
+    }
+
+    // Write the nodes to the file
+    for (auto &node : nodes) {
+      const auto x = (node->getX() + padding_x) * scale_x;
+      const auto y = (node->getY() + padding_y) * scale_y;
+      file << y << " " << x << " radius 0 360 arc" << std::endl
+           << "fill" << std::endl;
     }
 
     // write the PostScript footer
@@ -230,18 +264,21 @@ void Graph::loadFromPSFile(const std::string &filename) {
       }
 
       // Check if the line is an edge command
-      else if (std::regex_match(
-                   line, match,
-                   std::regex(R"((\S+) (\S+) moveto (\S+) (\S+) lineto)"))) {
+      else if (std::regex_match(line, match,
+                                std::regex(R"((\S+) (\S+) moveto)"))) {
         const float x1 = std::stof(match[1]);
         const float y1 = std::stof(match[2]);
-        const float x2 = std::stof(match[3]);
-        const float y2 = std::stof(match[4]);
+        if (std::getline(file, line) &&
+            std::regex_match(line, match,
+                             std::regex(R"((\S+) (\S+) lineto)"))) {
+          const float x2 = std::stof(match[1]);
+          const float y2 = std::stof(match[2]);
 
-        auto sourceNode = findNodeByPosition(x1, y1);
-        auto destNode = findNodeByPosition(x2, y2);
+          auto sourceNode = findNodeByPosition(x1, y1);
+          auto destNode = findNodeByPosition(x2, y2);
 
-        addEdge(std::make_shared<Edge>(sourceNode, destNode));
+          addEdge(std::make_shared<Edge>(sourceNode, destNode));
+        }
       }
     }
 
@@ -257,37 +294,21 @@ void Graph::clearGraph() {
 }
 
 std::shared_ptr<Node> Graph::findNodeByPosition(float x, float y) {
-  auto it =
-      std::find_if(nodes.begin(), nodes.end(), [=](std::shared_ptr<Node> &n) {
-        return n->contains(x, y, NODE_RADIUS);
-      });
-
-  if (it != std::end(nodes)) {
-    auto id = std::distance(nodes.begin(), it);
-    return nodes[id];
-  }
-
-  return nullptr;
+  return findNode(
+      [&](std::shared_ptr<Node> &n) { return n->contains(x, y, NODE_RADIUS); });
 }
 
 std::shared_ptr<Node> Graph::findNodeByName(const std::string &name) {
-  auto it =
-      std::find_if(nodes.begin(), nodes.end(), [=](std::shared_ptr<Node> &n) {
-        return n->getName() == name;
-      });
-
-  if (it != std::end(nodes)) {
-    auto id = std::distance(nodes.begin(), it);
-    return nodes[id];
-  }
-
-  return nullptr;
+  return findNode(
+      [&](std::shared_ptr<Node> &n) { return n->getName() == name; });
 }
 
 std::shared_ptr<Node> Graph::findNodeById(int id) {
-  auto it =
-      std::find_if(nodes.begin(), nodes.end(),
-                   [=](std::shared_ptr<Node> &n) { return n->getId() == id; });
+  return findNode([&](std::shared_ptr<Node> &n) { return n->getId() == id; });
+}
+
+template <typename Func> std::shared_ptr<Node> Graph::findNode(Func func) {
+  auto it = std::find_if(nodes.begin(), nodes.end(), func);
 
   if (it != std::end(nodes)) {
     auto id = std::distance(nodes.begin(), it);

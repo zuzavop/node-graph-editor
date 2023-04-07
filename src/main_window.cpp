@@ -72,8 +72,8 @@ void MainWindow::layoutGraph() {
 void MainWindow::layoutFix() {
   int startY = _menuBar->getHeight() + NODE_RADIUS * 2;
   int startX = NODE_RADIUS * 2;
-  _layout.layoutFix(_graph, _width - 2 * startX, _height - startY - startX, startX,
-                 startY);
+  _layout.layoutFix(_graph, _width - 2 * startX, _height - startY - startX,
+                    startX, startY);
 }
 
 void MainWindow::saveToFile(const std::string &fileName) {

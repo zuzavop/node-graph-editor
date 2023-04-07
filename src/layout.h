@@ -13,7 +13,8 @@ public:
 
   void layout(std::shared_ptr<Graph> graph, int width, int height, int x,
               int y);
-  void layoutFix(std::shared_ptr<Graph> graph, int width, int height, int x, int y);
+  void layoutFix(std::shared_ptr<Graph> graph, int width, int height, int x,
+                 int y);
 
 private:
   void fruchtermanReingold(std::shared_ptr<Graph> graph, int iterations,

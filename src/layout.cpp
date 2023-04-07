@@ -117,10 +117,10 @@ void Layout::layoutBruteForce(std::shared_ptr<Graph> graph, int width,
   }
 
   layoutFix(graph, width, height, x, y);
-
 }
 
-void Layout::layoutFix(std::shared_ptr<Graph> graph, int width, int height, int x, int y) {
+void Layout::layoutFix(std::shared_ptr<Graph> graph, int width, int height,
+                       int x, int y) {
   // normalize node positions to fit within the layout bounds
   float min_x = std::numeric_limits<float>::max();
   float max_x = std::numeric_limits<float>::min();
@@ -138,5 +138,4 @@ void Layout::layoutFix(std::shared_ptr<Graph> graph, int width, int height, int 
     node->setPosition((node->getX() - min_x) * scale_x + x,
                       (node->getY() - min_y) * scale_y + y);
   }
-
 }

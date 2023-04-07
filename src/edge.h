@@ -14,23 +14,27 @@
 
 class Node;
 
-enum Oriented { NOT = 0, FROM_SOURCE = 1, TO_SOURCE = 2 };
-
 class Edge {
 public:
-  Edge(std::shared_ptr<Node> start, std::shared_ptr<Node> end)
-      : startNode(start), endNode(end), selected(false), oriented(NOT) {}
+  Edge(std::shared_ptr<Node> start, std::shared_ptr<Node> end,
+       bool is_oriented = true)
+      : startNode(start), endNode(end), selected(false), oriented(is_oriented) {
+  }
 
   std::shared_ptr<Node> getSource() const { return startNode; }
-
   std::shared_ptr<Node> getTarget() const { return endNode; }
-
   bool isSelected() const { return selected; }
+  bool isOriented() const { return oriented; }
+
   void setSelected(bool is_selected) { selected = is_selected; }
+  void setOrientation(bool is_oriented) { oriented = is_oriented; }
 
   bool operator==(const Edge &other) const {
-    return (startNode == other.startNode && endNode == other.endNode) ||
-           (startNode == other.endNode && endNode == other.startNode);
+    return (startNode == other.getSource() && endNode == other.getTarget());
+  }
+  void switchNodes() {
+    oriented = true;
+    startNode.swap(endNode);
   }
 
   void draw(SDL_Renderer *renderer) const;
@@ -39,7 +43,7 @@ private:
   std::shared_ptr<Node> startNode; // starting node of the edge
   std::shared_ptr<Node> endNode;   // ending node of the edge
   bool selected;
-  Oriented oriented;
+  bool oriented;
 };
 
 #endif

@@ -1,6 +1,7 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
+#include <filesystem>
 #include <memory>
 
 class MainWindow;
@@ -22,15 +23,6 @@ private:
 class LoadCommand : public Command {
 public:
   LoadCommand(std::shared_ptr<MainWindow> window) : _window(window) {}
-  void execute() override;
-
-private:
-  std::shared_ptr<MainWindow> _window;
-};
-
-class LoadFromPSCommand : public Command {
-public:
-  LoadFromPSCommand(std::shared_ptr<MainWindow> window) : _window(window) {}
   void execute() override;
 
 private:

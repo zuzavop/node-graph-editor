@@ -4,6 +4,9 @@
 #include "edge.h"
 #include "node.h"
 
+const int A4_WIDTH = 595;
+const int A4_HEIGHT = 842;
+
 class Graph {
 public:
   Graph() {}
@@ -22,7 +25,6 @@ public:
   void clearGraph();
 
   const std::vector<std::shared_ptr<Node>> &getNodes() const { return nodes; }
-
   const std::vector<std::shared_ptr<Edge>> &getEdges() const { return edges; }
 
   void saveToFile(const std::string &fileName);
@@ -42,6 +44,8 @@ private:
   std::vector<std::shared_ptr<Edge>> edges; // list of edges in the graph
 
   bool _needLayout;
+
+  template <typename Func> std::shared_ptr<Node> findNode(Func func);
 };
 
 #endif
