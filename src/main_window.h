@@ -2,6 +2,7 @@
 #define MAIN_WINDOW_H_
 
 #include "graph.h"
+#include "input_window.h"
 #include "layout.h"
 #include "menu.h"
 #include "text.h"
@@ -12,7 +13,8 @@ class MainWindow : public Window,
 public:
   MainWindow();
   ~MainWindow();
-  bool init(const char *name) override;
+  bool init(const char *name, int width = WINDOW_WIDTH,
+            int height = WINDOW_HEIGHT) override;
   void mainLoop() override;
 
   std::shared_ptr<MainWindow> getptr() { return shared_from_this(); }
@@ -25,12 +27,18 @@ public:
   void loadFromFile(const std::string &fileName);
   void exportToPSFile(const std::string &fileName);
   void loadFromPSFile(const std::string &fileName);
+  void setPopUpWindow(const std::string &title, const std::string &content, const std::string &input = "");
+  void showPopUpWindow();
+  void setCallerPopUp(const std::shared_ptr<PopUpCommand> &caller);
+  const std::string &getInputFromPopUp() { return _input->getInput(); }
+  bool popUpIsActive() { return _input->isActive(); }
 
 private:
   std::shared_ptr<Graph> _graph;
   Layout _layout;
   std::shared_ptr<MenuBar> _menuBar;
   std::shared_ptr<BitmapFont> _font;
+  std::shared_ptr<InputWindow> _input;
 
   void renderWindow() override;
 };

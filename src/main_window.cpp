@@ -5,6 +5,7 @@ MainWindow::MainWindow() : Window() {
   _graph = std::make_shared<Graph>();
   _font = std::make_shared<BitmapFont>();
   _menuBar = std::make_shared<MenuBar>(_font);
+  _input = std::make_shared<InputWindow>();
 }
 
 MainWindow::~MainWindow() {
@@ -13,7 +14,7 @@ MainWindow::~MainWindow() {
   SDL_Quit();
 }
 
-bool MainWindow::init(const char *name) {
+bool MainWindow::init(const char *name, int width, int height) {
   if (!Window::init(name)) {
     return false;
   }
@@ -23,6 +24,7 @@ bool MainWindow::init(const char *name) {
   }
 
   _menuBar->init(getptr());
+  _input->init("");
 
   return true;
 }
@@ -43,11 +45,16 @@ void MainWindow::mainLoop() {
       if (event.type == SDL_QUIT) {
         _running = false;
       }
-      events.notify(&event);
-      _menuBar->handleEvent(&event);
+      if (event.window.windowID == _id) {
+        events.notify(&event);
+        _menuBar->handleEvent(&event);
+      }
+
+      _input->handleEvent(&event);
     }
 
     renderWindow();
+    _input->renderWindow();
   }
 }
 
@@ -90,4 +97,21 @@ void MainWindow::exportToPSFile(const std::string &fileName) {
 
 void MainWindow::loadFromPSFile(const std::string &fileName) {
   _graph->loadFromPSFile(fileName);
+}
+
+void MainWindow::setPopUpWindow(const std::string &title,
+                                const std::string &content, const std::string &input) {
+  _input->resetInput(input);
+  _input->setTitle(title);
+  _input->setDescription(content);
+}
+
+void MainWindow::showPopUpWindow() {
+  _input->focus();
+  // Enable text input
+  SDL_StartTextInput();
+}
+
+void MainWindow::setCallerPopUp(const std::shared_ptr<PopUpCommand> &caller) {
+  _input->setCaller(caller);
 }

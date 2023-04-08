@@ -5,15 +5,15 @@
 void MenuBar::init(std::shared_ptr<MainWindow> window) {
   float scale = 0.7;
   _buttons.push_back(std::make_unique<Button>(
-      std::make_unique<NewCommand>(window), _font, "New", scale));
+      std::make_shared<NewCommand>(window), _font, "New", scale));
   _buttons.push_back(std::make_unique<Button>(
-      std::make_unique<SaveCommand>(window), _font, "Save", scale));
+      std::make_shared<SaveCommand>(window), _font, "Save", scale));
   _buttons.push_back(std::make_unique<Button>(
-      std::make_unique<LoadCommand>(window), _font, "Open", scale));
+      std::make_shared<LoadCommand>(window), _font, "Open", scale));
   _buttons.push_back(std::make_unique<Button>(
-      std::make_unique<ExportCommand>(window), _font, "Export", scale));
+      std::make_shared<ExportCommand>(window), _font, "Export", scale));
   _buttons.push_back(std::make_unique<Button>(
-      std::make_unique<LayoutCommand>(window), _font, "Layout", scale));
+      std::make_shared<LayoutCommand>(window), _font, "Layout", scale));
 
   int startX = 0;
   for (std::size_t i = 0; i < _buttons.size(); ++i) {

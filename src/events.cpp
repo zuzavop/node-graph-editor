@@ -59,7 +59,10 @@ void MouseObserver::processButtonUp(SDL_Event *event) {
         if (node->isClicked(event->button.x, event->button.y)) {
           if (startNode != node) {
             window->getGraph()->addEdge(startNode, node);
-          }
+          } else {
+	    newCommand->resetNode(node);
+	    newCommand->execute();
+	  }
           releasedOnNode = true;
           break;
         }
@@ -77,39 +80,49 @@ void KeyboardObserver::update(SDL_Event *event) {
     // handle edge deletion
     if (event->key.keysym.sym == SDLK_DELETE ||
         event->key.keysym.sym == SDLK_BACKSPACE) {
-      // delete selected nodes and edges
-      std::shared_ptr<Node> deletedNode;
-      for (const auto &node : window->getGraph()->getNodes()) {
-        if (node->isSelected()) {
-          deletedNode = node;
-        }
-      }
-      if (deletedNode) {
-        window->getGraph()->removeNode(deletedNode);
-      }
-
-      std::shared_ptr<Edge> deletedEdge;
-      for (const auto &edge : window->getGraph()->getEdges()) {
-        if (edge->isSelected()) {
-          deletedEdge = edge;
-        }
-      }
-      if (deletedEdge) {
-        window->getGraph()->removeEdge(deletedEdge);
-      }
-
+      processDelete(event);
     } else if (event->key.keysym.sym == SDLK_F11) {
-      if (!window->isFullScreen()) {
-        SDL_SetWindowFullscreen(window->getWindow(), SDL_TRUE);
-        window->setFullScreen(true);
-        window->setMinimized(false);
-      }
+      processF11(event);
     } else if (event->key.keysym.sym == SDLK_ESCAPE) {
-      if (window->isFullScreen()) {
-        SDL_SetWindowFullscreen(window->getWindow(), SDL_FALSE);
-        window->setFullScreen(false);
-      }
+      processEscape(event);
     }
+  }
+}
+
+void KeyboardObserver::processDelete(SDL_Event *event) {
+  // delete selected nodes and edges
+  std::shared_ptr<Node> deletedNode;
+  for (const auto &node : window->getGraph()->getNodes()) {
+    if (node->isSelected()) {
+      deletedNode = node;
+    }
+  }
+  if (deletedNode) {
+    window->getGraph()->removeNode(deletedNode);
+  }
+
+  std::shared_ptr<Edge> deletedEdge;
+  for (const auto &edge : window->getGraph()->getEdges()) {
+    if (edge->isSelected()) {
+      deletedEdge = edge;
+    }
+  }
+  if (deletedEdge) {
+    window->getGraph()->removeEdge(deletedEdge);
+  }
+}
+
+void KeyboardObserver::processF11(SDL_Event *event) {
+  if (!window->isFullScreen()) {
+    SDL_SetWindowFullscreen(window->getWindow(), SDL_TRUE);
+    window->setFullScreen(true);
+  }
+}
+
+void KeyboardObserver::processEscape(SDL_Event *event) {
+  if (window->isFullScreen()) {
+    SDL_SetWindowFullscreen(window->getWindow(), SDL_FALSE);
+    window->setFullScreen(false);
   }
 }
 
@@ -125,33 +138,8 @@ void WindowObserver::update(SDL_Event *event) {
     case SDL_WINDOWEVENT_EXPOSED:
       SDL_RenderPresent(window->getRenderer());
       break;
-
-    case SDL_WINDOWEVENT_ENTER:
-      window->setMouseFocus(true);
-      break;
-
-    case SDL_WINDOWEVENT_LEAVE:
-      window->setMouseFocus(false);
-      break;
-
-    case SDL_WINDOWEVENT_FOCUS_GAINED:
-      window->setKeyboardFocus(true);
-      break;
-
-    case SDL_WINDOWEVENT_FOCUS_LOST:
-      window->setKeyboardFocus(false);
-      break;
-
-    case SDL_WINDOWEVENT_MINIMIZED:
-      window->setMinimized(true);
-      break;
-
-    case SDL_WINDOWEVENT_MAXIMIZED:
-      window->setMinimized(false);
-      break;
-
-    case SDL_WINDOWEVENT_RESTORED:
-      window->setMinimized(false);
+    case SDL_WINDOWEVENT_CLOSE:
+      window->setRunning(false);
       break;
     }
   }

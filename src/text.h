@@ -8,6 +8,9 @@
 #include "texture.h"
 
 const float SCALE_FACTOR = 1;
+const float BIG_FONT_SCALE = 0.7;
+const float SMALL_FONT_SCALE = 0.3;
+const float FONT_SCALE = 0.5;
 
 class BitmapFont {
 public:

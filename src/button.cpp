@@ -1,6 +1,6 @@
 #include "button.h"
 
-Button::Button(std::unique_ptr<Command> c, std::shared_ptr<BitmapFont> f,
+Button::Button(std::shared_ptr<Command> c, std::shared_ptr<BitmapFont> f,
                const std::string &name, float scale)
     : _function(std::move(c)), _font(f), _title(name) {
   _position.x = 0;

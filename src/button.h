@@ -12,7 +12,7 @@ const int BUTTON_HEIGHT = 200;
 
 class Button {
 public:
-  Button(std::unique_ptr<Command> c, std::shared_ptr<BitmapFont> f,
+  Button(std::shared_ptr<Command> c, std::shared_ptr<BitmapFont> f,
          const std::string &name, float scale = 0.6);
 
   void setPosition(int x, int y); // sets top left position
@@ -21,6 +21,7 @@ public:
 
   int getWidth() { return _width; }
   int getHeight() { return _height; }
+  const std::shared_ptr<Command> &getFunction() { return _function; }
 
   void handleEvent(SDL_Event *e);
   void render(SDL_Renderer *renderer);
@@ -30,7 +31,7 @@ private:
   int _width, _height;
   std::string _title;
 
-  std::unique_ptr<Command> _function;
+  std::shared_ptr<Command> _function;
   std::shared_ptr<BitmapFont> _font;
   float _scale;
 };

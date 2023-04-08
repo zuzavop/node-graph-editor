@@ -2,6 +2,7 @@
 #define EVENTS_H
 
 #include "node.h"
+#include "command.h"
 
 class MainWindow;
 
@@ -24,7 +25,9 @@ private:
 
 class MouseObserver : public Observer {
 public:
-  MouseObserver(std::shared_ptr<MainWindow> w) : window(w), dragging(false) {}
+  MouseObserver(std::shared_ptr<MainWindow> w) : window(w), dragging(false) {
+    newCommand = std::make_shared<NewNodeCommand>(w, startNode);
+  }
   void update(SDL_Event *event) override;
 
 private:
@@ -33,6 +36,7 @@ private:
   std::shared_ptr<MainWindow> window;
   bool dragging;
   std::shared_ptr<Node> startNode;
+  std::shared_ptr<NewNodeCommand> newCommand;
 };
 
 class KeyboardObserver : public Observer {
@@ -41,6 +45,9 @@ public:
   void update(SDL_Event *event) override;
 
 private:
+  void processDelete(SDL_Event *event);
+  void processF11(SDL_Event *event);
+  void processEscape(SDL_Event *event);
   std::shared_ptr<MainWindow> window;
 };
 

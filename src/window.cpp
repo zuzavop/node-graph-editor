@@ -2,28 +2,25 @@
 
 Window::Window(int width, int height)
     : _window(nullptr), _renderer(nullptr), _width(width), _height(height),
-      _running(true), _mouseFocus(false), _keyboardFocus(false),
-      _fullScreen(false), _minimized(false) {}
+      _running(false), _fullScreen(false), _shown(false) {}
 
-bool Window::init(const char *name) {
+bool Window::init(const char *name, int width, int height) {
   // set texture filtering to linear
   if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1")) {
     std::cerr << "Warning: Linear texture filtering not enabled!" << std::endl;
   }
 
   // create a window
-  _window = SDL_CreateWindow(
-      name, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH,
-      WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+  _window =
+      SDL_CreateWindow(name, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+                       width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
   if (!_window) {
     std::cout << "Failed to create window: " << SDL_GetError() << std::endl;
     return false;
   } else {
-    _mouseFocus = true;
-    _keyboardFocus = true;
-    _width = WINDOW_WIDTH;
-    _height = WINDOW_HEIGHT;
+    _width = width;
+    _height = height;
   }
 
   // create a renderer
@@ -35,5 +32,18 @@ bool Window::init(const char *name) {
     return false;
   }
 
+  _id = SDL_GetWindowID(_window);
+  _running = true;
+  _shown = true;
+
   return true;
+}
+
+void Window::focus() {
+  if (!_shown) {
+    SDL_ShowWindow(_window);
+    _shown = true;
+  }
+
+  SDL_RaiseWindow(_window);
 }

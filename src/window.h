@@ -11,28 +11,23 @@ const int WINDOW_HEIGHT = 600;
 class Window {
 public:
   virtual ~Window(){};
-  virtual bool init(const char *name);
+  virtual bool init(const char *name, int width = WINDOW_WIDTH,
+                    int height = WINDOW_HEIGHT);
   virtual void mainLoop() = 0;
+  void focus();
 
   int getWidth() { return _width; }
   int getHeight() { return _height; }
   SDL_Renderer *getRenderer() { return _renderer; }
   SDL_Window *getWindow() { return _window; }
+  bool isFullScreen() { return _fullScreen; }
 
   void setDimension(int width, int height) {
     _width = width;
     _height = height;
   }
-
-  bool hasMouseFocus() { return _mouseFocus; }
-  bool hasKeyboardFocus() { return _keyboardFocus; }
-  bool isFullScreen() { return _fullScreen; }
-  bool isMinimized() { return _minimized; }
-
-  void setMouseFocus(bool mouseFocus) { _mouseFocus = mouseFocus; }
-  void setKeyboardFocus(bool keyboardFocus) { _keyboardFocus = keyboardFocus; }
   void setFullScreen(bool fullScreen) { _fullScreen = fullScreen; }
-  void setMinimized(bool minimized) { _minimized = minimized; }
+  void setRunning(bool is_running) { _running = is_running; }
 
 protected:
   Window(int width = 0, int height = 0);
@@ -43,13 +38,10 @@ protected:
   int _width;
   int _height;
 
-  // window focus
-  bool _mouseFocus;
-  bool _keyboardFocus;
   bool _fullScreen;
-  bool _minimized;
-
   bool _running;
+  bool _shown;
+  int _id;
 
   virtual void renderWindow() = 0;
 };
