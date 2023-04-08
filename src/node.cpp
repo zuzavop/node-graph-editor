@@ -18,7 +18,8 @@ void Node::draw(SDL_Renderer *renderer, int radius,
 void Node::addEdge(std::shared_ptr<Edge> edge) { m_edges.push_back(edge); }
 
 void Node::removeEdge(const std::shared_ptr<Edge> &edge) {
-  m_edges.erase(std::remove(m_edges.begin(), m_edges.end(), edge), m_edges.end());
+  m_edges.erase(std::remove(m_edges.begin(), m_edges.end(), edge),
+                m_edges.end());
 }
 
 bool Node::isClicked(float mouseX, float mouseY) {

@@ -24,7 +24,8 @@ private:
 
 class MouseObserver : public Observer {
 public:
-  MouseObserver(std::shared_ptr<MainWindow> window) : m_window(window), m_dragging(false) {
+  MouseObserver(std::shared_ptr<MainWindow> window)
+      : m_window(window), m_dragging(false) {
     m_newCommand = std::make_shared<NewNodeCommand>(window, m_startNode);
   }
   virtual ~MouseObserver() {}

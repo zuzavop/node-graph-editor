@@ -8,7 +8,8 @@ class MainWindow;
 
 class MenuBar {
 public:
-  MenuBar(std::shared_ptr<BitmapFont> font) : m_font(font), m_height(0), m_width(0) {};
+  MenuBar(std::shared_ptr<BitmapFont> font)
+      : m_font(font), m_height(0), m_width(0){};
   ~MenuBar(){};
 
   void init(std::shared_ptr<MainWindow> window);

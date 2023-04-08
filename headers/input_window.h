@@ -13,9 +13,7 @@ public:
   bool init(const char *name = "", int width = WINDOW_WIDTH,
             int height = WINDOW_HEIGHT) override;
 
-  void setDescription(std::string description) {
-    m_description = description;
-  }
+  void setDescription(std::string description) { m_description = description; }
   void setWarning(std::string warning = "") { m_warning = warning; }
   void setTitle(const std::string &caption);
   void setCaller(std::shared_ptr<PopUpCommand> caller);

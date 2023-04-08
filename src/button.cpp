@@ -1,7 +1,7 @@
 #include "button.h"
 
-Button::Button(std::shared_ptr<Command> function, std::shared_ptr<BitmapFont> font,
-               std::string name, float scale)
+Button::Button(std::shared_ptr<Command> function,
+               std::shared_ptr<BitmapFont> font, std::string name, float scale)
     : m_function(std::move(function)), m_font(font), m_title(name) {
   m_position.x = 0;
   m_position.y = 0;
@@ -50,6 +50,6 @@ void Button::handleEvent(SDL_Event &event) {
 }
 
 void Button::render(SDL_Renderer *renderer) {
-  m_font->renderText(m_position.x, m_position.y, m_title, renderer, m_scale, m_width,
-                    m_height);
+  m_font->renderText(m_position.x, m_position.y, m_title, renderer, m_scale,
+                     m_width, m_height);
 }

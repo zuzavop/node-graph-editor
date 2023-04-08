@@ -44,8 +44,7 @@ private:
   std::vector<std::shared_ptr<Edge>> m_edges; // list of edges in the graph
   bool m_needLayout;
 
-  template <typename Func> 
-  std::shared_ptr<Node> findNode(Func func);
+  template <typename Func> std::shared_ptr<Node> findNode(Func func);
 };
 
 #endif

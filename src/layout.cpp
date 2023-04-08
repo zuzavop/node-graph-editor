@@ -1,7 +1,7 @@
 #include "layout.h"
 
-void Layout::layout(const std::shared_ptr<Graph> &graph, int width, int height, int x,
-                    int y) {
+void Layout::layout(const std::shared_ptr<Graph> &graph, int width, int height,
+                    int x, int y) {
   // use brute force layout for small graphs
   if (graph->getEdges().size() < 5) {
     layoutBruteForce(graph, width, height, ITERATION, x, y);
@@ -12,8 +12,9 @@ void Layout::layout(const std::shared_ptr<Graph> &graph, int width, int height, 
   }
 }
 
-void Layout::fruchtermanReingold(const std::shared_ptr<Graph> &graph, int iterations,
-                                 float k, int width, int height, int x, int y) {
+void Layout::fruchtermanReingold(const std::shared_ptr<Graph> &graph,
+                                 int iterations, float k, int width, int height,
+                                 int x, int y) {
   std::vector<std::pair<float, float>> pos(graph->getNodes().size());
   // initialize node positions randomly
   std::default_random_engine generator;
@@ -40,7 +41,8 @@ void Layout::fruchtermanReingold(const std::shared_ptr<Graph> &graph, int iterat
           float dx = pos[i].first - pos[j].first;
           float dy = pos[i].second - pos[j].second;
           float dist = sqrt(dx * dx + dy * dy);
-          if (dist == 0) continue;
+          if (dist == 0)
+            continue;
           float factor = optimal_distance / (dist * dist);
           disp[i].first += dx / dist * factor;
           disp[i].second += dy / dist * factor;
@@ -56,7 +58,8 @@ void Layout::fruchtermanReingold(const std::shared_ptr<Graph> &graph, int iterat
       float dx = pos[i].first - pos[j].first;
       float dy = pos[i].second - pos[j].second;
       float dist = sqrt(dx * dx + dy * dy);
-      if (dist == 0) continue;
+      if (dist == 0)
+        continue;
       float factor = (dist * dist) / optimal_distance;
       disp[i].first -= dx / dist * factor;
       disp[i].second -= dy / dist * factor;
@@ -66,7 +69,8 @@ void Layout::fruchtermanReingold(const std::shared_ptr<Graph> &graph, int iterat
 
     // set nodes according to forces and temperature
     for (int i = 0; i < graph->getNodes().size(); i++) {
-      float dist = sqrt(pos[i].first * pos[i].first + pos[i].second * pos[i].second);
+      float dist =
+          sqrt(pos[i].first * pos[i].first + pos[i].second * pos[i].second);
       float factor = std::min<float>(dist, temperature);
 
       pos[i].first += pos[i].first / dist * factor;
@@ -75,8 +79,9 @@ void Layout::fruchtermanReingold(const std::shared_ptr<Graph> &graph, int iterat
       pos[i].second =
           std::max<float>(0.0, std::min<float>(pos[i].second, height));
     }
-    
-    if (temperature > 1.5) temperature *= cooling_factor;
+
+    if (temperature > 1.5)
+      temperature *= cooling_factor;
   }
   // set final node positions
   for (int i = 0; i < graph->getNodes().size(); i++) {
@@ -114,8 +119,8 @@ void Layout::layoutBruteForce(const std::shared_ptr<Graph> &graph, int width,
   layoutFix(graph, width, height, x, y);
 }
 
-void Layout::layoutFix(const std::shared_ptr<Graph> &graph, int width, int height,
-                       int x, int y) {
+void Layout::layoutFix(const std::shared_ptr<Graph> &graph, int width,
+                       int height, int x, int y) {
   // normalize node positions to fit within the layout bounds
   float min_x = std::numeric_limits<float>::max();
   float max_x = std::numeric_limits<float>::min();

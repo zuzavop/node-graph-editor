@@ -8,18 +8,20 @@ void MenuBar::init(std::shared_ptr<MainWindow> window) {
       std::make_shared<SaveCommand>(window), m_font, "Save", BIG_FONT_SCALE));
   m_buttons.push_back(std::make_unique<Button>(
       std::make_shared<LoadCommand>(window), m_font, "Open", BIG_FONT_SCALE));
-  m_buttons.push_back(std::make_unique<Button>(
-      std::make_shared<ExportCommand>(window), m_font, "Export", BIG_FONT_SCALE));
-  m_buttons.push_back(std::make_unique<Button>(
-      std::make_shared<LayoutCommand>(window), m_font, "Layout", BIG_FONT_SCALE));
+  m_buttons.push_back(
+      std::make_unique<Button>(std::make_shared<ExportCommand>(window), m_font,
+                               "Export", BIG_FONT_SCALE));
+  m_buttons.push_back(
+      std::make_unique<Button>(std::make_shared<LayoutCommand>(window), m_font,
+                               "Layout", BIG_FONT_SCALE));
 
   int startX = 0;
   for (std::size_t i = 0; i < m_buttons.size(); ++i) {
     m_buttons[i]->setPosition(startX, 0);
     startX += m_buttons[i]->getWidth() * BIG_FONT_SCALE + PADDING;
     m_height = m_buttons[i]->getHeight() * BIG_FONT_SCALE > m_height
-                  ? m_buttons[i]->getHeight() * BIG_FONT_SCALE
-                  : m_height;
+                   ? m_buttons[i]->getHeight() * BIG_FONT_SCALE
+                   : m_height;
   }
   m_width = startX;
 }

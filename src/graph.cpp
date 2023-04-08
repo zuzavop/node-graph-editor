@@ -16,10 +16,12 @@ void Graph::removeNode(const std::shared_ptr<Node> &node) {
     auto otherNode =
         edge->getSource() == node ? edge->getTarget() : edge->getSource();
     otherNode->removeEdge(edge);
-    m_edges.erase(std::remove(m_edges.begin(), m_edges.end(), edge), m_edges.end());
+    m_edges.erase(std::remove(m_edges.begin(), m_edges.end(), edge),
+                  m_edges.end());
   }
 
-  m_nodes.erase(std::remove(m_nodes.begin(), m_nodes.end(), node), m_nodes.end());
+  m_nodes.erase(std::remove(m_nodes.begin(), m_nodes.end(), node),
+                m_nodes.end());
 }
 
 void Graph::addEdge(const std::shared_ptr<Node> &from,
@@ -68,7 +70,8 @@ void Graph::addEdge(std::shared_ptr<Edge> edge) {
 void Graph::removeEdge(const std::shared_ptr<Edge> &edge) {
   edge->getSource()->removeEdge(edge);
   edge->getTarget()->removeEdge(edge);
-  m_edges.erase(std::remove(m_edges.begin(), m_edges.end(), edge), m_edges.end());
+  m_edges.erase(std::remove(m_edges.begin(), m_edges.end(), edge),
+                m_edges.end());
 }
 
 void Graph::draw(SDL_Renderer *renderer, std::shared_ptr<BitmapFont> m_font) {

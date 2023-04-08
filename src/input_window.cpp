@@ -23,8 +23,9 @@ bool InputWindow::init(const char *name, int width, int height) {
   resetInput();
   m_okCommand = std::make_shared<OkCommand>(getPtr(), nullptr);
   m_okButton.reset(new Button(m_okCommand, m_font, "OK", BIG_FONT_SCALE));
-  m_okButton->setPosition(m_width - (m_okButton->getWidth() * BIG_FONT_SCALE) - PADDING,
-                         m_height - (m_okButton->getHeight() * BIG_FONT_SCALE) - PADDING);
+  m_okButton->setPosition(
+      m_width - (m_okButton->getWidth() * BIG_FONT_SCALE) - PADDING,
+      m_height - (m_okButton->getHeight() * BIG_FONT_SCALE) - PADDING);
 
   return true;
 }
@@ -69,9 +70,11 @@ void InputWindow::renderWindow() {
   if (m_warning != "") {
     SDL_SetRenderDrawColor(m_renderer, 0xFF, 0x00, 0x00, 0xFF);
     // scale position and size
-    float y = m_height - (m_font->getWordHeight(m_warning) * SMALL_FONT_SCALE) - PADDING;
-    float width = (m_width - m_okButton->getWidth() - PADDING) * (1 / SMALL_FONT_SCALE);
-    m_font->renderText(10, y, m_warning, m_renderer, SMALL_FONT_SCALE, width );
+    float y = m_height - (m_font->getWordHeight(m_warning) * SMALL_FONT_SCALE) -
+              PADDING;
+    float width =
+        (m_width - m_okButton->getWidth() - PADDING) * (1 / SMALL_FONT_SCALE);
+    m_font->renderText(10, y, m_warning, m_renderer, SMALL_FONT_SCALE, width);
   }
 
   SDL_RenderPresent(m_renderer);

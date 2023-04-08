@@ -72,15 +72,15 @@ void MainWindow::renderWindow() {
 void MainWindow::layoutGraph() {
   int startY = m_menuBar->getHeight() + NODE_RADIUS * 2;
   int startX = NODE_RADIUS * 2;
-  m_layout.layout(m_graph, m_width - 2 * startX, m_height - startY - startX, startX,
-                 startY);
+  m_layout.layout(m_graph, m_width - 2 * startX, m_height - startY - startX,
+                  startX, startY);
 }
 
 void MainWindow::layoutFix() {
   int startY = m_menuBar->getHeight() + NODE_RADIUS * 2;
   int startX = NODE_RADIUS * 2;
   m_layout.layoutFix(m_graph, m_width - 2 * startX, m_height - startY - startX,
-                    startX, startY);
+                     startX, startY);
 }
 
 void MainWindow::saveToFile(std::ofstream &file) { m_graph->saveToFile(file); }

@@ -4,7 +4,8 @@ Window::Window(int width, int height)
     : m_window(nullptr), m_renderer(nullptr), m_width(width), m_height(height),
       m_running(false), m_fullScreen(false), m_shown(false) {}
 
-bool Window::init(const char *name, int width, int height, bool isResizable, bool isShown) {
+bool Window::init(const char *name, int width, int height, bool isResizable,
+                  bool isShown) {
   // set texture filtering to linear
   if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1")) {
     std::cerr << "Warning: Linear texture filtering not enabled!" << std::endl;

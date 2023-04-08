@@ -18,8 +18,8 @@ class Edge {
 public:
   Edge(std::shared_ptr<Node> start, std::shared_ptr<Node> end,
        bool isOriented = true)
-      : m_startNode(start), m_endNode(end), m_selected(false), m_oriented(isOriented) {
-  }
+      : m_startNode(start), m_endNode(end), m_selected(false),
+        m_oriented(isOriented) {}
 
   std::shared_ptr<Node> getSource() const { return m_startNode; }
   std::shared_ptr<Node> getTarget() const { return m_endNode; }
@@ -39,11 +39,25 @@ private:
   bool m_oriented;
 };
 
-inline bool operator==(const Edge& lhs, const Edge& rhs) { return (lhs.getSource() == rhs.getSource() && lhs.getTarget() == rhs.getTarget()); }
-inline bool operator!=(const Edge& lhs, const Edge& rhs) { return !operator==(lhs,rhs); }
-inline bool operator< (const Edge& lhs, const Edge& rhs) { return (lhs.getSource() < rhs.getSource() && lhs.getTarget() < rhs.getTarget()) }
-inline bool operator> (const Edge& lhs, const Edge& rhs) { return  operator< (rhs,lhs); }
-inline bool operator<=(const Edge& lhs, const Edge& rhs) { return !operator> (lhs,rhs); }
-inline bool operator>=(const Edge& lhs, const Edge& rhs) { return !operator< (lhs,rhs); }
+inline bool operator==(const Edge &lhs, const Edge &rhs) {
+  return (lhs.getSource() == rhs.getSource() &&
+          lhs.getTarget() == rhs.getTarget());
+}
+inline bool operator!=(const Edge &lhs, const Edge &rhs) {
+  return !operator==(lhs, rhs);
+}
+inline bool operator<(const Edge &lhs, const Edge &rhs) {
+  return (lhs.getSource() < rhs.getSource() &&
+          lhs.getTarget() < rhs.getTarget())
+}
+inline bool operator>(const Edge &lhs, const Edge &rhs) {
+  return operator<(rhs, lhs);
+}
+inline bool operator<=(const Edge &lhs, const Edge &rhs) {
+  return !operator>(lhs, rhs);
+}
+inline bool operator>=(const Edge &lhs, const Edge &rhs) {
+  return !operator<(lhs, rhs);
+}
 
 #endif

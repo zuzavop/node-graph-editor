@@ -12,7 +12,8 @@ class Window {
 public:
   virtual ~Window(){};
   virtual bool init(const char *name, int width = WINDOW_WIDTH,
-                    int height = WINDOW_HEIGHT, bool isResizable = true, bool isShown = true);
+                    int height = WINDOW_HEIGHT, bool isResizable = true,
+                    bool isShown = true);
   virtual void mainLoop() = 0;
   void focus();
 

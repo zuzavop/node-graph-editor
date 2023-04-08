@@ -10,7 +10,7 @@ class InputWindow;
 
 class Command {
 public:
-  virtual ~Command() {};
+  virtual ~Command(){};
   virtual bool execute() = 0;
 };
 
@@ -20,7 +20,9 @@ public:
   virtual ~PopUpCommand() {}
   virtual bool execute() = 0;
   virtual bool control(std::string_view input) = 0;
-  const std::shared_ptr<PopUpCommand> getPtr() const { return shared_from_this(); }
+  const std::shared_ptr<PopUpCommand> getPtr() const {
+    return shared_from_this();
+  }
   void isActive(bool isActive) { m_active = isActive; }
 
 protected:
@@ -104,9 +106,7 @@ public:
             std::shared_ptr<PopUpCommand> caller)
       : m_window(window), m_caller(caller) {}
   virtual ~OkCommand() {}
-  void setCaller(std::shared_ptr<PopUpCommand> caller) {
-    m_caller = caller;
-  }
+  void setCaller(std::shared_ptr<PopUpCommand> caller) { m_caller = caller; }
   const std::shared_ptr<PopUpCommand> getCaller() const { return m_caller; }
   bool execute() override;
   void resetCallerState();
