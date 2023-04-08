@@ -6,12 +6,12 @@ void Node::draw(SDL_Renderer *renderer, int radius,
   for (int i = -radius; i <= radius; i++) {
     for (int j = -radius; j <= radius; j++) {
       if (i * i + j * j <= radius * radius) {
-        SDL_RenderDrawPoint(renderer, m_position.x + i, m_position.y + j);
+        SDL_RenderDrawPoint(renderer, m_x + i, m_y + j);
       }
     }
   }
   if (m_name != "") {
-    font->renderText(m_position.x, m_position.y, m_name, renderer, 0.2);
+    font->renderText(m_x, m_y, m_name, renderer, 0.2);
   }
 }
 

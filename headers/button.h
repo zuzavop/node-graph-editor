@@ -17,8 +17,8 @@ public:
   void setSize(int w, int h);
   void setTitle(const std::string &name);
 
-  int getWidth() const { return m_width; }
-  int getHeight() const { return m_height; }
+  int getWidth() const { return m_width * m_scale; }
+  int getHeight() const { return m_height * m_scale; }
   const std::shared_ptr<Command> getFunction() const { return m_function; }
 
   void handleEvent(SDL_Event &event);

@@ -14,13 +14,14 @@ public:
   MainWindow();
   ~MainWindow();
   bool init(const char *name, int width = WINDOW_WIDTH,
-            int height = WINDOW_HEIGHT) override;
+            int height = WINDOW_HEIGHT, bool isResizable = true,
+            bool isShown = true) override;
   void mainLoop() override;
 
-  std::shared_ptr<MainWindow> getPtr() const { return shared_from_this(); }
+  std::shared_ptr<MainWindow> getPtr() { return shared_from_this(); }
   std::shared_ptr<Graph> getGraph() const { return m_graph; }
   std::shared_ptr<MenuBar> getMenu() const { return m_menuBar; }
-  std::string_view getInputFromPopUp() { return m_input->getInput(); }
+  const std::string &getInputFromPopUp() { return m_input->getInput(); }
   bool popUpIsActive() { return m_input->isActive(); }
 
   void layoutGraph();

@@ -48,7 +48,7 @@ inline bool operator!=(const Edge &lhs, const Edge &rhs) {
 }
 inline bool operator<(const Edge &lhs, const Edge &rhs) {
   return (lhs.getSource() < rhs.getSource() &&
-          lhs.getTarget() < rhs.getTarget())
+          lhs.getTarget() < rhs.getTarget());
 }
 inline bool operator>(const Edge &lhs, const Edge &rhs) {
   return operator<(rhs, lhs);

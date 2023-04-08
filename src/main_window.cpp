@@ -14,7 +14,8 @@ MainWindow::~MainWindow() {
   SDL_Quit();
 }
 
-bool MainWindow::init(const char *name, int width, int height) {
+bool MainWindow::init(const char *name, int width, int height, bool isResizable,
+                      bool isShown) {
   if (!Window::init(name)) {
     return false;
   }
@@ -46,11 +47,11 @@ void MainWindow::mainLoop() {
         m_running = false;
       }
       if (event.window.windowID == m_id) {
-        events.notify(&event);
-        m_menuBar->handleEvent(&event);
+        events.notify(event);
+        m_menuBar->handleEvent(event);
       }
 
-      m_input->handleEvent(&event);
+      m_input->handleEvent(event);
     }
 
     renderWindow();

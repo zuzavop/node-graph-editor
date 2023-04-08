@@ -40,8 +40,8 @@ void Button::handleEvent(SDL_Event &event) {
     SDL_GetMouseState(&x, &y); // mouse position
 
     // check if mouse is in button
-    if (x > m_position.x && x < m_position.x + m_width && y > m_position.y &&
-        y < m_position.y + m_height) {
+    if (x > m_position.x && x < m_position.x + getWidth() && y > m_position.y &&
+        y < m_position.y + getHeight()) {
       if (event.type == SDL_MOUSEBUTTONDOWN) {
         m_function->execute();
       }

@@ -128,9 +128,9 @@ void KeyboardObserver::processEscape() {
 
 void WindowObserver::update(SDL_Event &event) {
   if (event.type == SDL_WINDOWEVENT) {
-    switch (event.m_window.event) {
+    switch (event.window.event) {
     case SDL_WINDOWEVENT_SIZE_CHANGED:
-      m_window->setDimension(event.m_window.data1, event.m_window.data2);
+      m_window->setDimension(event.window.data1, event.window.data2);
       m_window->layoutFix();
       SDL_RenderPresent(m_window->getRenderer());
       break;

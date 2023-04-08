@@ -3,8 +3,8 @@
 void Layout::layout(const std::shared_ptr<Graph> &graph, int width, int height,
                     int x, int y) {
   // use brute force layout for small graphs
-  if (graph->getEdges().size() < 5) {
-    layoutBruteForce(graph, width, height, ITERATION, x, y);
+  if (graph->getEdges().size() < 6) {
+    layoutBruteForce(graph, width, height, 10, x, y);
   }
   // use Fruchterman-Reingold algorithm for large graphs
   else {
@@ -27,7 +27,6 @@ void Layout::fruchtermanReingold(const std::shared_ptr<Graph> &graph,
 
   // set initial temperature and cooling factor
   float temperature = 10 * std::sqrt(graph->getNodes().size());
-  float cooling_factor = std::pow(temperature, 1.0f / iterations);
   double optimal_distance =
       k * std::sqrt((width * height) / graph->getNodes().size());
 
@@ -40,48 +39,46 @@ void Layout::fruchtermanReingold(const std::shared_ptr<Graph> &graph,
         if (i != j) {
           float dx = pos[i].first - pos[j].first;
           float dy = pos[i].second - pos[j].second;
-          float dist = sqrt(dx * dx + dy * dy);
+          float dist = std::sqrt(dx * dx + dy * dy);
           if (dist == 0)
             continue;
-          float factor = optimal_distance / (dist * dist);
-          disp[i].first += dx / dist * factor;
-          disp[i].second += dy / dist * factor;
-          disp[j].first -= dx / dist * factor;
-          disp[j].second -= dy / dist * factor;
+          float factor = optimal_distance * optimal_distance / dist;
+          disp[i].first += (dx / dist) * factor;
+          disp[i].second += (dy / dist) * factor;
         }
       }
     }
+
     // attractive forces between edges
     for (const auto &e : graph->getEdges()) {
       int i = e->getSource()->getId() - 1;
       int j = e->getTarget()->getId() - 1;
       float dx = pos[i].first - pos[j].first;
       float dy = pos[i].second - pos[j].second;
-      float dist = sqrt(dx * dx + dy * dy);
+      float dist = std::sqrt(dx * dx + dy * dy);
       if (dist == 0)
         continue;
       float factor = (dist * dist) / optimal_distance;
-      disp[i].first -= dx / dist * factor;
-      disp[i].second -= dy / dist * factor;
-      disp[j].first += dx / dist * factor;
-      disp[j].second += dy / dist * factor;
+      disp[i].first -= (dx / dist) * factor;
+      disp[i].second -= (dy / dist) * factor;
+      disp[j].first += (dx / dist) * factor;
+      disp[j].second += (dy / dist) * factor;
     }
 
     // set nodes according to forces and temperature
     for (int i = 0; i < graph->getNodes().size(); i++) {
-      float dist =
-          sqrt(pos[i].first * pos[i].first + pos[i].second * pos[i].second);
+      float dist = std::sqrt((pos[i].first * pos[i].first) +
+                             (pos[i].second * pos[i].second));
       float factor = std::min<float>(dist, temperature);
 
       pos[i].first += pos[i].first / dist * factor;
       pos[i].second += pos[i].second / dist * factor;
-      pos[i].first = std::max<float>(0.0, std::min<float>(pos[i].first, width));
-      pos[i].second =
-          std::max<float>(0.0, std::min<float>(pos[i].second, height));
     }
 
     if (temperature > 1.5)
-      temperature *= cooling_factor;
+      temperature *= COOLING_FACTOR;
+    else
+      temperature = 1.5;
   }
   // set final node positions
   for (int i = 0; i < graph->getNodes().size(); i++) {
@@ -106,7 +103,7 @@ void Layout::layoutBruteForce(const std::shared_ptr<Graph> &graph, int width,
     for (const auto &edge : graph->getEdges()) {
       float dx = edge->getTarget()->getX() - edge->getSource()->getX();
       float dy = edge->getTarget()->getY() - edge->getSource()->getY();
-      float d = std::max(1.0f, std::sqrt(dx * dx + dy * dy));
+      float d = std::sqrt(dx * dx + dy * dy);
       float ddx = dx / d;
       float ddy = dy / d;
       edge->getSource()->setPosition(edge->getSource()->getX() + ddx,

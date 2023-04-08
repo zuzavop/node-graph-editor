@@ -10,7 +10,8 @@ InputWindow::~InputWindow() {
   SDL_DestroyRenderer(m_renderer);
 }
 
-bool InputWindow::init(const char *name, int width, int height) {
+bool InputWindow::init(const char *name, int width, int height,
+                       bool isResizable, bool isShown) {
   if (!Window::init(name, 400, 300, false, false))
     return false;
 
@@ -23,9 +24,8 @@ bool InputWindow::init(const char *name, int width, int height) {
   resetInput();
   m_okCommand = std::make_shared<OkCommand>(getPtr(), nullptr);
   m_okButton.reset(new Button(m_okCommand, m_font, "OK", BIG_FONT_SCALE));
-  m_okButton->setPosition(
-      m_width - (m_okButton->getWidth() * BIG_FONT_SCALE) - PADDING,
-      m_height - (m_okButton->getHeight() * BIG_FONT_SCALE) - PADDING);
+  m_okButton->setPosition(m_width - m_okButton->getWidth() - PADDING,
+                          m_height - m_okButton->getHeight() - PADDING);
 
   return true;
 }
@@ -73,7 +73,8 @@ void InputWindow::renderWindow() {
     float y = m_height - (m_font->getWordHeight(m_warning) * SMALL_FONT_SCALE) -
               PADDING;
     float width =
-        (m_width - m_okButton->getWidth() - PADDING) * (1 / SMALL_FONT_SCALE);
+        (m_width - (m_okButton->getWidth() * (1 / BIG_FONT_SCALE)) - PADDING) *
+        (1 / SMALL_FONT_SCALE);
     m_font->renderText(10, y, m_warning, m_renderer, SMALL_FONT_SCALE, width);
   }
 

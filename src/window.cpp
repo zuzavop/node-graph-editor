@@ -12,9 +12,12 @@ bool Window::init(const char *name, int width, int height, bool isResizable,
   }
 
   // create a window
-  m_window =
-      SDL_CreateWindow(name, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                       width, height, isResizable && isShown ? SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE : (isShown ? SDL_WINDOW_SHOWN : (isResizable ? SDL_WINDOW_RESIZABLE : 0));
+  m_window = SDL_CreateWindow(
+      name, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height,
+      isResizable && isShown
+          ? SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
+          : (isShown ? SDL_WINDOW_SHOWN
+                     : (isResizable ? SDL_WINDOW_RESIZABLE : 0)));
 
   if (!m_window) {
     std::cout << "Failed to create window: " << SDL_GetError() << std::endl;

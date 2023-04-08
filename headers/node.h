@@ -11,7 +11,7 @@
 
 #include "text.h"
 
-const int NODE_RADIUS = 10;
+const int NODE_RADIUS = 8;
 
 class Edge;
 
@@ -19,41 +19,40 @@ class Node {
 public:
   Node(std::string name, float x, float y)
       : m_id(0), m_name(name), m_selected(false) {
-    m_position.x = x;
-    m_position.y = y;
+    m_x = x;
+    m_y = y;
   }
 
   Node(float x, float y) : m_id(0), m_name(""), m_selected(false) {
-    m_position.x = x;
-    m_position.y = y;
+    m_x = x;
+    m_y = y;
   }
 
   Node(std::string name, float x, float y, int id)
       : m_id(id), m_name(name), m_selected(false) {
-    m_position.x = x;
-    m_position.y = y;
+    m_x = x;
+    m_y = y;
   }
 
-  float getX() const { return m_position.x; }
-  float getY() const { return m_position.y; }
+  float getX() const { return m_x; }
+  float getY() const { return m_y; }
   int getId() const { return m_id; }
   bool isSelected() const { return m_selected; }
   std::string getName() const { return m_name; }
   const std::vector<std::shared_ptr<Edge>> &getEdges() const { return m_edges; }
 
-  void setX(float x) { m_position.x = x; }
-  void setY(float y) { m_position.y = y; }
+  void setX(float x) { m_x = x; }
+  void setY(float y) { m_y = y; }
   void setId(int id) { m_id = id; }
   void setName(std::string name) { m_name = name; }
   void setSelected(bool isSelected) { m_selected = isSelected; }
   void setPosition(float x, float y) {
-    m_position.x = x;
-    m_position.y = y;
+    m_x = x;
+    m_y = y;
   }
 
   bool contains(float x, float y, int radius) const {
-    return std::pow(x - m_position.x, 2) + std::pow(y - m_position.y, 2) <=
-           std::pow(radius, 2);
+    return std::pow(x - m_x, 2) + std::pow(y - m_y, 2) <= std::pow(radius, 2);
   }
 
   void addEdge(std::shared_ptr<Edge> edge);
@@ -67,7 +66,7 @@ private:
   int m_id;
   std::string m_name;
   bool m_selected;
-  SDL_Point m_position;
+  float m_x, m_y;
   std::vector<std::shared_ptr<Edge>> m_edges;
 };
 

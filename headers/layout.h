@@ -3,8 +3,9 @@
 
 #include "graph.h"
 
-const int ITERATION = 100;
-const float K = 1.0;
+const int ITERATION = 300;
+const float K = 15.0;
+const float COOLING_FACTOR = 0.8;
 
 class Layout {
 public:

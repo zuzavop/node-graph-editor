@@ -11,7 +11,8 @@ public:
   ~InputWindow();
 
   bool init(const char *name = "", int width = WINDOW_WIDTH,
-            int height = WINDOW_HEIGHT) override;
+            int height = WINDOW_HEIGHT, bool isResizable = true,
+            bool isShown = true) override;
 
   void setDescription(std::string description) { m_description = description; }
   void setWarning(std::string warning = "") { m_warning = warning; }
@@ -25,8 +26,8 @@ public:
   void hideWindow();
   void doneInput(bool isDone = true) { m_done = isDone; }
 
-  std::string_view getInput() const { return m_input; }
-  std::shared_ptr<InputWindow> getPtr() const { return shared_from_this(); }
+  const std::string &getInput() const { return m_input; }
+  std::shared_ptr<InputWindow> getPtr() { return shared_from_this(); }
   bool isActive() const { return !m_done; }
 
 private:

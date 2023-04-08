@@ -18,10 +18,9 @@ void MenuBar::init(std::shared_ptr<MainWindow> window) {
   int startX = 0;
   for (std::size_t i = 0; i < m_buttons.size(); ++i) {
     m_buttons[i]->setPosition(startX, 0);
-    startX += m_buttons[i]->getWidth() * BIG_FONT_SCALE + PADDING;
-    m_height = m_buttons[i]->getHeight() * BIG_FONT_SCALE > m_height
-                   ? m_buttons[i]->getHeight() * BIG_FONT_SCALE
-                   : m_height;
+    startX += m_buttons[i]->getWidth() + PADDING;
+    m_height = m_buttons[i]->getHeight() > m_height ? m_buttons[i]->getHeight()
+                                                    : m_height;
   }
   m_width = startX;
 }
