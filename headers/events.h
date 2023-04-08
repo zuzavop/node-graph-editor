@@ -1,8 +1,8 @@
 #ifndef EVENTS_H
 #define EVENTS_H
 
-#include "node.h"
 #include "command.h"
+#include "node.h"
 
 class MainWindow;
 

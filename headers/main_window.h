@@ -27,7 +27,8 @@ public:
   void loadFromFile(std::ifstream &file);
   void loadFromPSFile(std::ifstream &file);
   void exportToPSFile(std::ofstream &file);
-  void setPopUpWindow(const std::string &title, const std::string &content, const std::string &input = "");
+  void setPopUpWindow(const std::string &title, const std::string &content,
+                      const std::string &input = "");
   void setPopUpWarning(const std::string &warning);
   void showPopUpWindow();
   void setCallerPopUp(const std::shared_ptr<PopUpCommand> &caller);

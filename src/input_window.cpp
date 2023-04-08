@@ -69,7 +69,9 @@ void InputWindow::renderWindow() {
 
   if (_warning != "") {
     SDL_SetRenderDrawColor(_renderer, 0xFF, 0x00, 0x00, 0xFF);
-    _font->renderText(10, _height - (_font->getWordHeight(_warning) * 0.3) - 10, _warning, _renderer, 0.3, (_width - _okButton->getWidth() - 10) * (1/0.3));
+    _font->renderText(10, _height - (_font->getWordHeight(_warning) * 0.3) - 10,
+                      _warning, _renderer, 0.3,
+                      (_width - _okButton->getWidth() - 10) * (1 / 0.3));
   }
 
   SDL_RenderPresent(_renderer);
@@ -78,7 +80,8 @@ void InputWindow::renderWindow() {
 void InputWindow::hideWindow() {
   _shown = false;
   _done = false;
-  if (_okCommand) _okCommand->getCaller()->isActive(false);
+  if (_okCommand)
+    _okCommand->getCaller()->isActive(false);
   SDL_HideWindow(_window);
   // disable text input
   SDL_StopTextInput();

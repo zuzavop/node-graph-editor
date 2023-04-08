@@ -15,11 +15,11 @@ bool SaveCommand::execute() {
       const std::string address = _window->getInputFromPopUp();
       std::ofstream file(address);
       if (file.is_open()) {
-      	_window->saveToFile(file);
+        _window->saveToFile(file);
         file.close();
       } else {
         _window->setPopUpWarning("Failed to open file: " + address + "\n");
-	return false;
+        return false;
       }
       active = false;
     }
@@ -52,20 +52,20 @@ bool LoadCommand::execute() {
       // open the file for reading
       std::ifstream file(address);
 
-      if(file.is_open()) {
+      if (file.is_open()) {
         if (pathObj.extension() == ".ps") {
           _window->loadFromPSFile(file);
         } else if (pathObj.extension() == ".txt") {
           _window->loadFromFile(file);
-	}
-	file.close();
-	
-	if (_window->getGraph()->needLayout()) {
+        }
+        file.close();
+
+        if (_window->getGraph()->needLayout()) {
           _window->layoutGraph();
           _window->getGraph()->wasLayout();
         }
       } else {
-	_window->setPopUpWarning("Failed to open file: " + address + "\n");
+        _window->setPopUpWarning("Failed to open file: " + address + "\n");
         return false;
       }
       active = false;
@@ -81,8 +81,9 @@ bool LoadCommand::control(const std::string &input) {
     if (pathObj.extension() == ".ps" || pathObj.extension() == ".txt") {
       return true;
     } else {
-    _window->setPopUpWarning("Please enter file with\nthe extension `.txt` or `.ps`.");
-  }
+      _window->setPopUpWarning(
+          "Please enter file with\nthe extension `.txt` or `.ps`.");
+    }
   } else {
     _window->setPopUpWarning("Please enter existing file.");
   }
@@ -100,12 +101,12 @@ bool ExportCommand::execute() {
       const std::string address = _window->getInputFromPopUp();
       // open the file for writing
       std::ofstream file(address);
-      if(file.is_open()) {
-      	_window->exportToPSFile(file);
-	file.close();
+      if (file.is_open()) {
+        _window->exportToPSFile(file);
+        file.close();
       } else {
-    	_window->setPopUpWarning("Failed to open file: " + address + "\n");
-	return false;
+        _window->setPopUpWarning("Failed to open file: " + address + "\n");
+        return false;
       }
       active = false;
     }
@@ -140,27 +141,33 @@ bool NewNodeCommand::execute() {
 }
 
 bool NewNodeCommand::control(const std::string &input) {
-	if (input.size() < 4) {
-		return true;
-	} else {
+  if (input.size() < 4) {
+    return true;
+  } else {
     _window->setPopUpWarning("Please enter a name of up to 3 characters.");
   }
-	return false;
+  return false;
 }
 
-bool LayoutCommand::execute() { _window->layoutGraph(); return true; }
+bool LayoutCommand::execute() {
+  _window->layoutGraph();
+  return true;
+}
 
-bool NewCommand::execute() { _window->getGraph()->clearGraph(); return true; }
+bool NewCommand::execute() {
+  _window->getGraph()->clearGraph();
+  return true;
+}
 
 bool OkCommand::execute() {
   if (_window->getInput() != "") {
     if (_caller) {
       if (_caller->control(_window->getInput())) {
-	_window->doneInput();
-	if(_caller->execute())
-		_window->hideWindow();
-	else
-		_window->doneInput(false);
+        _window->doneInput();
+        if (_caller->execute())
+          _window->hideWindow();
+        else
+          _window->doneInput(false);
       }
     }
   } else {
@@ -170,5 +177,6 @@ bool OkCommand::execute() {
 }
 
 void OkCommand::resetCallerState() {
-  if (_caller) _caller->isActive(false);
+  if (_caller)
+    _caller->isActive(false);
 }

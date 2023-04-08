@@ -126,7 +126,7 @@ void BitmapFont::renderText(int x, int y, std::string text,
   height = (height == 0 ? getWordHeight(text) : height) + 2;
   // Set the scaling factor
   SDL_RenderSetScale(renderer, scale_factor, scale_factor);
-  const SDL_Rect buttonSpace = { x, y, width, height };
+  const SDL_Rect buttonSpace = {x, y, width, height};
   SDL_RenderFillRect(renderer, &buttonSpace);
 
   // if the font has been built

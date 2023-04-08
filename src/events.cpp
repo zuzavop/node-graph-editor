@@ -60,9 +60,9 @@ void MouseObserver::processButtonUp(SDL_Event *event) {
           if (startNode != node) {
             window->getGraph()->addEdge(startNode, node);
           } else {
-	    newCommand->resetNode(node);
-	    newCommand->execute();
-	  }
+            newCommand->resetNode(node);
+            newCommand->execute();
+          }
           releasedOnNode = true;
           break;
         }

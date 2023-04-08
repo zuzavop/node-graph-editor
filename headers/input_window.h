@@ -16,16 +16,14 @@ public:
   void setDescription(const std::string description) {
     _description = description;
   }
-  void setWarning(const std::string warning) {
-    _warning = warning;
-  }
+  void setWarning(const std::string warning) { _warning = warning; }
   void setTitle(const std::string &caption);
   void setCaller(const std::shared_ptr<PopUpCommand> &caller);
 
   void mainLoop() override{};
   void handleEvent(SDL_Event *event);
   void renderWindow() override;
-  void resetInput(const std::string & input = "") { _input = input; }
+  void resetInput(const std::string &input = "") { _input = input; }
   void hideWindow();
   void doneInput(bool is_done = true) { _done = is_done; }
 
