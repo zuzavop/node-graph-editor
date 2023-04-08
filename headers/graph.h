@@ -27,10 +27,10 @@ public:
   const std::vector<std::shared_ptr<Node>> &getNodes() const { return nodes; }
   const std::vector<std::shared_ptr<Edge>> &getEdges() const { return edges; }
 
-  void saveToFile(const std::string &fileName);
-  void loadFromFile(const std::string &fileName);
-  void loadFromPSFile(const std::string &fileName);
-  void exportToPSFile(const std::string &fileName);
+  void saveToFile(std::ofstream &file);
+  void loadFromFile(std::ifstream &file);
+  void loadFromPSFile(std::ifstream &file);
+  void exportToPSFile(std::ofstream &file);
 
   std::shared_ptr<Node> findNodeByPosition(float x, float y);
   std::shared_ptr<Node> findNodeByName(const std::string &name);

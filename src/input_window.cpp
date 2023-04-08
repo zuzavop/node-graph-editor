@@ -1,7 +1,7 @@
 #include "input_window.h"
 #include "command.h"
 
-InputWindow::InputWindow() : Window(), _okButton(nullptr) {
+InputWindow::InputWindow() : Window(), _okButton(nullptr), _warning("") {
   _font = std::make_shared<BitmapFont>();
 }
 
@@ -39,9 +39,7 @@ void InputWindow::handleEvent(SDL_Event *event) {
     if (event->type == SDL_TEXTINPUT) {
       _input += event->text.text;
     } else if (event->window.event == SDL_WINDOWEVENT_CLOSE) {
-      _shown = false;
-      _okCommand->resetCallerState();
-      SDL_HideWindow(_window);
+      hideWindow();
     } else if (event->type == SDL_KEYDOWN) {
       if (event->key.keysym.sym == SDLK_DELETE ||
           event->key.keysym.sym == SDLK_BACKSPACE) {
@@ -69,11 +67,18 @@ void InputWindow::renderWindow() {
   if (_okButton)
     _okButton->render(_renderer);
 
+  if (_warning != "") {
+    SDL_SetRenderDrawColor(_renderer, 0xFF, 0x00, 0x00, 0xFF);
+    _font->renderText(10, _height - (_font->getWordHeight(_warning) * 0.3) - 10, _warning, _renderer, 0.3, (_width - _okButton->getWidth() - 10) * (1/0.3));
+  }
+
   SDL_RenderPresent(_renderer);
 }
 
 void InputWindow::hideWindow() {
   _shown = false;
+  _done = false;
+  if (_okCommand) _okCommand->getCaller()->isActive(false);
   SDL_HideWindow(_window);
   // disable text input
   SDL_StopTextInput();

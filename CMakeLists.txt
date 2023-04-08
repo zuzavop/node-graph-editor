@@ -9,6 +9,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # Add the source files
 file(GLOB SOURCES "src/*.cpp")
 
+# Add header files
+include_directories(headers)
+
 # Find the SDL2 library
 find_package(SDL2 REQUIRED)
 

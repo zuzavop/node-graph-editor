@@ -122,11 +122,11 @@ void BitmapFont::renderText(int x, int y, std::string text,
                             int width, int height) {
   x = x * (1 / scale_factor);
   y = y * (1 / scale_factor);
+  width = (width == 0 ? getWordWidth(text) : width) + 2;
+  height = (height == 0 ? getWordHeight(text) : height) + 2;
   // Set the scaling factor
   SDL_RenderSetScale(renderer, scale_factor, scale_factor);
-  const SDL_Rect buttonSpace = {
-      x, y, (width == 0 ? getWordWidth(text) : width) + 2,
-      (height == 0 ? getWordHeight(text) : height) + 2};
+  const SDL_Rect buttonSpace = { x, y, width, height };
   SDL_RenderFillRect(renderer, &buttonSpace);
 
   // if the font has been built
@@ -145,7 +145,7 @@ void BitmapFont::renderText(int x, int y, std::string text,
 
         _fontTexture.render(curX, curY, renderer, &_chars[ascii]);
 
-        curX += _chars[ascii].w + 1;
+        curX += _chars[ascii].w;
       }
     }
   }

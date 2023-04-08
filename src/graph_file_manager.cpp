@@ -1,9 +1,6 @@
 #include "graph.h"
 
-void Graph::saveToFile(const std::string &filename) {
-  // open the file for writing
-  std::ofstream file(filename);
-
+void Graph::saveToFile(std::ofstream &file) {
   if (file.is_open()) {
     // write the nodes
     for (const auto &node : nodes) {
@@ -28,16 +25,10 @@ void Graph::saveToFile(const std::string &filename) {
              << " " << y2 << "\n";
       }
     }
-
-    file.close();
-  } else {
-    std::cerr << "Failed to open file: " << filename << std::endl;
   }
 }
 
-void Graph::loadFromFile(const std::string &filename) {
-  // open the file for reading
-  std::ifstream file(filename);
+void Graph::loadFromFile(std::ifstream &file) {
   if (file.is_open()) {
     clearGraph();
 
@@ -99,17 +90,11 @@ void Graph::loadFromFile(const std::string &filename) {
       }
       ++num_line;
     }
-    file.close();
-  } else {
-    std::cerr << "Failed to open file: " << filename << std::endl;
   }
 }
 
-void Graph::exportToPSFile(const std::string &filename) {
-  // open the file for writing
-  std::ofstream file(filename);
+void Graph::exportToPSFile(std::ofstream &file) {
   if (file.is_open()) {
-
     // Calculate the scaling factor to fit the graph on a page
     const float padding = NODE_RADIUS * 2;
     float min_x = std::numeric_limits<float>::max();
@@ -196,16 +181,10 @@ void Graph::exportToPSFile(const std::string &filename) {
 
     // write the PostScript footer
     file << "\nshowpage\n";
-
-    file.close();
-  } else {
-    std::cerr << "Failed to open file: " << filename << std::endl;
   }
 }
 
-void Graph::loadFromPSFile(const std::string &filename) {
-  // open the file for reading
-  std::ifstream file(filename);
+void Graph::loadFromPSFile(std::ifstream &file) {
   if (file.is_open()) {
     clearGraph();
     _needLayout = true;
@@ -276,9 +255,5 @@ void Graph::loadFromPSFile(const std::string &filename) {
         }
       }
     }
-
-    file.close();
-  } else {
-    std::cerr << "Failed to open file: " << filename << std::endl;
   }
 }

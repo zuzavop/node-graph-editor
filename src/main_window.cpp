@@ -83,27 +83,32 @@ void MainWindow::layoutFix() {
                     startX, startY);
 }
 
-void MainWindow::saveToFile(const std::string &fileName) {
-  _graph->saveToFile(fileName);
+void MainWindow::saveToFile(std::ofstream &file) {
+  _graph->saveToFile(file);
 }
 
-void MainWindow::loadFromFile(const std::string &fileName) {
-  _graph->loadFromFile(fileName);
+void MainWindow::loadFromFile(std::ifstream &file) {
+  _graph->loadFromFile(file);
 }
 
-void MainWindow::exportToPSFile(const std::string &fileName) {
-  _graph->exportToPSFile(fileName);
+void MainWindow::exportToPSFile(std::ofstream &file) {
+  _graph->exportToPSFile(file);
 }
 
-void MainWindow::loadFromPSFile(const std::string &fileName) {
-  _graph->loadFromPSFile(fileName);
+void MainWindow::loadFromPSFile(std::ifstream &file) {
+  _graph->loadFromPSFile(file);
 }
 
 void MainWindow::setPopUpWindow(const std::string &title,
                                 const std::string &content, const std::string &input) {
+  _input->setWarning("");
   _input->resetInput(input);
   _input->setTitle(title);
   _input->setDescription(content);
+}
+
+void MainWindow::setPopUpWarning(const std::string &warning) {
+  _input->setWarning(warning);
 }
 
 void MainWindow::showPopUpWindow() {
