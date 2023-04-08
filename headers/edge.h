@@ -17,33 +17,33 @@ class Node;
 class Edge {
 public:
   Edge(std::shared_ptr<Node> start, std::shared_ptr<Node> end,
-       bool is_oriented = true)
-      : startNode(start), endNode(end), selected(false), oriented(is_oriented) {
+       bool isOriented = true)
+      : m_startNode(start), m_endNode(end), m_selected(false), m_oriented(isOriented) {
   }
 
-  std::shared_ptr<Node> getSource() const { return startNode; }
-  std::shared_ptr<Node> getTarget() const { return endNode; }
-  bool isSelected() const { return selected; }
-  bool isOriented() const { return oriented; }
+  std::shared_ptr<Node> getSource() const { return m_startNode; }
+  std::shared_ptr<Node> getTarget() const { return m_endNode; }
+  bool isSelected() const { return m_selected; }
+  bool isOriented() const { return m_oriented; }
 
-  void setSelected(bool is_selected) { selected = is_selected; }
-  void setOrientation(bool is_oriented) { oriented = is_oriented; }
-
-  bool operator==(const Edge &other) const {
-    return (startNode == other.getSource() && endNode == other.getTarget());
-  }
-  void switchNodes() {
-    oriented = true;
-    startNode.swap(endNode);
-  }
+  void setSelected(bool isSelected) { m_selected = isSelected; }
+  void setOrientation(bool isOriented) { m_oriented = isOriented; }
+  void switchNodes();
 
   void draw(SDL_Renderer *renderer) const;
 
 private:
-  std::shared_ptr<Node> startNode; // starting node of the edge
-  std::shared_ptr<Node> endNode;   // ending node of the edge
-  bool selected;
-  bool oriented;
+  std::shared_ptr<Node> m_startNode; // starting node of the edge
+  std::shared_ptr<Node> m_endNode;   // ending node of the edge
+  bool m_selected;
+  bool m_oriented;
 };
+
+inline bool operator==(const Edge& lhs, const Edge& rhs) { return (lhs.getSource() == rhs.getSource() && lhs.getTarget() == rhs.getTarget()); }
+inline bool operator!=(const Edge& lhs, const Edge& rhs) { return !operator==(lhs,rhs); }
+inline bool operator< (const Edge& lhs, const Edge& rhs) { return (lhs.getSource() < rhs.getSource() && lhs.getTarget() < rhs.getTarget()) }
+inline bool operator> (const Edge& lhs, const Edge& rhs) { return  operator< (rhs,lhs); }
+inline bool operator<=(const Edge& lhs, const Edge& rhs) { return !operator> (lhs,rhs); }
+inline bool operator>=(const Edge& lhs, const Edge& rhs) { return !operator< (lhs,rhs); }
 
 #endif

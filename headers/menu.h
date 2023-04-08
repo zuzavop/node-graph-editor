@@ -1,33 +1,27 @@
 #ifndef MENU_H
 #define MENU_H
 
-#include <SDL2/SDL.h>
-#include <iostream>
-#include <memory>
-#include <string>
-#include <vector>
-
 #include "button.h"
-#include "text.h"
+#include "command.h"
 
 class MainWindow;
 
 class MenuBar {
 public:
-  MenuBar(std::shared_ptr<BitmapFont> f) : _font(f){};
+  MenuBar(std::shared_ptr<BitmapFont> font) : m_font(font), m_height(0), m_width(0) {};
   ~MenuBar(){};
 
   void init(std::shared_ptr<MainWindow> window);
-  void handleEvent(SDL_Event *event);
+  void handleEvent(SDL_Event &event);
   void draw(SDL_Renderer *r);
   bool clickedInMenu(int x, int y);
-  int getHeight() { return _height; }
+
+  int getHeight() const { return m_height; }
 
 private:
-  std::shared_ptr<BitmapFont> _font;
-  std::vector<std::unique_ptr<Button>> _buttons;
-
-  int _height;
+  std::shared_ptr<BitmapFont> m_font;
+  std::vector<std::unique_ptr<Button>> m_buttons;
+  int m_height, m_width;
 };
 
 #endif

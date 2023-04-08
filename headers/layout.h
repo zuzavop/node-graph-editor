@@ -1,25 +1,24 @@
 #ifndef LAYOUT_H
 #define LAYOUT_H
 
-#include <memory>
-#include <random>
-#include <vector>
+#include "graph.h"
 
-class Graph;
+const int ITERATION = 100;
+const float K = 1.0;
 
 class Layout {
 public:
   Layout() {}
 
-  void layout(std::shared_ptr<Graph> graph, int width, int height, int x,
+  void layout(const std::shared_ptr<Graph> &graph, int width, int height, int x,
               int y);
-  void layoutFix(std::shared_ptr<Graph> graph, int width, int height, int x,
+  void layoutFix(const std::shared_ptr<Graph> &graph, int width, int height, int x,
                  int y);
 
 private:
-  void fruchtermanReingold(std::shared_ptr<Graph> graph, int iterations,
+  void fruchtermanReingold(const std::shared_ptr<Graph> &graph, int iterations,
                            float k, int width, int height, int x, int y);
-  void layoutBruteForce(std::shared_ptr<Graph> graph, int width, int height,
+  void layoutBruteForce(const std::shared_ptr<Graph> &graph, int width, int height,
                         int iterations, int x, int y);
 };
 

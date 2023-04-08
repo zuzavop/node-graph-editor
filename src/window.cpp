@@ -1,49 +1,49 @@
 #include "window.h"
 
 Window::Window(int width, int height)
-    : _window(nullptr), _renderer(nullptr), _width(width), _height(height),
-      _running(false), _fullScreen(false), _shown(false) {}
+    : m_window(nullptr), m_renderer(nullptr), m_width(width), m_height(height),
+      m_running(false), m_fullScreen(false), m_shown(false) {}
 
-bool Window::init(const char *name, int width, int height) {
+bool Window::init(const char *name, int width, int height, bool isResizable, bool isShown) {
   // set texture filtering to linear
   if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1")) {
     std::cerr << "Warning: Linear texture filtering not enabled!" << std::endl;
   }
 
   // create a window
-  _window =
+  m_window =
       SDL_CreateWindow(name, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                       width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+                       width, height, isResizable && isShown ? SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE : (isShown ? SDL_WINDOW_SHOWN : (isResizable ? SDL_WINDOW_RESIZABLE : 0));
 
-  if (!_window) {
+  if (!m_window) {
     std::cout << "Failed to create window: " << SDL_GetError() << std::endl;
     return false;
   } else {
-    _width = width;
-    _height = height;
+    m_width = width;
+    m_height = height;
   }
 
   // create a renderer
-  _renderer = SDL_CreateRenderer(
-      _window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+  m_renderer = SDL_CreateRenderer(
+      m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-  if (!_renderer) {
+  if (!m_renderer) {
     std::cout << "Failed to create renderer: " << SDL_GetError() << std::endl;
     return false;
   }
 
-  _id = SDL_GetWindowID(_window);
-  _running = true;
-  _shown = true;
+  m_id = SDL_GetWindowID(m_window);
+  m_running = true;
+  m_shown = true;
 
   return true;
 }
 
 void Window::focus() {
-  if (!_shown) {
-    SDL_ShowWindow(_window);
-    _shown = true;
+  if (!m_shown) {
+    SDL_ShowWindow(m_window);
+    m_shown = true;
   }
 
-  SDL_RaiseWindow(_window);
+  SDL_RaiseWindow(m_window);
 }

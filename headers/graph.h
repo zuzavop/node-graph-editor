@@ -21,11 +21,14 @@ public:
   void addEdge(std::shared_ptr<Edge> edge);
   void removeEdge(const std::shared_ptr<Edge> &edge);
 
-  void draw(SDL_Renderer *renderer, std::shared_ptr<BitmapFont> _font);
+  void wasLayout() { m_needLayout = false; }
+
+  void draw(SDL_Renderer *renderer, std::shared_ptr<BitmapFont> m_font);
   void clearGraph();
 
-  const std::vector<std::shared_ptr<Node>> &getNodes() const { return nodes; }
-  const std::vector<std::shared_ptr<Edge>> &getEdges() const { return edges; }
+  const std::vector<std::shared_ptr<Node>> &getNodes() const { return m_nodes; }
+  const std::vector<std::shared_ptr<Edge>> &getEdges() const { return m_edges; }
+  bool needLayout() const { return m_needLayout; }
 
   void saveToFile(std::ofstream &file);
   void loadFromFile(std::ifstream &file);
@@ -33,19 +36,16 @@ public:
   void exportToPSFile(std::ofstream &file);
 
   std::shared_ptr<Node> findNodeByPosition(float x, float y);
-  std::shared_ptr<Node> findNodeByName(const std::string &name);
+  std::shared_ptr<Node> findNodeByName(std::string_view name);
   std::shared_ptr<Node> findNodeById(int id);
 
-  bool needLayout() { return _needLayout; }
-  void wasLayout() { _needLayout = false; }
-
 private:
-  std::vector<std::shared_ptr<Node>> nodes; // list of nodes in the graph
-  std::vector<std::shared_ptr<Edge>> edges; // list of edges in the graph
+  std::vector<std::shared_ptr<Node>> m_nodes; // list of nodes in the graph
+  std::vector<std::shared_ptr<Edge>> m_edges; // list of edges in the graph
+  bool m_needLayout;
 
-  bool _needLayout;
-
-  template <typename Func> std::shared_ptr<Node> findNode(Func func);
+  template <typename Func> 
+  std::shared_ptr<Node> findNode(Func func);
 };
 
 #endif

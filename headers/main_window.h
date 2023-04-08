@@ -17,9 +17,11 @@ public:
             int height = WINDOW_HEIGHT) override;
   void mainLoop() override;
 
-  std::shared_ptr<MainWindow> getptr() { return shared_from_this(); }
-  std::shared_ptr<Graph> getGraph() { return _graph; }
-  std::shared_ptr<MenuBar> getMenu() { return _menuBar; }
+  std::shared_ptr<MainWindow> getPtr() const { return shared_from_this(); }
+  std::shared_ptr<Graph> getGraph() const { return m_graph; }
+  std::shared_ptr<MenuBar> getMenu() const { return m_menuBar; }
+  std::string_view getInputFromPopUp() { return m_input->getInput(); }
+  bool popUpIsActive() { return m_input->isActive(); }
 
   void layoutGraph();
   void layoutFix();
@@ -31,16 +33,14 @@ public:
                       const std::string &input = "");
   void setPopUpWarning(const std::string &warning);
   void showPopUpWindow();
-  void setCallerPopUp(const std::shared_ptr<PopUpCommand> &caller);
-  const std::string &getInputFromPopUp() { return _input->getInput(); }
-  bool popUpIsActive() { return _input->isActive(); }
+  void setCallerPopUp(std::shared_ptr<PopUpCommand> caller);
 
 private:
-  std::shared_ptr<Graph> _graph;
-  Layout _layout;
-  std::shared_ptr<MenuBar> _menuBar;
-  std::shared_ptr<BitmapFont> _font;
-  std::shared_ptr<InputWindow> _input;
+  std::shared_ptr<Graph> m_graph;
+  Layout m_layout;
+  std::shared_ptr<MenuBar> m_menuBar;
+  std::shared_ptr<BitmapFont> m_font;
+  std::shared_ptr<InputWindow> m_input;
 
   void renderWindow() override;
 };

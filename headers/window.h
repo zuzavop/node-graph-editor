@@ -12,36 +12,36 @@ class Window {
 public:
   virtual ~Window(){};
   virtual bool init(const char *name, int width = WINDOW_WIDTH,
-                    int height = WINDOW_HEIGHT);
+                    int height = WINDOW_HEIGHT, bool isResizable = true, bool isShown = true);
   virtual void mainLoop() = 0;
   void focus();
 
-  int getWidth() { return _width; }
-  int getHeight() { return _height; }
-  SDL_Renderer *getRenderer() { return _renderer; }
-  SDL_Window *getWindow() { return _window; }
-  bool isFullScreen() { return _fullScreen; }
+  int getWidth() const { return m_width; }
+  int getHeight() const { return m_height; }
+  SDL_Renderer *getRenderer() const { return m_renderer; }
+  SDL_Window *getWindow() const { return m_window; }
+  bool isFullScreen() const { return m_fullScreen; }
 
   void setDimension(int width, int height) {
-    _width = width;
-    _height = height;
+    m_width = width;
+    m_height = height;
   }
-  void setFullScreen(bool fullScreen) { _fullScreen = fullScreen; }
-  void setRunning(bool is_running) { _running = is_running; }
+  void setFullScreen(bool fullScreen) { m_fullScreen = fullScreen; }
+  void setRunning(bool isRunning) { m_running = isRunning; }
 
 protected:
   Window(int width = 0, int height = 0);
   // window data
-  SDL_Window *_window;
-  SDL_Renderer *_renderer;
+  SDL_Window *m_window;
+  SDL_Renderer *m_renderer;
 
-  int _width;
-  int _height;
+  int m_width;
+  int m_height;
 
-  bool _fullScreen;
-  bool _running;
-  bool _shown;
-  int _id;
+  bool m_fullScreen;
+  bool m_running;
+  bool m_shown;
+  int m_id;
 
   virtual void renderWindow() = 0;
 };

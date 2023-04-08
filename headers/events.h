@@ -8,16 +8,15 @@ class MainWindow;
 
 class Observer {
 public:
-  virtual void update(SDL_Event *event) = 0;
+  virtual ~Observer(){};
+  virtual void update(SDL_Event &event) = 0;
 };
 
 class Subject {
 public:
   void attach(Observer *observer);
-
   void detach(Observer *observer);
-
-  void notify(SDL_Event *event);
+  void notify(SDL_Event &event);
 
 private:
   std::vector<Observer *> observers;
@@ -25,39 +24,44 @@ private:
 
 class MouseObserver : public Observer {
 public:
-  MouseObserver(std::shared_ptr<MainWindow> w) : window(w), dragging(false) {
-    newCommand = std::make_shared<NewNodeCommand>(w, startNode);
+  MouseObserver(std::shared_ptr<MainWindow> window) : m_window(window), m_dragging(false) {
+    m_newCommand = std::make_shared<NewNodeCommand>(window, m_startNode);
   }
-  void update(SDL_Event *event) override;
+  virtual ~MouseObserver() {}
+  void update(SDL_Event &event) override;
 
 private:
-  void processButtonDown(SDL_Event *event);
-  void processButtonUp(SDL_Event *event);
-  std::shared_ptr<MainWindow> window;
-  bool dragging;
-  std::shared_ptr<Node> startNode;
-  std::shared_ptr<NewNodeCommand> newCommand;
+  void processButtonDown(SDL_Event &event);
+  void processButtonUp(SDL_Event &event);
+
+  std::shared_ptr<MainWindow> m_window;
+  bool m_dragging;
+  std::shared_ptr<Node> m_startNode;
+  std::shared_ptr<NewNodeCommand> m_newCommand;
 };
 
 class KeyboardObserver : public Observer {
 public:
-  KeyboardObserver(std::shared_ptr<MainWindow> w) : window(w) {}
-  void update(SDL_Event *event) override;
+  KeyboardObserver(std::shared_ptr<MainWindow> window) : m_window(window) {}
+  virtual ~KeyboardObserver() {}
+  void update(SDL_Event &event) override;
 
 private:
-  void processDelete(SDL_Event *event);
-  void processF11(SDL_Event *event);
-  void processEscape(SDL_Event *event);
-  std::shared_ptr<MainWindow> window;
+  void processDelete();
+  void processF11();
+  void processEscape();
+
+  std::shared_ptr<MainWindow> m_window;
 };
 
 class WindowObserver : public Observer {
 public:
-  WindowObserver(std::shared_ptr<MainWindow> w) : window(w) {}
-  void update(SDL_Event *event) override;
+  WindowObserver(std::shared_ptr<MainWindow> window) : m_window(window) {}
+  virtual ~WindowObserver() {}
+  void update(SDL_Event &event) override;
 
 private:
-  std::shared_ptr<MainWindow> window;
+  std::shared_ptr<MainWindow> m_window;
 };
 
 #endif

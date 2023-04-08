@@ -1,92 +1,92 @@
 #include "input_window.h"
 #include "command.h"
 
-InputWindow::InputWindow() : Window(), _okButton(nullptr), _warning("") {
-  _font = std::make_shared<BitmapFont>();
+InputWindow::InputWindow() : Window(), m_okButton(nullptr), m_warning("") {
+  m_font = std::make_shared<BitmapFont>();
 }
 
 InputWindow::~InputWindow() {
-  SDL_DestroyWindow(_window);
-  SDL_DestroyRenderer(_renderer);
+  SDL_DestroyWindow(m_window);
+  SDL_DestroyRenderer(m_renderer);
 }
 
 bool InputWindow::init(const char *name, int width, int height) {
-  if (!Window::init(name, 400, 300))
+  if (!Window::init(name, 400, 300, false, false))
     return false;
 
   hideWindow();
 
-  if (!_font->buildFont("../data/font.bmp", _window, _renderer)) {
+  if (!m_font->buildFont("../data/font.bmp", m_window, m_renderer)) {
     return false;
   }
 
   resetInput();
-  _okCommand = std::make_shared<OkCommand>(getptr(), nullptr);
-  _okButton.reset(new Button(_okCommand, _font, "OK", BIG_FONT_SCALE));
-  _okButton->setPosition(_width - (_okButton->getWidth() * BIG_FONT_SCALE) - 10,
-                         _height - (_okButton->getHeight() * BIG_FONT_SCALE) -
-                             10);
+  m_okCommand = std::make_shared<OkCommand>(getPtr(), nullptr);
+  m_okButton.reset(new Button(m_okCommand, m_font, "OK", BIG_FONT_SCALE));
+  m_okButton->setPosition(m_width - (m_okButton->getWidth() * BIG_FONT_SCALE) - PADDING,
+                         m_height - (m_okButton->getHeight() * BIG_FONT_SCALE) - PADDING);
 
   return true;
 }
 
 void InputWindow::setTitle(const std::string &caption) {
-  SDL_SetWindowTitle(_window, caption.c_str());
+  SDL_SetWindowTitle(m_window, caption.c_str());
 }
 
-void InputWindow::handleEvent(SDL_Event *event) {
-  if (event->window.windowID == _id) {
-    if (event->type == SDL_TEXTINPUT) {
-      _input += event->text.text;
-    } else if (event->window.event == SDL_WINDOWEVENT_CLOSE) {
+void InputWindow::handleEvent(SDL_Event &event) {
+  if (event.window.windowID == m_id) {
+    if (event.type == SDL_TEXTINPUT) {
+      m_input += event.text.text;
+    } else if (event.window.event == SDL_WINDOWEVENT_CLOSE) {
       hideWindow();
-    } else if (event->type == SDL_KEYDOWN) {
-      if (event->key.keysym.sym == SDLK_DELETE ||
-          event->key.keysym.sym == SDLK_BACKSPACE) {
-        if (_input.size() > 0) {
-          _input.pop_back();
+    } else if (event.type == SDL_KEYDOWN) {
+      if (event.key.keysym.sym == SDLK_DELETE ||
+          event.key.keysym.sym == SDLK_BACKSPACE) {
+        if (m_input.size() > 0) {
+          m_input.pop_back();
         }
       }
     }
-    if (_okButton)
-      _okButton->handleEvent(event);
+    if (m_okButton)
+      m_okButton->handleEvent(event);
   }
 }
 
 void InputWindow::renderWindow() {
   // clear the screen
-  SDL_SetRenderDrawColor(_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-  SDL_RenderClear(_renderer);
+  SDL_SetRenderDrawColor(m_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+  SDL_RenderClear(m_renderer);
 
-  SDL_SetRenderDrawColor(_renderer, 0x00, 0x00, 0x00, 0xFF);
+  SDL_SetRenderDrawColor(m_renderer, 0x00, 0x00, 0x00, 0xFF);
 
-  _font->renderText(0, 0, _description, _renderer, 0.6);
+  m_font->renderText(0, 0, m_description, m_renderer, NORMAL_FONT_SCALE);
 
-  _font->renderText(10, 100, _input, _renderer, 0.5);
+  m_font->renderText(10, 100, m_input, m_renderer, FONT_SCALE);
 
-  if (_okButton)
-    _okButton->render(_renderer);
+  if (m_okButton)
+    m_okButton->render(m_renderer);
 
-  if (_warning != "") {
-    SDL_SetRenderDrawColor(_renderer, 0xFF, 0x00, 0x00, 0xFF);
-    _font->renderText(10, _height - (_font->getWordHeight(_warning) * 0.3) - 10,
-                      _warning, _renderer, 0.3,
-                      (_width - _okButton->getWidth() - 10) * (1 / 0.3));
+  if (m_warning != "") {
+    SDL_SetRenderDrawColor(m_renderer, 0xFF, 0x00, 0x00, 0xFF);
+    // scale position and size
+    float y = m_height - (m_font->getWordHeight(m_warning) * SMALL_FONT_SCALE) - PADDING;
+    float width = (m_width - m_okButton->getWidth() - PADDING) * (1 / SMALL_FONT_SCALE);
+    m_font->renderText(10, y, m_warning, m_renderer, SMALL_FONT_SCALE, width );
   }
 
-  SDL_RenderPresent(_renderer);
+  SDL_RenderPresent(m_renderer);
 }
 
 void InputWindow::hideWindow() {
-  _shown = false;
-  _done = false;
-  if (_okCommand)
-    _okCommand->getCaller()->isActive(false);
-  SDL_HideWindow(_window);
-  // disable text input
+  m_shown = false;
+  m_done = false;
+  if (m_okCommand && m_okCommand->getCaller())
+    m_okCommand->getCaller()->isActive(false);
+  SDL_HideWindow(m_window);
   SDL_StopTextInput();
 }
 
-void InputWindow::setCaller(const std::shared_ptr<PopUpCommand> &caller) {
-  _okCommand->setCaller(caller);
+void InputWindow::setCaller(std::shared_ptr<PopUpCommand> caller) {
+  if (m_okCommand)
+    m_okCommand->setCaller(caller);
 }

@@ -3,13 +3,13 @@
 void Graph::saveToFile(std::ofstream &file) {
   if (file.is_open()) {
     // write the nodes
-    for (const auto &node : nodes) {
+    for (const auto &node : m_nodes) {
       file << "\\node (" << node->getId() << ") {" << node->getName() << "} "
            << node->getX() << " " << node->getY() << "\n";
     }
 
     // write the edges
-    for (const auto &edge : edges) {
+    for (const auto &edge : m_edges) {
 
       if (edge->getSource()->getId() > 0 && edge->getTarget()->getId() > 0) {
         file << "(" << edge->getSource()->getId()
@@ -49,7 +49,7 @@ void Graph::loadFromFile(std::ifstream &file) {
         const float x = match[4].matched ? std::stof(match[4]) : 0;
         const float y = match[5].matched ? std::stof(match[5]) : 0;
         if (!match[4].matched || !match[5].matched) {
-          _needLayout = true;
+          m_needLayout = true;
         }
 
         addNode(std::make_shared<Node>(name, x, y, id));
@@ -101,7 +101,7 @@ void Graph::exportToPSFile(std::ofstream &file) {
     float max_x = std::numeric_limits<float>::min();
     float min_y = std::numeric_limits<float>::max();
     float max_y = std::numeric_limits<float>::min();
-    for (const auto &node : nodes) {
+    for (const auto &node : m_nodes) {
       min_x = std::min(min_x, node->getX());
       max_x = std::max(max_x, node->getX());
       min_y = std::min(min_y, node->getY());
@@ -125,7 +125,7 @@ void Graph::exportToPSFile(std::ofstream &file) {
          << std::endl;
 
     // Write the nodes to the file
-    for (auto &node : nodes) {
+    for (auto &node : m_nodes) {
       const auto x = (node->getX() + padding_x) * scale_x;
       const auto y = (node->getY() + padding_y) * scale_y;
       file << "newpath" << std::endl
@@ -145,7 +145,7 @@ void Graph::exportToPSFile(std::ofstream &file) {
     }
 
     // Write the edges to the file
-    for (auto &edge : edges) {
+    for (auto &edge : m_edges) {
       double startAngle =
           atan2(edge->getTarget()->getY() - edge->getSource()->getY(),
                 edge->getTarget()->getX() - edge->getSource()->getX());
@@ -187,7 +187,7 @@ void Graph::exportToPSFile(std::ofstream &file) {
 void Graph::loadFromPSFile(std::ifstream &file) {
   if (file.is_open()) {
     clearGraph();
-    _needLayout = true;
+    m_needLayout = true;
 
     // read the PostScript commands
     std::string line;
@@ -224,9 +224,9 @@ void Graph::loadFromPSFile(std::ifstream &file) {
             if (std::getline(file, line)) {
               if (std::regex_match(line, match,
                                    std::regex(R"((\S+) (\S+) lineto)"))) {
-                if (!edges.empty()) {
-                  if (edges.back()) {
-                    edges.back()->setOrientation(true);
+                if (!m_edges.empty()) {
+                  if (m_edges.back()) {
+                    m_edges.back()->setOrientation(true);
                   }
                 }
               } else {
