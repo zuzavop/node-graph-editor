@@ -17,6 +17,8 @@ Kód programu Node Graph Editor je strukturován do několika pro funkčnost hla
 * layout.h a layout.cpp - zajišťuje rozložení grafu na zadaném prostoru.
 * events.h a events.cpp - stará se o zpracování všech událostí hlavního okna kromě hlavního menu.
 * menu.h a menu.cpp - vykresluje a vytváří hlavní menu, přeposílá události jednotlivým tlačítkám v menu.
+* button.h a button.cpp - definice a implementace pomocné třídy Button, zajišťující vykreslení tlačítka a zpracování událostí týkajících se tohoto tlačítka.
+* input_window.h a input_window.cpp - implementace okna pro textový vstup od uživatele.
 
 ## Běh programu
 Běh programu začí inicializací SDL knihovny a konstrukcí `MainWindow`. Po veškeré inicializaci se spustí fukce `mainLoop()`. V této funkci setrvává program celý běh programu, reaguje na události okna a vykresluje okno.
@@ -30,11 +32,13 @@ Možné akce tlačítek:
 * Export - exportování grafu do PostScript souboru na adrese definované uživatelem v novém okně
 * Layout - zarovnání grafu pomocí brute force algoritmu (počet hran v grafu je menší než 6) nebo pomocí Fruchterman-Reingold algoritmu
 
-## Detaily editoru
-
+## Elementy editoru
+Pro jednoduchost vykreslování textu a tlačítek jsou vytvořeny třídy `Button` a `BitmapFont`, které se starají o veškerou implementaci těchto objektů.
+Třída `BitmapFont` se převážně stará o vykreslování textu ve správné velikosti a na zadaném místě.
+Třída `Button` se stará pouze o vykreslování samotného tlačítka a o zachytávání událostí týkajících se tlačítka. O fuknčnost jednotlivých tlačítek se starajíc potomci `Command` třídy.
 
 ## Použité knihovny
-Program Graph Editor byl napsán v jazyce C++ s použitím knihovny SDL pro zobrazování a interakci s uživatelem.
+Program Graph Editor byl napsán v jazyce C++ s použitím knihovny SDL2 pro zobrazování a interakci s uživatelem.
 
 ## Použité algoritmy
 Program Node Graph Editor používá algoritmus Fruchterman-Reingold pro automatické rozložení uzlů v grafu. 
@@ -51,9 +55,18 @@ Tento algoritmus funguje následovně:
 ### Observer
 Trochu upravený návrhový vzor Observer byl použit v hlavním okně na zachytávání a zpracování událostí okna.
 ![class_diagram](img/Observer.png)
+
+#### Události
+Možné události týkající se hlavního okna:
+* Události okna - resize, close, ...
+* Události klávesnice - ukončování fullscreen, mazání uzlů (delete key), ...
+* Události myši - zmáčknutí myši, ...
+
 ### Command
 Pro implementaci funkčnosti tlačítek byl využit návrhový vzor Command, jehož strukturu v projektu můžete vidět níže.
 ![class_diagram](img/Command.png)
+
+Potomci `PopUpCommand` jsou funkce, které vyžadují textový vstup od uživatele, takže spolupracují s třídou `OkCommand`, která volá jejich funkci `execute` pokud je vstup uživatele správný.
 
 ## Plány do budoucna
 * [ ] Podpora dalších formátů exportu: Kromě formátu PostScript by mohla být implementována podpora pro další formáty, jako je například SVG nebo PNG.

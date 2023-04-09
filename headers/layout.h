@@ -4,7 +4,7 @@
 #include "graph.h"
 
 const int ITERATION = 300;
-const float K = 15.0;
+const float K = 1.5;
 const float COOLING_FACTOR = 0.8;
 
 class Layout {

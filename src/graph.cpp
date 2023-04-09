@@ -56,14 +56,21 @@ void Graph::addEdge(const std::shared_ptr<Node> &from,
 
 void Graph::addEdge(std::shared_ptr<Edge> edge) {
   // check if the edge already exists
+  auto invertedEdge = std::make_shared<Edge>(edge->getTarget(), edge->getSource());
   for (const auto &e : m_edges) {
     if (*e == *edge) {
+      e->setSelected(true);
+      return;
+    }
+    if (*e == *invertedEdge) {
       e->setSelected(true);
       return;
     }
   }
 
   edge->setSelected(true);
+  edge->getSource()->addEdge(edge);
+  edge->getTarget()->addEdge(edge);
   m_edges.push_back(edge);
 }
 

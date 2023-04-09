@@ -20,8 +20,8 @@ void Layout::fruchtermanReingold(const std::shared_ptr<Graph> &graph,
   std::default_random_engine generator;
   std::uniform_real_distribution<float> distribution(0, 1);
   for (std::size_t i = 0; i < graph->getNodes().size(); i++) {
-    pos[i].first = (distribution(generator) * width) - (width/2);
-    pos[i].second = (distribution(generator) * height) - (height/2);
+    pos[i].first = (distribution(generator) * width) - (width / 2);
+    pos[i].second = (distribution(generator) * height) - (height / 2);
     graph->getNodes()[i]->setId(i + 1);
   }
   
@@ -83,7 +83,7 @@ void Layout::fruchtermanReingold(const std::shared_ptr<Graph> &graph,
   }
   // set final node positions
   for (std::size_t i = 0; i < graph->getNodes().size(); i++) {
-    graph->getNodes()[i]->setPosition(pos[i].first + x + (width/2), pos[i].second + y + (height/2));
+    graph->getNodes()[i]->setPosition(pos[i].first + (width/2), pos[i].second + (height/2));
   }
 
   layoutFix(graph, width, height, x, y);

@@ -15,7 +15,19 @@ void Node::draw(SDL_Renderer *renderer, int radius,
   }
 }
 
-void Node::addEdge(std::shared_ptr<Edge> edge) { m_edges.push_back(edge); }
+void Node::addEdge(std::shared_ptr<Edge> edge) { 
+  auto invertedEdge = std::make_shared<Edge>(edge->getTarget(), edge->getSource());
+  for (const auto &e : m_edges) {
+    if (*e == *edge) {
+      return;
+    }
+    if (*e == *invertedEdge) {
+      return;
+    }
+  }
+  
+  m_edges.push_back(edge); 
+}
 
 void Node::removeEdge(const std::shared_ptr<Edge> &edge) {
   m_edges.erase(std::remove(m_edges.begin(), m_edges.end(), edge),

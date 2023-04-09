@@ -7,7 +7,7 @@ Program je napsán v jazyce C++ a využívá knihovnu SDL pro vytváření grafi
 
 * SDL knihovna
 * c++ (minimálně verze 17)
-* na windows: mingw
+* pro windows: mingw
 
 ## How to install
 Pro spuštění programu Node Graph Editor musíte nejprve nainstalovat knihovnu SDL. Pokud již tuto knihovnu máte nainstalovanou, přeskočte 1. a 2. kroky.
@@ -17,7 +17,7 @@ Pro spuštění programu Node Graph Editor musíte nejprve nainstalovat knihovnu
 3. Stáhněte zdrojový kód z repozitáře na GitHubu pomocí příkazu `git clone https://gitlab.mff.cuni.cz/teaching/nprg041/2022-23/repetenti/vopalkoz.git`.
 4. Vytvořte složku build `mkdir build` a `cd build`.
 5. Zkompilujte program podle Vašeho operačního systému (viz níže).
-6. Po úspěšné kompilaci můžete spustit program pomocí příkazu `./graphEditor`.
+6. Po úspěšné kompilaci můžete spustit program pomocí příkazu `./graphEditor` na linuxu nebo `graphEditor.exe`.
 
 ### On Windows
 #### SDL2 install
@@ -59,11 +59,11 @@ Pro vymazání hrany je potřeba nejprve hranu označit, což se učiní pomocí
 Uživatel může upravovat pozici uzlů v grafu pomocí tažení myší.
 
 ### Export grafu do formátu PostScript
-Pro exportování grafu do formátu PostScript použijte tlačítko "Export" v horní liště. Program Vám umožní vybrat název souboru, do kterého bude graf exportován.
+Pro exportování grafu do formátu PostScript použijte tlačítko "Export" v horní liště. Program Vám umožní vybrat název souboru (absolutní nebo relativní cesta), do kterého bude graf exportován.
 
 ### Uložení a načtení grafu
-Uživatel může uložit aktuální stav grafu do souboru pomocí kliknutí na tlačítko "Save" v menu. Po zadání názvu souboru se aktuální stav grafu uloží do zvoleného souboru. 
-Uživatel může také načíst graf ze souboru (s příponami `.txt` nebo `.ps`) pomocí kliknutí na tlačítko "Open". Po zadání názvu souboru se načte graf ze zvoleného souboru.
+Uživatel může uložit aktuální stav grafu do souboru pomocí kliknutí na tlačítko "Save" v menu. Po zadání názvu souboru (absolutní nebo relativní cesta) se aktuální stav grafu uloží do zvoleného souboru. 
+Uživatel může také načíst graf ze souboru (s příponami `.txt` nebo `.ps`) pomocí kliknutí na tlačítko "Open". Po zadání názvu souboru (absolutní nebo relativní cesta) se načte graf ze zvoleného souboru.
 
 ## Definice syntaxe pro grafy
 Vlastní graf je možné definovat do textového souboru, který je možné následně načíst programem.
