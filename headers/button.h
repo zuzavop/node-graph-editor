@@ -25,13 +25,13 @@ public:
   void render(SDL_Renderer *renderer);
 
 private:
-  SDL_Point m_position;
-  int m_width, m_height;
-  std::string m_title;
-
   std::shared_ptr<Command> m_function;
   std::shared_ptr<BitmapFont> m_font;
   float m_scale;
+
+  SDL_Point m_position;
+  int m_width, m_height;
+  std::string m_title;
 };
 
 #endif

@@ -13,17 +13,18 @@ void Layout::layout(const std::shared_ptr<Graph> &graph, int width, int height,
 }
 
 void Layout::fruchtermanReingold(const std::shared_ptr<Graph> &graph,
-                                 int iterations, float k, int width, int height,
+                                 int iterations, float k, double width, double height,
                                  int x, int y) {
   std::vector<std::pair<float, float>> pos(graph->getNodes().size());
   // initialize node positions randomly
   std::default_random_engine generator;
   std::uniform_real_distribution<float> distribution(0, 1);
-  for (int i = 0; i < graph->getNodes().size(); i++) {
-    pos[i].first = distribution(generator) * width;
-    pos[i].second = distribution(generator) * height;
+  for (std::size_t i = 0; i < graph->getNodes().size(); i++) {
+    pos[i].first = (distribution(generator) * width) - (width/2);
+    pos[i].second = (distribution(generator) * height) - (height/2);
     graph->getNodes()[i]->setId(i + 1);
   }
+  
 
   // set initial temperature and cooling factor
   float temperature = 10 * std::sqrt(graph->getNodes().size());
@@ -34,8 +35,8 @@ void Layout::fruchtermanReingold(const std::shared_ptr<Graph> &graph,
     // repulsive forces between nodes
     std::vector<std::pair<float, float>> disp(graph->getNodes().size(),
                                               {0.0f, 0.0f});
-    for (int i = 0; i < graph->getNodes().size(); i++) {
-      for (int j = i + 1; j < graph->getNodes().size(); j++) {
+    for (std::size_t i = 0; i < graph->getNodes().size(); i++) {
+      for (std::size_t j = i + 1; j < graph->getNodes().size(); j++) {
         if (i != j) {
           float dx = pos[i].first - pos[j].first;
           float dy = pos[i].second - pos[j].second;
@@ -66,7 +67,7 @@ void Layout::fruchtermanReingold(const std::shared_ptr<Graph> &graph,
     }
 
     // set nodes according to forces and temperature
-    for (int i = 0; i < graph->getNodes().size(); i++) {
+    for (std::size_t i = 0; i < graph->getNodes().size(); i++) {
       float dist = std::sqrt((pos[i].first * pos[i].first) +
                              (pos[i].second * pos[i].second));
       float factor = std::min<float>(dist, temperature);
@@ -81,8 +82,8 @@ void Layout::fruchtermanReingold(const std::shared_ptr<Graph> &graph,
       temperature = 1.5;
   }
   // set final node positions
-  for (int i = 0; i < graph->getNodes().size(); i++) {
-    graph->getNodes()[i]->setPosition(pos[i].first + x, pos[i].second + y);
+  for (std::size_t i = 0; i < graph->getNodes().size(); i++) {
+    graph->getNodes()[i]->setPosition(pos[i].first + x + (width/2), pos[i].second + y + (height/2));
   }
 
   layoutFix(graph, width, height, x, y);

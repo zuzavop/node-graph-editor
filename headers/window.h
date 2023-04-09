@@ -1,7 +1,12 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
+#ifndef _MSC_VER
 #include <SDL2/SDL.h>
+#else
+#include "SDL.h"
+#endif
+
 #include <iostream>
 #include <memory>
 
@@ -42,7 +47,7 @@ protected:
   bool m_fullScreen;
   bool m_running;
   bool m_shown;
-  int m_id;
+  unsigned int m_id;
 
   virtual void renderWindow() = 0;
 };

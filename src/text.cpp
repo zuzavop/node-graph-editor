@@ -130,7 +130,7 @@ void BitmapFont::renderText(int x, int y, std::string_view text,
   // if the font has been built
   if (m_fontTexture.getWidth() > 0) {
     int curX = x + 1, curY = y + 1;
-    for (int i = 0; i < text.length(); ++i) {
+    for (std::size_t i = 0; i < text.length(); ++i) {
       if (text[i] == ' ') {
         curX += m_space;
       } else if (text[i] == '\n') {
@@ -154,7 +154,7 @@ int BitmapFont::getWordWidth(std::string_view word) {
   int width = 0;
   // if the font has been built
   if (m_fontTexture.getWidth() > 0) {
-    for (int i = 0; i < word.length(); ++i) {
+    for (std::size_t i = 0; i < word.length(); ++i) {
       if (word[i] == ' ') {
         width += m_space;
       } else {
@@ -173,7 +173,7 @@ int BitmapFont::getWordHeight(std::string_view word) {
     // get the ASCII value of the character
     int ascii = (unsigned char)word[0];
     height = m_chars[ascii].h;
-    for (int i = 0; i < word.length(); ++i) {
+    for (std::size_t i = 0; i < word.length(); ++i) {
       if (word[i] == '\n') {
         height += m_newLine;
       }

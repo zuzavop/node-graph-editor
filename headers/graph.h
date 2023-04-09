@@ -9,7 +9,7 @@ const int A4_HEIGHT = 842;
 
 class Graph {
 public:
-  Graph() {}
+  Graph() : m_needLayout(false) {}
 
   void addNode(float x, float y);
   void addNode(const std::string &name, float x, float y);

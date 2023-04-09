@@ -10,7 +10,11 @@
 #include <string>
 #include <vector>
 
+#ifndef _MSC_VER
 #include <SDL2/SDL.h>
+#else
+#include "SDL.h"
+#endif
 
 class Node;
 

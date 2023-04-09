@@ -8,6 +8,7 @@
 #include "text.h"
 #include "window.h"
 
+
 class MainWindow : public Window,
                    public std::enable_shared_from_this<MainWindow> {
 public:

@@ -1,7 +1,12 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
+#ifndef _MSC_VER
 #include <SDL2/SDL.h>
+#else
+#include "SDL.h"
+#endif
+
 #include <iostream>
 #include <string>
 #include <string_view>

@@ -1,7 +1,7 @@
 #include "input_window.h"
 #include "command.h"
 
-InputWindow::InputWindow() : Window(), m_okButton(nullptr), m_warning("") {
+InputWindow::InputWindow() : Window(), m_warning(""), m_description(""), m_input(""), m_okButton(nullptr) {
   m_font = std::make_shared<BitmapFont>();
 }
 
@@ -60,9 +60,9 @@ void InputWindow::renderWindow() {
 
   SDL_SetRenderDrawColor(m_renderer, 0x00, 0x00, 0x00, 0xFF);
 
-  m_font->renderText(0, 0, m_description, m_renderer, NORMAL_FONT_SCALE);
+  if (m_description != "") m_font->renderText(0, 0, m_description, m_renderer, NORMAL_FONT_SCALE);
 
-  m_font->renderText(10, 100, m_input, m_renderer, FONT_SCALE);
+  if (m_input != "") m_font->renderText(10, 100, m_input, m_renderer, FONT_SCALE);
 
   if (m_okButton)
     m_okButton->render(m_renderer);
