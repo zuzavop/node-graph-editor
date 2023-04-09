@@ -9,6 +9,7 @@ bool Window::init(const char *name, int width, int height, bool isResizable,
   // set texture filtering to linear
   if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1")) {
     std::cerr << "Warning: Linear texture filtering not enabled!" << std::endl;
+    return false;
   }
 
   // create a window

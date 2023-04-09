@@ -9,8 +9,8 @@ MainWindow::MainWindow() : Window() {
 }
 
 MainWindow::~MainWindow() {
-  SDL_DestroyWindow(m_window);
-  SDL_DestroyRenderer(m_renderer);
+  if (m_window) SDL_DestroyWindow(m_window);
+  if (m_renderer) SDL_DestroyRenderer(m_renderer);
   SDL_Quit();
 }
 
@@ -20,7 +20,7 @@ bool MainWindow::init(const char *name, int width, int height, bool isResizable,
     return false;
   }
 
-  if (!m_font->buildFont("../data/font.bmp", m_window, m_renderer)) {
+  if (!m_font->buildFont("../assets/font.bmp", m_window, m_renderer)) {
     return false;
   }
 

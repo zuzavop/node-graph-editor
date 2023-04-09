@@ -17,7 +17,7 @@ bool InputWindow::init(const char *name, int width, int height,
 
   hideWindow();
 
-  if (!m_font->buildFont("../data/font.bmp", m_window, m_renderer)) {
+  if (!m_font->buildFont("../assets/font.bmp", m_window, m_renderer)) {
     return false;
   }
 

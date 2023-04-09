@@ -11,6 +11,7 @@ file(GLOB SOURCES "src/*.cpp")
 
 # Add header files
 include_directories(headers)
+include_directories(SDL2/include)
 
 # Find the SDL2 library
 find_package(SDL2 REQUIRED)
