@@ -1,8 +1,5 @@
 *.o
 *.bin
 cmake
-include
-lib
 .vscode
 build
-bin
