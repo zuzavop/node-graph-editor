@@ -23,7 +23,7 @@ public:
 
   void wasLayout() { m_needLayout = false; }
 
-  void draw(SDL_Renderer *renderer, std::shared_ptr<BitmapFont> m_font);
+  void draw(SDL_Renderer *renderer);
   void clearGraph();
 
   const std::vector<std::shared_ptr<Node>> &getNodes() const { return m_nodes; }

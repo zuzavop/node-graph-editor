@@ -21,7 +21,7 @@ Kód programu Node Graph Editor je strukturován do několika pro funkčnost hla
 * input_window.h a input_window.cpp - implementace okna pro textový vstup od uživatele.
 
 ## Běh programu
-Běh programu začí inicializací SDL knihovny a konstrukcí `MainWindow`. Po veškeré inicializaci se spustí fukce `mainLoop()`. V této funkci setrvává program celý běh programu, reaguje na události okna a vykresluje okno.
+Běh programu začí inicializací SDL knihovny a konstrukcí singletonu `MainWindow`. Po veškeré inicializaci se spustí fukce `mainLoop()`. V této funkci setrvává program celý běh programu, reaguje na události okna a vykresluje okno.
 
 Při interakci uživatele s plochou okna se o zpracování události starají potomci třídy `Observer`. Při kliknutí na nějaké z tlačítek je zavoláná fuknce `execute()` potomka třídy `Command`, který je definován ve zvoleném tlačítku.
 

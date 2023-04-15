@@ -38,7 +38,7 @@ public:
   float getY() const { return m_y; }
   int getId() const { return m_id; }
   bool isSelected() const { return m_selected; }
-  std::string getName() const { return m_name; }
+  const std::string getName() const { return m_name; }
   const std::vector<std::shared_ptr<Edge>> &getEdges() const { return m_edges; }
 
   void setX(float x) { m_x = x; }
@@ -58,8 +58,7 @@ public:
   void addEdge(std::shared_ptr<Edge> edge);
   void removeEdge(const std::shared_ptr<Edge> &edge);
 
-  void draw(SDL_Renderer *renderer, int radius,
-            const std::shared_ptr<BitmapFont> &font) const;
+  void draw(SDL_Renderer *renderer, int radius);
   bool isClicked(float mouseX, float mouseY);
 
 private:

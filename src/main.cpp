@@ -7,10 +7,8 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  std::shared_ptr<MainWindow> main_window(new MainWindow);
-
-  if (main_window->init("Graph Editor")) {
-    main_window->mainLoop();
+  if (MainWindow::getInstance().init("Graph Editor")) {
+    MainWindow::getInstance().mainLoop();
   } else {
     return 1;
   }

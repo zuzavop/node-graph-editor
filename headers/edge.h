@@ -15,6 +15,7 @@
 #else
 #include "SDL.h"
 #endif
+#include "colors.h"
 
 class Node;
 
@@ -25,8 +26,8 @@ public:
       : m_startNode(start), m_endNode(end), m_selected(false),
         m_oriented(isOriented) {}
 
-  std::shared_ptr<Node> getSource() const { return m_startNode; }
-  std::shared_ptr<Node> getTarget() const { return m_endNode; }
+  const std::shared_ptr<Node> &getSource() const { return m_startNode; }
+  const std::shared_ptr<Node> &getTarget() const { return m_endNode; }
   bool isSelected() const { return m_selected; }
   bool isOriented() const { return m_oriented; }
 

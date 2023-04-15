@@ -1,17 +1,18 @@
 #include "button.h"
+#include "command.h"
+#include "main_window.h"
 
-Button::Button(std::shared_ptr<Command> function,
-               std::shared_ptr<BitmapFont> font, std::string name, float scale)
-    : m_function(std::move(function)), m_font(font), m_title(name) {
+Button::Button(std::unique_ptr<Command> f, std::string name, float scale)
+    : function(std::move(f)), m_title(name) {
   m_position.x = 0;
   m_position.y = 0;
   m_scale = scale;
 
-  m_width = m_font->getWordWidth(name);
+  m_width = MainWindow::getInstance().font->getWordWidth(name);
   if (m_width == 0) {
     m_width = BUTTON_WIDTH;
   }
-  m_height = m_font->getWordHeight(name);
+  m_height = MainWindow::getInstance().font->getWordHeight(name);
   if (m_height == 0) {
     m_height = BUTTON_HEIGHT;
   }
@@ -29,8 +30,8 @@ void Button::setSize(int w, int h) {
 
 void Button::setTitle(const std::string &name) {
   m_title = name;
-  m_width = m_font->getWordWidth(name);
-  m_height = m_font->getWordHeight(name);
+  m_width = MainWindow::getInstance().font->getWordWidth(name);
+  m_height = MainWindow::getInstance().font->getWordHeight(name);
 }
 
 void Button::handleEvent(SDL_Event &event) {
@@ -43,13 +44,18 @@ void Button::handleEvent(SDL_Event &event) {
     if (x > m_position.x && x < m_position.x + getWidth() && y > m_position.y &&
         y < m_position.y + getHeight()) {
       if (event.type == SDL_MOUSEBUTTONDOWN) {
-        m_function->execute();
+        if (function) function->execute();
       }
     }
   }
 }
 
 void Button::render(SDL_Renderer *renderer) {
-  m_font->renderText(m_position.x, m_position.y, m_title, renderer, m_scale,
+  MainWindow::getInstance().font->renderText(m_position.x, m_position.y, m_title, renderer, m_scale,
+                     m_width, m_height);
+}
+
+void Button::render(SDL_Renderer *renderer, std::unique_ptr<BitmapFont> &font) {
+  font->renderText(m_position.x, m_position.y, m_title, renderer, m_scale,
                      m_width, m_height);
 }

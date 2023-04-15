@@ -1,8 +1,8 @@
 #include "node.h"
 #include "edge.h"
+#include "main_window.h"
 
-void Node::draw(SDL_Renderer *renderer, int radius,
-                const std::shared_ptr<BitmapFont> &font) const {
+void Node::draw(SDL_Renderer *renderer, int radius) {
   for (int i = -radius; i <= radius; i++) {
     for (int j = -radius; j <= radius; j++) {
       if (i * i + j * j <= radius * radius) {
@@ -10,18 +10,15 @@ void Node::draw(SDL_Renderer *renderer, int radius,
       }
     }
   }
-  if (m_name != "") {
-    font->renderText(m_x, m_y, m_name, renderer, 0.2);
+  if (!m_name.empty()) {
+    MainWindow::getInstance().font->renderText(m_x, m_y, m_name, renderer, 0.2);
   }
 }
 
 void Node::addEdge(std::shared_ptr<Edge> edge) { 
   auto invertedEdge = std::make_shared<Edge>(edge->getTarget(), edge->getSource());
   for (const auto &e : m_edges) {
-    if (*e == *edge) {
-      return;
-    }
-    if (*e == *invertedEdge) {
+    if (*e == *edge || *e == *invertedEdge) {
       return;
     }
   }

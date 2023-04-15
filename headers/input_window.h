@@ -4,8 +4,12 @@
 #include "button.h"
 #include "window.h"
 
-class InputWindow : public Window,
-                    public std::enable_shared_from_this<InputWindow> {
+const int INPUT_START_X = 10;
+const int INPUT_START_Y = 100;
+
+class PopUpCommand;
+
+class InputWindow : public Window {
 public:
   InputWindow();
   ~InputWindow();
@@ -17,7 +21,7 @@ public:
   void setDescription(std::string description) { m_description = description; }
   void setWarning(std::string warning = "") { m_warning = warning; }
   void setTitle(const std::string &caption);
-  void setCaller(std::shared_ptr<PopUpCommand> caller);
+  void setCaller(PopUpCommand *caller);
 
   void mainLoop() override{};
   void handleEvent(SDL_Event &event);
@@ -27,16 +31,14 @@ public:
   void doneInput(bool isDone = true) { m_done = isDone; }
 
   const std::string &getInput() const { return m_input; }
-  std::shared_ptr<InputWindow> getPtr() { return shared_from_this(); }
   bool isActive() const { return !m_done; }
 
 private:
-  std::shared_ptr<BitmapFont> m_font;
+  std::unique_ptr<BitmapFont> m_font;
   std::string m_input;
   std::string m_description;
   std::string m_warning;
   std::unique_ptr<Button> m_okButton;
-  std::shared_ptr<OkCommand> m_okCommand;
   bool m_done;
 };
 

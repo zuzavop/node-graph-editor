@@ -118,11 +118,11 @@ void Graph::exportToPSFile(std::ofstream &file) {
     // Write the PostScript header
     file << "%!PS-Adobe-3.0" << std::endl
          << "%%BoundingBox: 0 0 " << A4_WIDTH << " " << A4_HEIGHT << std::endl
-         << "%%EndComments\n\n";
+         << "%%EndComments\n" << std::endl;
+
     file << "/radius " << NODE_RADIUS << " def" << std::endl
          << "/Times-Roman findfont\n"
-         << NODE_RADIUS << " scalefont\nsetfont\n"
-         << std::endl;
+         << NODE_RADIUS << " scalefont\nsetfont\n" << std::endl;
 
     // Write the nodes to the file
     for (auto &node : m_nodes) {
@@ -131,16 +131,15 @@ void Graph::exportToPSFile(std::ofstream &file) {
       file << "newpath" << std::endl
            << y << " " << x << " radius 0 360 arc" << std::endl
            << "gsave\n  1 setgray\n  fill\ngrestore" << std::endl
-           << "stroke\n"
-           << std::endl;
+           << "stroke\n" << std::endl;
+
       if (node->getName() != "") {
         file << "newpath" << std::endl
              << y + (NODE_RADIUS / 2) << " " << x - (3 * NODE_RADIUS / 4)
              << " moveto" << std::endl
              << "90 rotate" << std::endl
              << "(" << node->getName() << ") show" << std::endl
-             << "-90 rotate\n"
-             << std::endl;
+             << "-90 rotate\n" << std::endl;
       }
     }
 
@@ -162,8 +161,8 @@ void Graph::exportToPSFile(std::ofstream &file) {
       file << "newpath" << std::endl
            << fromY << " " << fromX << " moveto" << std::endl
            << toY << " " << toX << " lineto" << std::endl
-           << "stroke\n"
-           << std::endl;
+           << "stroke\n" << std::endl;
+
       if (edge->isOriented()) {
         // calculate arrowhead points
         double x1 = toX - NODE_RADIUS * cos(startAngle - M_PI / 6);
@@ -174,8 +173,7 @@ void Graph::exportToPSFile(std::ofstream &file) {
              << y1 << " " << x1 << " moveto" << std::endl
              << toY << " " << toX << " lineto" << std::endl
              << y2 << " " << x2 << " lineto" << std::endl
-             << "fill\n"
-             << std::endl;
+             << "fill\n" << std::endl;
       }
     }
 
@@ -194,16 +192,17 @@ void Graph::loadFromPSFile(std::ifstream &file) {
     while (std::getline(file, line)) {
       // Check if the line is a node command
       std::smatch match;
+
       if (std::regex_match(line, match,
                            std::regex(R"((\S+) (\S+) (\S+) 0 360 arc)"))) {
         const float y = std::stof(match[1]);
         const float x = std::stof(match[2]);
 
         addNode(std::make_shared<Node>(x, y));
-        while (line.find("stroke") == std::string::npos && line != "" &&
-               line.find("newpath") == std::string::npos) {
-          if (!std::getline(file, line))
-            break;
+
+        // skip the rest of the node command
+        while (std::getline(file, line) && line.find("stroke") == std::string::npos &&
+              line != "" && line.find("newpath") == std::string::npos) {
         }
       }
       // Check if the line is an edge command or name
@@ -224,10 +223,8 @@ void Graph::loadFromPSFile(std::ifstream &file) {
             if (std::getline(file, line)) {
               if (std::regex_match(line, match,
                                    std::regex(R"((\S+) (\S+) lineto)"))) {
-                if (!m_edges.empty()) {
-                  if (m_edges.back()) {
+                if (!m_edges.empty() && m_edges.back()) {
                     m_edges.back()->setOrientation(true);
-                  }
                 }
               } else {
                 if (sourceNode && destNode) {
@@ -236,19 +233,15 @@ void Graph::loadFromPSFile(std::ifstream &file) {
               }
             }
           } else {
-            while (!std::regex_match(line, match,
-                                     std::regex(R"(\((\w*)\) show)")) &&
-                   line.find("newpath") == std::string::npos &&
-                   line.find("stroke") == std::string::npos) {
-              if (!std::getline(file, line))
-                break;
+            while (std::getline(file, line) &&
+               !std::regex_match(line, match, std::regex(R"(\((\w*)\) show)")) &&
+               line.find("newpath") == std::string::npos && line.find("stroke") == std::string::npos) {
             }
-            if (match.size() > 0) {
-              if (match[1].matched) {
-                auto node = findNodeByPosition(x1, y1);
-                if (node) {
-                  node->setName(match[1]);
-                }
+            
+            if (match.size() > 0 && match[1].matched) {
+              auto node = findNodeByPosition(x1, y1);
+              if (node) {
+                node->setName(match[1]);
               }
             }
           }

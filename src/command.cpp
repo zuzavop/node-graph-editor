@@ -1,28 +1,26 @@
 #include "command.h"
-#include "input_window.h"
 #include "main_window.h"
+#include "input_window.h"
 
 namespace fs = std::filesystem;
 
-bool SaveCommand::execute() {
-  if (!m_active) {
-    m_window->setPopUpWindow("Save", "Enter the file path:");
-    m_window->setCallerPopUp(getPtr());
-    m_window->showPopUpWindow();
-    m_active = true;
+void SaveCommand::execute() {
+  MainWindow::getInstance().showPopUpWindow("Save", "Enter the file path:");
+  MainWindow::getInstance().inputWindow->setCaller(this);
+}
+
+bool SaveCommand::realize() {
+  if (MainWindow::getInstance().inputWindow->isActive()) {
+    return false;
+  }
+  auto address = MainWindow::getInstance().inputWindow->getInput();
+  std::ofstream file(address);
+  if (file.is_open()) {
+    MainWindow::getInstance().graph->saveToFile(file);
+    file.close();
   } else {
-    if (!m_window->popUpIsActive()) {
-      auto address = m_window->getInputFromPopUp();
-      std::ofstream file(address);
-      if (file.is_open()) {
-        m_window->saveToFile(file);
-        file.close();
-      } else {
-        m_window->setPopUpWarning("Failed to open file: " + address + "\n");
-        return false;
-      }
-      m_active = false;
-    }
+    MainWindow::getInstance().inputWindow->setWarning("Failed to open file: " + address + "\n");
+    return false;
   }
   return true;
 }
@@ -31,44 +29,43 @@ bool SaveCommand::control(std::string_view input) {
   fs::path pathObj(input);
 
   if (pathObj.extension() != ".txt") {
-    m_window->setPopUpWarning("Please enter file with\nthe extension `.txt`.");
+    MainWindow::getInstance().inputWindow->setWarning("Please enter file with\nthe extension `.txt`.");
     return false;
   }
 
   return true;
 }
 
-bool LoadCommand::execute() {
-  if (!m_active) {
-    m_window->setPopUpWindow("Load", "Enter the file path:");
-    m_window->setCallerPopUp(getPtr());
-    m_window->showPopUpWindow();
-    m_active = true;
-  } else {
-    if (!m_window->popUpIsActive()) {
-      auto address = m_window->getInputFromPopUp();
-      fs::path pathObj(address);
+void LoadCommand::execute() {
+  MainWindow::getInstance().showPopUpWindow("Load", "Enter the file path:");
+  MainWindow::getInstance().inputWindow->setCaller(this);
+}
 
-      // open the file for reading
-      std::ifstream file(address);
-      if (file.is_open()) {
-        if (pathObj.extension() == ".ps") {
-          m_window->loadFromPSFile(file);
-        } else if (pathObj.extension() == ".txt") {
-          m_window->loadFromFile(file);
-        }
-        file.close();
+bool LoadCommand::realize() {
+  if (MainWindow::getInstance().inputWindow->isActive()) {
+    return false;
+  }
 
-        if (m_window->getGraph()->needLayout()) {
-          m_window->layoutGraph();
-          m_window->getGraph()->wasLayout();
-        }
-      } else {
-        m_window->setPopUpWarning("Failed to open file: " + address + "\n");
-        return false;
-      }
-      m_active = false;
+  auto address = MainWindow::getInstance().inputWindow->getInput();
+  fs::path pathObj(address);
+
+  // open the file for reading
+  std::ifstream file(address);
+  if (file.is_open()) {
+    if (pathObj.extension() == ".ps") {
+      MainWindow::getInstance().graph->loadFromPSFile(file);
+    } else if (pathObj.extension() == ".txt") {
+      MainWindow::getInstance().graph->loadFromFile(file);
     }
+    file.close();
+
+    if (MainWindow::getInstance().graph->needLayout()) {
+      MainWindow::getInstance().layoutGraph();
+      MainWindow::getInstance().graph->wasLayout();
+    }
+  } else {
+    MainWindow::getInstance().inputWindow->setWarning("Failed to open file: " + address + "\n");
+    return false;
   }
   return true;
 }
@@ -78,38 +75,37 @@ bool LoadCommand::control(std::string_view input) {
 
   if (fs::exists(pathObj)) {
     if (pathObj.extension() != ".ps" && pathObj.extension() != ".txt") {
-      m_window->setPopUpWarning(
+      MainWindow::getInstance().inputWindow->setWarning(
           "Please enter file with\nthe extension `.txt` or `.ps`.");
       return false;
     }
   } else {
-    m_window->setPopUpWarning("Please enter existing file.");
+    MainWindow::getInstance().inputWindow->setWarning("Please enter existing file.");
     return false;
   }
 
   return true;
 }
 
-bool ExportCommand::execute() {
-  if (!m_active) {
-    m_window->setPopUpWindow("Export", "Enter the file path:");
-    m_window->setCallerPopUp(getPtr());
-    m_window->showPopUpWindow();
-    m_active = true;
+void ExportCommand::execute() {
+  MainWindow::getInstance().showPopUpWindow("Export", "Enter the file path:");
+  MainWindow::getInstance().inputWindow->setCaller(this);
+}
+
+bool ExportCommand::realize() {
+  if (MainWindow::getInstance().inputWindow->isActive()) {
+    return false;
+  }
+
+  auto address = MainWindow::getInstance().inputWindow->getInput();
+  // open the file for writing
+  std::ofstream file(address);
+  if (file.is_open()) {
+    MainWindow::getInstance().graph->exportToPSFile(file);
+    file.close();
   } else {
-    if (!m_window->popUpIsActive()) {
-      auto address = m_window->getInputFromPopUp();
-      // open the file for writing
-      std::ofstream file(address);
-      if (file.is_open()) {
-        m_window->exportToPSFile(file);
-        file.close();
-      } else {
-        m_window->setPopUpWarning("Failed to open file: " + address + "\n");
-        return false;
-      }
-      m_active = false;
-    }
+    MainWindow::getInstance().inputWindow->setWarning("Failed to open file: " + address + "\n");
+    return false;
   }
   return true;
 }
@@ -117,65 +113,54 @@ bool ExportCommand::execute() {
 bool ExportCommand::control(std::string_view input) {
   fs::path pathObj(input);
   if (pathObj.extension() != ".ps") {
-    m_window->setPopUpWarning("Please enter file with\nthe extension `.ps`.");
+    MainWindow::getInstance().inputWindow->setWarning("Please enter file with\nthe extension `.ps`.");
     return false;
   }
   return true;
 }
 
-bool NewNodeCommand::execute() {
-  if (!m_active) {
-    m_window->setPopUpWindow("Node name", "Enter new name:", _node->getName());
-    m_window->setCallerPopUp(getPtr());
-    m_window->showPopUpWindow();
-    m_active = true;
-  } else {
-    if (!m_window->popUpIsActive()) {
-      auto name = m_window->getInputFromPopUp();
-      _node->setName(name);
-      m_active = false;
-    }
+void NewNodeCommand::execute() {
+  MainWindow::getInstance().showPopUpWindow("Node name", "Enter new name:", m_node->getName());
+  MainWindow::getInstance().inputWindow->setCaller(this);
+}
+
+bool NewNodeCommand::realize() {
+  if (!MainWindow::getInstance().inputWindow->isActive()) {
+    auto name = MainWindow::getInstance().inputWindow->getInput();
+    m_node->setName(name);
+    return true;
   }
-  return true;
+  return false;
 }
 
 bool NewNodeCommand::control(std::string_view input) {
   if (input.size() > 4) {
-    m_window->setPopUpWarning("Please enter a name of up to 4 characters.");
+    MainWindow::getInstance().inputWindow->setWarning("Please enter a name of up to 4 characters.");
     return false;
   }
   return true;
 }
 
-bool LayoutCommand::execute() {
-  m_window->layoutGraph();
-  return true;
+void LayoutCommand::execute() {
+  MainWindow::getInstance().layoutGraph();
 }
 
-bool NewCommand::execute() {
-  m_window->getGraph()->clearGraph();
-  return true;
+void NewCommand::execute() {
+  MainWindow::getInstance().graph->clearGraph();
 }
 
-bool OkCommand::execute() {
-  if (m_window->getInput() != "") {
-    if (m_caller) {
-      if (m_caller->control(m_window->getInput())) {
-        m_window->doneInput();
-        if (m_caller->execute()) {
-          m_window->hideWindow();
-        } else {
-          m_window->doneInput(false);
-        }
+void OkCommand::execute() {
+  const auto input = MainWindow::getInstance().inputWindow->getInput();
+  if (!input.empty()) {
+    if (m_caller && m_caller->control(input)) {
+      MainWindow::getInstance().inputWindow->doneInput();
+      if (m_caller->realize()) {
+        MainWindow::getInstance().inputWindow->hideWindow();
+      } else {
+        MainWindow::getInstance().inputWindow->doneInput(false);
       }
     }
   } else {
-    m_window->setWarning("Please enter value.");
+    MainWindow::getInstance().inputWindow->setWarning("Please enter value.");
   }
-  return true;
-}
-
-void OkCommand::resetCallerState() {
-  if (m_caller)
-    m_caller->isActive(false);
 }

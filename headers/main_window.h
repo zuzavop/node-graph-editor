@@ -9,40 +9,32 @@
 #include "window.h"
 
 
-class MainWindow : public Window,
-                   public std::enable_shared_from_this<MainWindow> {
+class MainWindow : public Window {
 public:
-  MainWindow();
-  ~MainWindow();
+  MainWindow(const MainWindow &) = delete;
+  MainWindow &operator=(const MainWindow &) = delete;
+  static MainWindow &getInstance();
+
   bool init(const char *name, int width = WINDOW_WIDTH,
             int height = WINDOW_HEIGHT, bool isResizable = true,
             bool isShown = true) override;
   void mainLoop() override;
 
-  std::shared_ptr<MainWindow> getPtr() { return shared_from_this(); }
-  std::shared_ptr<Graph> getGraph() const { return m_graph; }
-  std::shared_ptr<MenuBar> getMenu() const { return m_menuBar; }
-  const std::string &getInputFromPopUp() { return m_input->getInput(); }
-  bool popUpIsActive() { return m_input->isActive(); }
-
   void layoutGraph();
   void layoutFix();
-  void saveToFile(std::ofstream &file);
-  void loadFromFile(std::ifstream &file);
-  void loadFromPSFile(std::ifstream &file);
-  void exportToPSFile(std::ofstream &file);
-  void setPopUpWindow(const std::string &title, const std::string &content,
+  void showPopUpWindow(const std::string &title = "", const std::string &content = "",
                       const std::string &input = "");
-  void setPopUpWarning(const std::string &warning);
-  void showPopUpWindow();
-  void setCallerPopUp(std::shared_ptr<PopUpCommand> caller);
+
+  const std::unique_ptr<Graph> graph;
+  const std::unique_ptr<MenuBar> menuBar;
+  const std::unique_ptr<BitmapFont> font;
+  const std::unique_ptr<InputWindow> inputWindow;
 
 private:
-  std::shared_ptr<Graph> m_graph;
-  Layout m_layout;
-  std::shared_ptr<MenuBar> m_menuBar;
-  std::shared_ptr<BitmapFont> m_font;
-  std::shared_ptr<InputWindow> m_input;
+  MainWindow();
+  ~MainWindow();
+
+  std::unique_ptr<Layout> m_layout;
 
   void renderWindow() override;
 };

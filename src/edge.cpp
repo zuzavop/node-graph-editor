@@ -14,10 +14,11 @@ void Edge::draw(SDL_Renderer *renderer) const {
   SDL_RenderDrawLine(renderer, startX, startY, endX, endY);
   if (m_oriented) {
     // calculate arrowhead points
-    double x1 = endX - NODE_RADIUS * cos(startAngle - M_PI / 6);
-    double y1 = endY - NODE_RADIUS * sin(startAngle - M_PI / 6);
-    double x2 = endX - NODE_RADIUS * cos(startAngle + M_PI / 6);
-    double y2 = endY - NODE_RADIUS * sin(startAngle + M_PI / 6);
+    double angleDiff = M_PI / 6;
+    double x1 = endX - NODE_RADIUS * cos(startAngle - angleDiff);
+    double y1 = endY - NODE_RADIUS * sin(startAngle - angleDiff);
+    double x2 = endX - NODE_RADIUS * cos(startAngle + angleDiff);
+    double y2 = endY - NODE_RADIUS * sin(startAngle + angleDiff);
 
     SDL_RenderDrawLine(renderer, endX, endY, (int)x1, (int)y1);
     SDL_RenderDrawLine(renderer, endX, endY, (int)x2, (int)y2);

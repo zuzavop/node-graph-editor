@@ -1,8 +1,10 @@
 #include "input_window.h"
+#include "main_window.h"
 #include "command.h"
 
-InputWindow::InputWindow() : Window(), m_warning(""), m_description(""), m_input(""), m_okButton(nullptr) {
-  m_font = std::make_shared<BitmapFont>();
+
+InputWindow::InputWindow() : Window(), m_warning(""), m_description(""), m_input(""), m_okButton(nullptr) { 
+  m_font = std::make_unique<BitmapFont>();
 }
 
 InputWindow::~InputWindow() {
@@ -22,8 +24,7 @@ bool InputWindow::init(const char *name, int width, int height,
   }
 
   resetInput();
-  m_okCommand = std::make_shared<OkCommand>(getPtr(), nullptr);
-  m_okButton.reset(new Button(m_okCommand, m_font, "OK", BIG_FONT_SCALE));
+  m_okButton.reset(new Button(std::make_unique<OkCommand>(nullptr), "OK", BIG_FONT_SCALE));
   m_okButton->setPosition(m_width - m_okButton->getWidth() - PADDING,
                           m_height - m_okButton->getHeight() - PADDING);
 
@@ -55,27 +56,27 @@ void InputWindow::handleEvent(SDL_Event &event) {
 
 void InputWindow::renderWindow() {
   // clear the screen
-  SDL_SetRenderDrawColor(m_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+  SDL_SetRenderDrawColor(m_renderer, WHITE.r, WHITE.g, WHITE.b, WHITE.a);
   SDL_RenderClear(m_renderer);
 
-  SDL_SetRenderDrawColor(m_renderer, 0x00, 0x00, 0x00, 0xFF);
+  SDL_SetRenderDrawColor(m_renderer, BLACK.r, BLACK.g, BLACK.b, BLACK.a);
 
-  if (m_description != "") m_font->renderText(0, 0, m_description, m_renderer, NORMAL_FONT_SCALE);
+  if (!m_description.empty()) m_font->renderText(0, 0, m_description, m_renderer, NORMAL_FONT_SCALE);
 
-  if (m_input != "") m_font->renderText(10, 100, m_input, m_renderer, FONT_SCALE);
+  if (!m_input.empty()) m_font->renderText(INPUT_START_X, INPUT_START_Y, m_input, m_renderer, FONT_SCALE);
 
   if (m_okButton)
-    m_okButton->render(m_renderer);
+    m_okButton->render(m_renderer, m_font);
 
-  if (m_warning != "") {
-    SDL_SetRenderDrawColor(m_renderer, 0xFF, 0x00, 0x00, 0xFF);
+  if (!m_warning.empty()) {
+    SDL_SetRenderDrawColor(m_renderer, RED.r, RED.g, RED.b, RED.a);
     // scale position and size
     float y = m_height - (m_font->getWordHeight(m_warning) * SMALL_FONT_SCALE) -
               PADDING;
-    float width =
-        (m_width - (m_okButton->getWidth() * (1 / BIG_FONT_SCALE)) - PADDING) *
+    float maxWidth =
+        (m_width - ((m_okButton ? m_okButton->getWidth() : BUTTON_WIDTH) * (1 / BIG_FONT_SCALE)) - PADDING) *
         (1 / SMALL_FONT_SCALE);
-    m_font->renderText(10, y, m_warning, m_renderer, SMALL_FONT_SCALE, width);
+    m_font->renderText(INPUT_START_X, y, m_warning, m_renderer, SMALL_FONT_SCALE, maxWidth);
   }
 
   SDL_RenderPresent(m_renderer);
@@ -84,13 +85,11 @@ void InputWindow::renderWindow() {
 void InputWindow::hideWindow() {
   m_shown = false;
   m_done = false;
-  if (m_okCommand && m_okCommand->getCaller())
-    m_okCommand->getCaller()->isActive(false);
   SDL_HideWindow(m_window);
   SDL_StopTextInput();
 }
 
-void InputWindow::setCaller(std::shared_ptr<PopUpCommand> caller) {
-  if (m_okCommand)
-    m_okCommand->setCaller(caller);
+void InputWindow::setCaller(PopUpCommand *caller) {
+  if (m_okButton)
+    dynamic_cast<OkCommand*>(m_okButton->function.get())->setCaller(caller);
 }

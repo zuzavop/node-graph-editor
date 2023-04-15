@@ -1,28 +1,30 @@
 #include "menu.h"
-#include "main_window.h"
+#include "command.h"
+#include "window.h"
 
-void MenuBar::init(std::shared_ptr<MainWindow> window) {
-  m_buttons.push_back(std::make_unique<Button>(
-      std::make_shared<NewCommand>(window), m_font, "New", BIG_FONT_SCALE));
-  m_buttons.push_back(std::make_unique<Button>(
-      std::make_shared<SaveCommand>(window), m_font, "Save", BIG_FONT_SCALE));
-  m_buttons.push_back(std::make_unique<Button>(
-      std::make_shared<LoadCommand>(window), m_font, "Open", BIG_FONT_SCALE));
-  m_buttons.push_back(
-      std::make_unique<Button>(std::make_shared<ExportCommand>(window), m_font,
-                               "Export", BIG_FONT_SCALE));
-  m_buttons.push_back(
-      std::make_unique<Button>(std::make_shared<LayoutCommand>(window), m_font,
-                               "Layout", BIG_FONT_SCALE));
+void MenuBar::init() {
+  addMenuButton(std::make_unique<NewCommand>(), "New");
+  addMenuButton(std::make_unique<SaveCommand>(), "Save");
+  addMenuButton(std::make_unique<LoadCommand>(), "Open");
+  addMenuButton(std::make_unique<ExportCommand>(), "Export");
+  addMenuButton(std::make_unique<LayoutCommand>(), "Layout");
 
+  layoutButtons();
+}
+
+void MenuBar::addMenuButton(std::unique_ptr<Command> command,
+                            const std::string& label) {
+  m_buttons.push_back(std::make_unique<Button>(std::move(command), label, BIG_FONT_SCALE));
+}
+
+void MenuBar::layoutButtons() {
   int startX = 0;
   for (std::size_t i = 0; i < m_buttons.size(); ++i) {
     m_buttons[i]->setPosition(startX, 0);
     startX += m_buttons[i]->getWidth() + PADDING;
-    m_height = m_buttons[i]->getHeight() > m_height ? m_buttons[i]->getHeight()
-                                                    : m_height;
+    m_height = std::max(m_height, m_buttons[i]->getHeight());
   }
-  m_width = startX;
+  m_width = startX - PADDING;
 }
 
 void MenuBar::handleEvent(SDL_Event &event) {
@@ -38,5 +40,5 @@ void MenuBar::draw(SDL_Renderer *renderer) {
 }
 
 bool MenuBar::clickedInMenu(int x, int y) {
-  return y < m_height && x < m_width && x > 0 && y > 0;
+  return y < m_height + WINDOW_PADDING && x < m_width + WINDOW_PADDING && x > 0 && y > 0;
 }

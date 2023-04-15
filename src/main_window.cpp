@@ -1,11 +1,15 @@
 #include "main_window.h"
 #include "events.h"
 
-MainWindow::MainWindow() : Window() {
-  m_graph = std::make_shared<Graph>();
-  m_font = std::make_shared<BitmapFont>();
-  m_menuBar = std::make_shared<MenuBar>(m_font);
-  m_input = std::make_shared<InputWindow>();
+MainWindow &MainWindow::getInstance()
+{
+    static MainWindow singleInstance;
+    return singleInstance;
+}
+
+MainWindow::MainWindow() : Window(), graph(std::make_unique<Graph>()), font(std::make_unique<BitmapFont>()),
+      menuBar(std::make_unique<MenuBar>()), inputWindow(std::make_unique<InputWindow>()) {
+  m_layout = std::make_unique<Layout>();
 }
 
 MainWindow::~MainWindow() {
@@ -20,20 +24,19 @@ bool MainWindow::init(const char *name, int width, int height, bool isResizable,
     return false;
   }
 
-  if (!m_font->buildFont("../assets/font.bmp", m_window, m_renderer)) {
+  if (!font->buildFont("../assets/font.bmp", m_window, m_renderer)) {
     return false;
   }
 
-  m_menuBar->init(getPtr());
-  m_input->init();
+  menuBar->init();
 
-  return true;
+  return inputWindow->init();
 }
 
 void MainWindow::mainLoop() {
-  MouseObserver mouseObserver(getPtr());
-  KeyboardObserver keyboardObserver(getPtr());
-  WindowObserver windowObserver(getPtr());
+  MouseObserver mouseObserver;
+  KeyboardObserver keyboardObserver;
+  WindowObserver windowObserver;
 
   Subject events;
   events.attach(&mouseObserver);
@@ -48,74 +51,49 @@ void MainWindow::mainLoop() {
       }
       if (event.window.windowID == m_id) {
         events.notify(event);
-        m_menuBar->handleEvent(event);
+        menuBar->handleEvent(event);
       }
 
-      m_input->handleEvent(event);
+      inputWindow->handleEvent(event);
     }
 
     renderWindow();
-    m_input->renderWindow();
+    inputWindow->renderWindow();
   }
 }
 
 void MainWindow::renderWindow() {
   // clear the screen
-  SDL_SetRenderDrawColor(m_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+  SDL_SetRenderDrawColor(m_renderer, WHITE.r, WHITE.g, WHITE.b, WHITE.a);
   SDL_RenderClear(m_renderer);
 
-  m_graph->draw(m_renderer, m_font);
-  m_menuBar->draw(m_renderer);
+  graph->draw(m_renderer);
+  menuBar->draw(m_renderer);
 
   SDL_RenderPresent(m_renderer);
 }
 
 void MainWindow::layoutGraph() {
-  int startY = m_menuBar->getHeight() + NODE_RADIUS * 2;
-  int startX = NODE_RADIUS * 2;
-  m_layout.layout(m_graph, m_width - 2 * startX, m_height - startY - startX,
+  int startY = menuBar->getHeight() + WINDOW_PADDING;
+  int startX = WINDOW_PADDING;
+  m_layout->layout(graph, m_width - 2 * startX, m_height - startY - startX,
                   startX, startY);
 }
 
 void MainWindow::layoutFix() {
-  int startY = m_menuBar->getHeight() + NODE_RADIUS * 2;
-  int startX = NODE_RADIUS * 2;
-  m_layout.layoutFix(m_graph, m_width - 2 * startX, m_height - startY - startX,
+  int startY = menuBar->getHeight() + WINDOW_PADDING;
+  int startX = WINDOW_PADDING;
+  m_layout->layoutFix(graph, m_width - 2 * startX, m_height - startY - startX,
                      startX, startY);
 }
 
-void MainWindow::saveToFile(std::ofstream &file) { m_graph->saveToFile(file); }
-
-void MainWindow::loadFromFile(std::ifstream &file) {
-  m_graph->loadFromFile(file);
-}
-
-void MainWindow::exportToPSFile(std::ofstream &file) {
-  m_graph->exportToPSFile(file);
-}
-
-void MainWindow::loadFromPSFile(std::ifstream &file) {
-  m_graph->loadFromPSFile(file);
-}
-
-void MainWindow::setPopUpWindow(const std::string &title,
+void MainWindow::showPopUpWindow(const std::string &title,
                                 const std::string &content,
                                 const std::string &input) {
-  m_input->setWarning();
-  m_input->resetInput(input);
-  m_input->setTitle(title);
-  m_input->setDescription(content);
-}
-
-void MainWindow::setPopUpWarning(const std::string &warning) {
-  m_input->setWarning(warning);
-}
-
-void MainWindow::showPopUpWindow() {
-  m_input->focus();
+  inputWindow->setWarning();
+  inputWindow->resetInput(input);
+  inputWindow->setTitle(title);
+  inputWindow->setDescription(content);
+  inputWindow->focus();
   SDL_StartTextInput();
-}
-
-void MainWindow::setCallerPopUp(std::shared_ptr<PopUpCommand> caller) {
-  m_input->setCaller(caller);
 }

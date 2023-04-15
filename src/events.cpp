@@ -26,52 +26,65 @@ void MouseObserver::update(SDL_Event &event) {
   }
 }
 
+std::shared_ptr<Node> MouseObserver::findClickedNode(int x, int y) const {
+    for (const auto& node : MainWindow::getInstance().graph->getNodes()) {
+        if (node->isClicked(x, y)) {
+            return node;
+        }
+    }
+    return nullptr;
+}
+
+void MouseObserver::clearSelectedEdges() {
+  for (const auto& edge : MainWindow::getInstance().graph->getEdges()) {
+    edge->setSelected(false);
+  }
+}
+
+void MouseObserver::clearSelectedNodes() {
+  for (const auto &node : MainWindow::getInstance().graph->getNodes()) {
+    node->setSelected(false);
+  }
+}
+
 void MouseObserver::processButtonDown(SDL_Event &event) {
-  if (!m_window->getMenu()->clickedInMenu(event.button.x, event.button.y)) {
-    for (const auto &edge : m_window->getGraph()->getEdges()) {
-      edge->setSelected(false);
-    }
-    // check if the mouse was clicked on a node
-    for (const auto &node : m_window->getGraph()->getNodes()) {
-      if (node->isClicked(event.button.x, event.button.y)) {
-        // handle node click
-        node->setSelected(true);
-        m_dragging = true;
-        m_startNode = node;
-      }
-    }
-    if (!m_dragging) {
-      m_window->getGraph()->addNode(event.button.x, event.button.y);
-    }
+  if (MainWindow::getInstance().menuBar->clickedInMenu(event.button.x, event.button.y)) {
+    return;
+  }
+
+  clearSelectedEdges();
+
+  // check if the mouse was clicked on a node
+  auto clickedNode = findClickedNode(event.button.x, event.button.y);
+  if (clickedNode) {
+      clickedNode->setSelected(true);
+      m_dragging = true;
+      m_startNode = clickedNode;
+  } else {
+      MainWindow::getInstance().graph->addNode(event.button.x, event.button.y);
   }
 }
 
 void MouseObserver::processButtonUp(SDL_Event &event) {
-  if (!m_window->getMenu()->clickedInMenu(event.button.x, event.button.y)) {
-    // clear node selection
-    for (const auto &node : m_window->getGraph()->getNodes()) {
-      node->setSelected(false);
-    }
-    if (m_dragging) {
-      // check if the mouse was released on a node
-      bool releasedOnNode = false;
-      for (const auto &node : m_window->getGraph()->getNodes()) {
-        if (node->isClicked(event.button.x, event.button.y)) {
-          if (m_startNode != node) {
-            m_window->getGraph()->addEdge(m_startNode, node);
-          } else {
-            m_newCommand->resetNode(node);
-            m_newCommand->execute();
-          }
-          releasedOnNode = true;
-          break;
-        }
+  if (MainWindow::getInstance().menuBar->clickedInMenu(event.button.x, event.button.y)) {
+    return;
+  }
+
+  clearSelectedNodes();
+  
+  if (m_dragging) {
+    auto clickedNode = findClickedNode(event.button.x, event.button.y);
+    if (clickedNode) {
+        if (m_startNode != clickedNode) {
+        MainWindow::getInstance().graph->addEdge(m_startNode, clickedNode);
+      } else {
+        m_newCommand->resetNode(clickedNode);
+        m_newCommand->execute();
       }
-      if (!releasedOnNode) {
+    } else {
         m_startNode->setPosition(event.button.x, event.button.y);
-      }
-      m_dragging = false;
     }
+    m_dragging = false;
   }
 }
 
@@ -92,37 +105,39 @@ void KeyboardObserver::update(SDL_Event &event) {
 void KeyboardObserver::processDelete() {
   // delete selected nodes and edges
   std::shared_ptr<Node> deletedNode;
-  for (const auto &node : m_window->getGraph()->getNodes()) {
+  for (const auto &node : MainWindow::getInstance().graph->getNodes()) {
     if (node->isSelected()) {
       deletedNode = node;
+      break;
     }
   }
   if (deletedNode) {
-    m_window->getGraph()->removeNode(deletedNode);
+    MainWindow::getInstance().graph->removeNode(deletedNode);
   }
 
   std::shared_ptr<Edge> deletedEdge;
-  for (const auto &edge : m_window->getGraph()->getEdges()) {
+  for (const auto &edge : MainWindow::getInstance().graph->getEdges()) {
     if (edge->isSelected()) {
       deletedEdge = edge;
+      break;
     }
   }
   if (deletedEdge) {
-    m_window->getGraph()->removeEdge(deletedEdge);
+    MainWindow::getInstance().graph->removeEdge(deletedEdge);
   }
 }
 
 void KeyboardObserver::processF11() {
-  if (!m_window->isFullScreen()) {
-    SDL_SetWindowFullscreen(m_window->getWindow(), SDL_TRUE);
-    m_window->setFullScreen(true);
+  if (!MainWindow::getInstance().isFullScreen()) {
+    SDL_SetWindowFullscreen(MainWindow::getInstance().getWindow(), SDL_TRUE);
+    MainWindow::getInstance().setFullScreen(true);
   }
 }
 
 void KeyboardObserver::processEscape() {
-  if (m_window->isFullScreen()) {
-    SDL_SetWindowFullscreen(m_window->getWindow(), SDL_FALSE);
-    m_window->setFullScreen(false);
+  if (MainWindow::getInstance().isFullScreen()) {
+    SDL_SetWindowFullscreen(MainWindow::getInstance().getWindow(), SDL_FALSE);
+    MainWindow::getInstance().setFullScreen(false);
   }
 }
 
@@ -130,16 +145,16 @@ void WindowObserver::update(SDL_Event &event) {
   if (event.type == SDL_WINDOWEVENT) {
     switch (event.window.event) {
     case SDL_WINDOWEVENT_SIZE_CHANGED:
-      m_window->setDimension(event.window.data1, event.window.data2);
-      m_window->layoutFix();
-      SDL_RenderPresent(m_window->getRenderer());
+      MainWindow::getInstance().setDimension(event.window.data1, event.window.data2);
+      MainWindow::getInstance().layoutFix();
+      SDL_RenderPresent(MainWindow::getInstance().getRenderer());
       break;
 
     case SDL_WINDOWEVENT_EXPOSED:
-      SDL_RenderPresent(m_window->getRenderer());
+      SDL_RenderPresent(MainWindow::getInstance().getRenderer());
       break;
     case SDL_WINDOWEVENT_CLOSE:
-      m_window->setRunning(false);
+      MainWindow::getInstance().setRunning(false);
       break;
     }
   }

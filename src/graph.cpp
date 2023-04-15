@@ -81,8 +81,8 @@ void Graph::removeEdge(const std::shared_ptr<Edge> &edge) {
                 m_edges.end());
 }
 
-void Graph::draw(SDL_Renderer *renderer, std::shared_ptr<BitmapFont> m_font) {
-  SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
+void Graph::draw(SDL_Renderer *renderer) {
+  SDL_SetRenderDrawColor(renderer, BLACK.r, BLACK.g, BLACK.b, BLACK.a);
   // draw all edges first
   for (auto edge : m_edges) {
     edge->draw(renderer);
@@ -90,7 +90,7 @@ void Graph::draw(SDL_Renderer *renderer, std::shared_ptr<BitmapFont> m_font) {
 
   // draw all nodes on top of the edges
   for (auto node : m_nodes) {
-    node->draw(renderer, NODE_RADIUS, m_font);
+    node->draw(renderer, NODE_RADIUS);
   }
 }
 
