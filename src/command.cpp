@@ -5,6 +5,9 @@
 namespace fs = std::filesystem;
 
 void SaveCommand::execute() {
+  if (MainWindow::getInstance().graph->getNodes().size() == 0) {
+    return;
+  }
   MainWindow::getInstance().showPopUpWindow("Save", "Enter the file path:");
   MainWindow::getInstance().inputWindow->setCaller(this);
 }
@@ -88,6 +91,9 @@ bool LoadCommand::control(std::string_view input) {
 }
 
 void ExportCommand::execute() {
+  if (MainWindow::getInstance().graph->getNodes().size() == 0) {
+    return;
+  }
   MainWindow::getInstance().showPopUpWindow("Export", "Enter the file path:");
   MainWindow::getInstance().inputWindow->setCaller(this);
 }

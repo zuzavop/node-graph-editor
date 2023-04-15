@@ -12,7 +12,7 @@
 
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
-const int WINDOW_PADDING = 15;
+const int WINDOW_PADDING = 20;
 
 class Window {
 public:
