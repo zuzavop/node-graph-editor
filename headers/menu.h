@@ -6,7 +6,7 @@
 class MenuBar {
 public:
   MenuBar() : m_height(0), m_width(0) {};
-  ~MenuBar(){};
+  ~MenuBar() = default;
 
   void init();
   void handleEvent(SDL_Event &event);

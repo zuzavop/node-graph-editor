@@ -6,7 +6,7 @@
 
 class Observer {
 public:
-  virtual ~Observer(){};
+  virtual ~Observer() = default;
   virtual void update(SDL_Event &event) = 0;
 };
 
@@ -25,7 +25,7 @@ public:
   MouseObserver() : m_dragging(false) {
     m_newCommand = std::make_unique<NewNodeCommand>(m_startNode);
   }
-  virtual ~MouseObserver() {}
+  virtual ~MouseObserver() = default;
   void update(SDL_Event &event) override;
 
 private:
@@ -43,8 +43,8 @@ private:
 
 class KeyboardObserver : public Observer {
 public:
-  KeyboardObserver() {}
-  virtual ~KeyboardObserver() {}
+  KeyboardObserver()  = default;
+  virtual ~KeyboardObserver()  = default;
   void update(SDL_Event &event) override;
 
 private:
@@ -55,8 +55,8 @@ private:
 
 class WindowObserver : public Observer {
 public:
-  WindowObserver() {}
-  virtual ~WindowObserver() {}
+  WindowObserver()  = default;
+  virtual ~WindowObserver()  = default;
   void update(SDL_Event &event) override;
 };
 

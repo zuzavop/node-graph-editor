@@ -17,28 +17,22 @@ class Edge;
 
 class Node {
 public:
-  Node(std::string name, float x, float y)
-      : m_id(0), m_name(name), m_selected(false) {
-    m_x = x;
-    m_y = y;
-  }
-
-  Node(float x, float y) : m_id(0), m_name(""), m_selected(false) {
-    m_x = x;
-    m_y = y;
-  }
-
   Node(std::string name, float x, float y, int id)
       : m_id(id), m_name(name), m_selected(false) {
     m_x = x;
     m_y = y;
   }
 
+  Node(std::string name, float x, float y) : Node(name, x, y, 0) {}
+  Node(float x, float y) : Node("", x, y) {}
+
+  
+
   float getX() const { return m_x; }
   float getY() const { return m_y; }
   int getId() const { return m_id; }
   bool isSelected() const { return m_selected; }
-  const std::string getName() const { return m_name; }
+  const std::string& getName() const { return m_name; }
   const std::vector<std::shared_ptr<Edge>> &getEdges() const { return m_edges; }
 
   void setX(float x) { m_x = x; }
@@ -66,7 +60,7 @@ private:
   std::string m_name;
   bool m_selected;
   float m_x, m_y;
-  std::vector<std::shared_ptr<Edge>> m_edges;
+  std::vector<std::shared_ptr<Edge>> m_edges; // edges of node
 };
 
 inline bool operator==(const Node &lhs, const Node &rhs) {

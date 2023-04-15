@@ -16,7 +16,7 @@ const int WINDOW_PADDING = 15;
 
 class Window {
 public:
-  virtual ~Window(){};
+  virtual ~Window() = default;
   virtual bool init(const char *name, int width = WINDOW_WIDTH,
                     int height = WINDOW_HEIGHT, bool isResizable = true,
                     bool isShown = true);

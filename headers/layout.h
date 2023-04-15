@@ -10,7 +10,7 @@ const float E = 2 * NODE_RADIUS; // minimum distance
 
 class Layout {
 public:
-  Layout() {}
+  Layout() = default;
 
   void layout(const std::unique_ptr<Graph> &graph, int width, int height,
                  int x, int y);

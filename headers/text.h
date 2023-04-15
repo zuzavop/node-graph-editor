@@ -17,7 +17,7 @@ const int FONT_CHARS = 256;
 class BitmapFont {
 public:
   BitmapFont();
-  ~BitmapFont(){};
+  ~BitmapFont() = default;
 
   bool buildFont(std::string path, SDL_Window *window, SDL_Renderer *renderer);
   void renderText(int x, int y, std::string_view text, SDL_Renderer *renderer,
