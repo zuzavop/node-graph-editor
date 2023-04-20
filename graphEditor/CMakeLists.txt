@@ -1,7 +1,9 @@
-﻿# CMakeList.txt: Projekt CMake pro graphEditor, sem přidejte logiku zdrojového
+# CMakeList.txt: Projekt CMake pro graphEditor, sem přidejte logiku zdrojového
 # kódu a definic specifickou pro projekt.
 #
 cmake_minimum_required (VERSION 3.8)
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}")
 
 # Enable Hot Reload for MSVC compilers if supported.
 if (POLICY CMP0141)
@@ -19,19 +21,15 @@ file(GLOB_RECURSE SOURCES "${CMAKE_SOURCE_DIR}/../src/*.cpp")
 
 include_directories("${CMAKE_SOURCE_DIR}/../headers")
 
-set(SDL2_DIR "${CMAKE_SOURCE_DIR}/../SDL2")
-set(SDL2_INCLUDE_DIR "${SDL2_DIR}/include")
-set(SDL2_LIBRARY "${SDL2_DIR}/bin")
-set(SDL2_LIB_DIR "${SDL2_DIR}/lib")
-
-include_directories(${SDL2_INCLUDE_DIR})
-link_directories(${SDL2_LIB_DIR})
+find_package(SDL2 REQUIRED PATHS "${CMAKE_SOURCE_DIR}/../SDL2")
+include_directories(${SDL2_INCLUDE_DIRS})
 
 add_executable (${PROJECT_NAME} ${SOURCES})
 
-target_link_libraries(${PROJECT_NAME} SDL2main SDL2)
-    
-file(GLOB PROJECT_DEPENDENCIES ${SDL2_LIBRARY}/*.dll)
+target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
+
+file(GLOB PROJECT_DEPENDENCIES "${SDL2_DIR}/../lib/x64/*.dll")
+
 foreach(Dependency IN LISTS PROJECT_DEPENDENCIES)
     file(
         COPY ${Dependency}
