@@ -1,6 +1,6 @@
 #include "text.h"
 
-BitmapFont::BitmapFont() {
+BitmapFont::BitmapFont() : m_chars() {
   m_newLine = 0;
   m_space = 0;
 }
@@ -127,16 +127,16 @@ bool BitmapFont::buildFont(std::string path, SDL_Window *window,
 }
 
 void BitmapFont::renderText(int x, int y, std::string_view text,
-                            SDL_Renderer *renderer, float scale_factor,
+                            SDL_Renderer *renderer, double scale_factor,
                             int width, int height) {
-  const float inv_scale_factor = 1.0f / scale_factor;
+  const double inv_scale_factor = 1.0f / scale_factor;
   x = static_cast<int>(x * inv_scale_factor);
   y = static_cast<int>(y * inv_scale_factor);
   width = (width == 0 ? getWordWidth(text) : width) + 2;
   height = (height == 0 ? getWordHeight(text) : height) + 2;
 
   // set the scaling factor
-  SDL_RenderSetScale(renderer, scale_factor, scale_factor);
+  SDL_RenderSetScale(renderer, (float)scale_factor, (float)scale_factor);
   const SDL_Rect buttonSpace = {x, y, width, height};
   SDL_RenderFillRect(renderer, &buttonSpace);
 
@@ -183,7 +183,7 @@ int BitmapFont::getWordHeight(std::string_view word) {
     // get the ASCII value of the character
     height = m_chars['A'].h;
     size_t numNewlines = std::count(word.begin(), word.end(), '\n');
-    height += numNewlines * m_newLine;
+    height += (int)(numNewlines * m_newLine);
   }
   return height;
 }

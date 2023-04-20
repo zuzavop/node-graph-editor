@@ -16,10 +16,10 @@ void Graph::saveToFile(std::ofstream &file) {
              << (edge->isOriented() ? ") --> (" : ") -- (")
              << edge->getTarget()->getId() << ")\n";
       } else {
-        const float x1 = edge->getSource()->getX();
-        const float y1 = edge->getSource()->getY();
-        const float x2 = edge->getTarget()->getX();
-        const float y2 = edge->getTarget()->getY();
+        const double x1 = edge->getSource()->getX();
+        const double y1 = edge->getSource()->getY();
+        const double x2 = edge->getTarget()->getX();
+        const double y2 = edge->getTarget()->getY();
 
         file << x1 << " " << y1 << (edge->isOriented() ? " --> " : " -- ") << x2
              << " " << y2 << "\n";
@@ -96,11 +96,11 @@ void Graph::loadFromFile(std::ifstream &file) {
 void Graph::exportToPSFile(std::ofstream &file) {
   if (file.is_open()) {
     // Calculate the scaling factor to fit the graph on a page
-    const float padding = NODE_RADIUS * 2;
-    float min_x = std::numeric_limits<float>::max();
-    float max_x = std::numeric_limits<float>::min();
-    float min_y = std::numeric_limits<float>::max();
-    float max_y = std::numeric_limits<float>::min();
+    const int padding = NODE_RADIUS * 2;
+    double min_x = std::numeric_limits<double>::max();
+    double max_x = std::numeric_limits<double>::min();
+    double min_y = std::numeric_limits<double>::max();
+    double max_y = std::numeric_limits<double>::min();
     for (const auto &node : m_nodes) {
       min_x = std::min(min_x, node->getX());
       max_x = std::max(max_x, node->getX());
@@ -108,12 +108,12 @@ void Graph::exportToPSFile(std::ofstream &file) {
       max_y = std::max(max_y, node->getY());
     }
 
-    const float width = max_x - min_x;
-    const float height = max_y - min_y;
-    const float scale_x = (A4_HEIGHT - (2 * padding)) / width;
-    const float padding_x = padding - min_x;
-    const float scale_y = (A4_WIDTH - (2 * padding)) / height;
-    const float padding_y = padding - min_y;
+    const double width = max_x - min_x;
+    const double height = max_y - min_y;
+    const double scale_x = (A4_HEIGHT - (2 * padding)) / width;
+    const double padding_x = padding - min_x;
+    const double scale_y = (A4_WIDTH - (2 * padding)) / height;
+    const double padding_y = padding - min_y;
 
     // Write the PostScript header
     file << "%!PS-Adobe-3.0" << std::endl
@@ -150,13 +150,13 @@ void Graph::exportToPSFile(std::ofstream &file) {
                 edge->getTarget()->getX() - edge->getSource()->getX());
       double endAngle = startAngle + M_PI;
 
-      int fromX = (edge->getSource()->getX() + padding_x) * scale_x +
+      double fromX = (edge->getSource()->getX() + padding_x) * scale_x +
                   NODE_RADIUS * cos(startAngle);
-      int fromY = (edge->getSource()->getY() + padding_y) * scale_y +
+      double fromY = (edge->getSource()->getY() + padding_y) * scale_y +
                   NODE_RADIUS * sin(startAngle);
-      int toX = (edge->getTarget()->getX() + padding_x) * scale_x +
+      double toX = (edge->getTarget()->getX() + padding_x) * scale_x +
                 NODE_RADIUS * cos(endAngle);
-      int toY = (edge->getTarget()->getY() + padding_y) * scale_y +
+      double toY = (edge->getTarget()->getY() + padding_y) * scale_y +
                 NODE_RADIUS * sin(endAngle);
       file << "newpath" << std::endl
            << fromY << " " << fromX << " moveto" << std::endl

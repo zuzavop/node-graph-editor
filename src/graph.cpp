@@ -1,12 +1,12 @@
 #include "graph.h"
 
-void Graph::addNode(const std::string &name, float x, float y) {
+void Graph::addNode(const std::string &name, double x, double y) {
   m_nodes.push_back(std::make_shared<Node>(name, x, y));
 }
 
 void Graph::addNode(std::shared_ptr<Node> node) { m_nodes.push_back(node); }
 
-void Graph::addNode(float x, float y) {
+void Graph::addNode(double x, double y) {
   m_nodes.push_back(std::make_shared<Node>("", x, y));
 }
 

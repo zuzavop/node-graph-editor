@@ -17,35 +17,35 @@ class Edge;
 
 class Node {
 public:
-  Node(std::string name, float x, float y, int id)
+  Node(std::string name, double x, double y, int id)
       : m_id(id), m_name(name), m_selected(false) {
     m_x = x;
     m_y = y;
   }
 
-  Node(std::string name, float x, float y) : Node(name, x, y, 0) {}
-  Node(float x, float y) : Node("", x, y) {}
+  Node(std::string name, double x, double y) : Node(name, x, y, 0) {}
+  Node(double x, double y) : Node("", x, y) {}
 
   
 
-  float getX() const { return m_x; }
-  float getY() const { return m_y; }
+  double getX() const { return m_x; }
+  double getY() const { return m_y; }
   int getId() const { return m_id; }
   bool isSelected() const { return m_selected; }
   const std::string& getName() const { return m_name; }
   const std::vector<std::shared_ptr<Edge>> &getEdges() const { return m_edges; }
 
-  void setX(float x) { m_x = x; }
-  void setY(float y) { m_y = y; }
+  void setX(double x) { m_x = x; }
+  void setY(double y) { m_y = y; }
   void setId(int id) { m_id = id; }
   void setName(std::string name) { m_name = name; }
   void setSelected(bool isSelected) { m_selected = isSelected; }
-  void setPosition(float x, float y) {
+  void setPosition(double x, double y) {
     m_x = x;
     m_y = y;
   }
 
-  bool contains(float x, float y, int radius) const {
+  bool contains(double x, double y, int radius) const {
     return std::pow(x - m_x, 2) + std::pow(y - m_y, 2) <= std::pow(radius, 2);
   }
 
@@ -53,13 +53,13 @@ public:
   void removeEdge(const std::shared_ptr<Edge> &edge);
 
   void draw(SDL_Renderer *renderer, int radius);
-  bool isClicked(float mouseX, float mouseY);
+  bool isClicked(double mouseX, double mouseY);
 
 private:
   int m_id;
   std::string m_name;
   bool m_selected;
-  float m_x, m_y;
+  double m_x, m_y;
   std::vector<std::shared_ptr<Edge>> m_edges; // edges of node
 };
 

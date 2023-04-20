@@ -12,14 +12,14 @@ const int BUTTON_HEIGHT = 200;
 
 class Button {
 public:
-  Button(std::unique_ptr<Command> f, std::string name, float scale = NORMAL_FONT_SCALE);
+  Button(std::unique_ptr<Command> f, std::string name, double scale = NORMAL_FONT_SCALE);
 
   void setPosition(int x, int y); // sets top left position
   void setSize(int w, int h);
   void setTitle(const std::string &name);
 
-  int getWidth() const { return m_width * m_scale; }
-  int getHeight() const { return m_height * m_scale; }
+  double getWidth() const { return m_width * m_scale; }
+  double getHeight() const { return m_height * m_scale; }
 
   void handleEvent(SDL_Event &event);
   void render(SDL_Renderer *renderer);
@@ -28,7 +28,7 @@ public:
   const std::unique_ptr<Command> function;
 
 private:
-  float m_scale;
+  double m_scale;
   SDL_Point m_position;
   int m_width, m_height;
   std::string m_title;

@@ -6,12 +6,12 @@ void Node::draw(SDL_Renderer *renderer, int radius) {
   for (int i = -radius; i <= radius; i++) {
     for (int j = -radius; j <= radius; j++) {
       if (i * i + j * j <= radius * radius) {
-        SDL_RenderDrawPoint(renderer, m_x + i, m_y + j);
+        SDL_RenderDrawPoint(renderer, (int)(m_x + i), (int)(m_y + j));
       }
     }
   }
   if (!m_name.empty()) {
-    MainWindow::getInstance().font->renderText(m_x, m_y, m_name, renderer, 0.2);
+    MainWindow::getInstance().font->renderText((int)m_x, (int)m_y, m_name, renderer, 0.2);
   }
 }
 
@@ -31,6 +31,6 @@ void Node::removeEdge(const std::shared_ptr<Edge> &edge) {
                 m_edges.end());
 }
 
-bool Node::isClicked(float mouseX, float mouseY) {
+bool Node::isClicked(double mouseX, double mouseY) {
   return contains(mouseX, mouseY, NODE_RADIUS);
 }

@@ -11,8 +11,8 @@ class Graph {
 public:
   Graph() : m_needLayout(false) {}
 
-  void addNode(float x, float y);
-  void addNode(const std::string &name, float x, float y);
+  void addNode(double x, double y);
+  void addNode(const std::string &name, double x, double y);
   void addNode(std::shared_ptr<Node> node);
   void removeNode(const std::shared_ptr<Node> &node);
 

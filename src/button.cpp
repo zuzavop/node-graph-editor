@@ -2,7 +2,7 @@
 #include "command.h"
 #include "main_window.h"
 
-Button::Button(std::unique_ptr<Command> f, std::string name, float scale)
+Button::Button(std::unique_ptr<Command> f, std::string name, double scale)
     : function(std::move(f)), m_title(name) {
   m_position.x = 0;
   m_position.y = 0;

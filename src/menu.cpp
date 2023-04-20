@@ -21,8 +21,8 @@ void MenuBar::layoutButtons() {
   int startX = 0;
   for (std::size_t i = 0; i < m_buttons.size(); ++i) {
     m_buttons[i]->setPosition(startX, 0);
-    startX += m_buttons[i]->getWidth() + PADDING;
-    m_height = std::max(m_height, m_buttons[i]->getHeight());
+    startX += (int)(m_buttons[i]->getWidth() + PADDING);
+    m_height = std::max<int>(m_height, (int)m_buttons[i]->getHeight());
   }
   m_width = startX - PADDING;
 }
