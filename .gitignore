@@ -1,5 +1,6 @@
 *.o
 *.bin
-cmake
 .vscode
 build
+.vs
+out
