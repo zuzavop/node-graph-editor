@@ -5,7 +5,7 @@ Program je napsán v jazyce C++ a využívá knihovnu SDL pro vytváření grafi
 
 ## Requirements
 
-* SDL knihovna
+* SDL knihovna (pro VS již součástí projektu)
 * c++ (minimálně verze 17)
 * pro windows: mingw
 
@@ -15,15 +15,16 @@ Pro spuštění programu Node Graph Editor musíte nejprve nainstalovat knihovnu
 1. Otevřete příkazový řádek nebo terminál.
 2. Spusťte příkaz pro instalaci knihovny, který odpovídá Vašemu operačnímu systému.
 3. Stáhněte zdrojový kód z repozitáře na GitHubu pomocí příkazu `git clone https://gitlab.mff.cuni.cz/teaching/nprg041/2022-23/repetenti/vopalkoz.git`.
-4. Vytvořte složku build `mkdir build` a `cd build`.
-5. Zkompilujte program podle Vašeho operačního systému (viz níže).
-6. Po úspěšné kompilaci můžete spustit program pomocí příkazu `./graphEditor` na linuxu nebo `graphEditor.exe`.
+4. Zkompilujte program podle Vašeho operačního systému (viz níže).
+5. Po úspěšné kompilaci můžete spustit program pomocí příkazu `./graphEditor` na linuxu nebo `graphEditor.exe`.
 
 ### On Windows
 #### SDL2 install
 Pro Windows je potřebná část knihovny již přidána do projektu.
 #### Make
-Pro zkompilování ve složce build zadejte `cmake -G "Unix Makefiles" ..` a následně `make`. Po dokončení kompilace by měl být výsledek ve složce `bin`.
+Pro sestavení projektu použijte sestavení pomocí [cmake ve složce graphEditor](graphEditor/CMakeLists.txt) ve Visual Studiu.
+
+Další možností je vytvořit složku `build` a v této složce zadej `cmake -G "Unix Makefiles" ..` a následně `make`. Po dokončení kompilace by měl být výsledek ve složce `bin`.
 
 ### On Linux
 #### SDL2 install
@@ -35,6 +36,7 @@ sudo apt install libsdl2-dev
 ```
 
 #### Make
+Vytvořte složku build `mkdir build` a `cd build`.
 Zkompilování programuje se provede za pomoci `cmake ..` a následného `make`.
 
 ## How to use it
