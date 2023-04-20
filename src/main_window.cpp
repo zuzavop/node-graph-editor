@@ -24,7 +24,7 @@ bool MainWindow::init(const char *name, int width, int height, bool isResizable,
     return false;
   }
 
-  if (!font->buildFont("../assets/font.bmp", m_window, m_renderer)) {
+  if (!font->buildFont("assets/font.bmp", m_window, m_renderer)) {
     return false;
   }
 
