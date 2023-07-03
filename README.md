@@ -20,7 +20,7 @@ Pro spuštění programu Node Graph Editor musíte nejprve nainstalovat knihovnu
 
 ### On Windows
 #### SDL2 install
-Pro Windows je potřebná část knihovny již přidána do projektu.
+Je potřeba stáhnout knihovnu do složky SDL2. Knihovnu je možné stáhnout na [stránkách SDL2](https://github.com/libsdl-org/SDL/releases/tag/release-2.28.1).
 #### Make
 Pro sestavení projektu použijte sestavení pomocí [cmake ve složce graphEditor](graphEditor/CMakeLists.txt) ve Visual Studiu.
 
